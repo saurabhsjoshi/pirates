@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.IntStream;
@@ -84,5 +85,27 @@ public class ScoreTest {
         };
         int score = Score.getIdenticalObjectScore(dieRoll);
         assertEquals(getExpectedIdenticalScore(3) + getExpectedIdenticalScore(4), score);
+    }
+
+    @Test
+    @DisplayName("Validate bonus score for diamond and gold")
+    void testGetBonusObjectScore() {
+        DiceSide[] dieRoll = {DiceSide.GOLD_COIN, DiceSide.DIAMOND};
+        int score = Score.getBonusObjectScore(dieRoll);
+        assertEquals(200, score);
+    }
+
+    @ParameterizedTest
+    @DisplayName("Validate score for bonus objects")
+    @EnumSource(DiceSide.class)
+    void testGetBonusObjectScore_AllSides(DiceSide diceSide) {
+        DiceSide[] dieRoll = {diceSide};
+        int score = Score.getBonusObjectScore(dieRoll);
+
+        if (diceSide == DiceSide.DIAMOND || diceSide == DiceSide.GOLD_COIN) {
+            assertEquals(100, score);
+        } else {
+            assertEquals(0, score);
+        }
     }
 }

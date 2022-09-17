@@ -31,4 +31,9 @@ public class Score {
                 }).mapToInt(Integer::intValue)
                 .sum();
     }
+
+    public static int getBonusObjectScore(DiceSide[] diceSides) {
+        //TODO: Implement
+        return -1;
+    }
 }
