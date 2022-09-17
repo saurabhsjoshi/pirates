@@ -15,7 +15,7 @@ public class Score {
      * @param diceSides the sides of the dice that have been rolled
      * @return score achieved
      */
-    public static int getIdenticalObjectScore(DiceSide[] diceSides) {
+    public static int getIdenticalObjectScore(Die.Side[] diceSides) {
         return Arrays.stream(diceSides)
                 .collect(Collectors.groupingBy(Function.identity()))
                 .values()
@@ -32,10 +32,10 @@ public class Score {
                 .sum();
     }
 
-    public static int getBonusObjectScore(DiceSide[] diceSides) {
+    public static int getBonusObjectScore(Die.Side[] diceSides) {
         int score = 0;
         for (var side : diceSides) {
-            if (side == DiceSide.DIAMOND || side == DiceSide.GOLD_COIN) {
+            if (side == Die.Side.DIAMOND || side == Die.Side.GOLD_COIN) {
                 score += 100;
             }
         }

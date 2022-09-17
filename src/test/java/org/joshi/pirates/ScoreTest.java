@@ -41,9 +41,9 @@ public class ScoreTest {
         return IntStream.range(1, 9)
                 .boxed()
                 .map(kind -> {
-                    DiceSide[] dieRoll = new DiceSide[kind];
+                    Die.Side[] dieRoll = new Die.Side[kind];
                     for (int i = 0; i < kind; i++) {
-                        dieRoll[i] = DiceSide.PARROT;
+                        dieRoll[i] = Die.Side.PARROT;
                     }
                     return Arguments.of(dieRoll, getExpectedIdenticalScore(kind));
                 });
@@ -52,7 +52,7 @@ public class ScoreTest {
     @ParameterizedTest
     @DisplayName("Validate score for identical objects on die roll")
     @MethodSource("ofKindDieRoll")
-    void testGetIdenticalObjectScore(DiceSide[] dieRoll, int expectedScore) {
+    void testGetIdenticalObjectScore(Die.Side[] dieRoll, int expectedScore) {
         int score = Score.getIdenticalObjectScore(dieRoll);
         assertEquals(expectedScore, score);
     }
@@ -60,12 +60,12 @@ public class ScoreTest {
     @DisplayName("Validate three of a kind when roll includes other objects")
     @Test
     void testGetIdenticalObjectScore_DifferentObjects() {
-        DiceSide[] dieRoll = {
-                DiceSide.MONKEY,
-                DiceSide.PARROT,
-                DiceSide.MONKEY,
-                DiceSide.MONKEY,
-                DiceSide.DIAMOND
+        Die.Side[] dieRoll = {
+                Die.Side.MONKEY,
+                Die.Side.PARROT,
+                Die.Side.MONKEY,
+                Die.Side.MONKEY,
+                Die.Side.DIAMOND
         };
         int score = Score.getIdenticalObjectScore(dieRoll);
         assertEquals(getExpectedIdenticalScore(3), score);
@@ -74,14 +74,14 @@ public class ScoreTest {
     @Test
     @DisplayName("Validate score for multiple identical objects")
     void testMultipleIdenticalObject() {
-        DiceSide[] dieRoll = {
-                DiceSide.MONKEY,
-                DiceSide.PARROT,
-                DiceSide.MONKEY,
-                DiceSide.MONKEY,
-                DiceSide.PARROT,
-                DiceSide.PARROT,
-                DiceSide.PARROT
+        Die.Side[] dieRoll = {
+                Die.Side.MONKEY,
+                Die.Side.PARROT,
+                Die.Side.MONKEY,
+                Die.Side.MONKEY,
+                Die.Side.PARROT,
+                Die.Side.PARROT,
+                Die.Side.PARROT
         };
         int score = Score.getIdenticalObjectScore(dieRoll);
         assertEquals(getExpectedIdenticalScore(3) + getExpectedIdenticalScore(4), score);
@@ -90,19 +90,19 @@ public class ScoreTest {
     @Test
     @DisplayName("Validate bonus score for diamond and gold")
     void testGetBonusObjectScore() {
-        DiceSide[] dieRoll = {DiceSide.GOLD_COIN, DiceSide.DIAMOND};
+        Die.Side[] dieRoll = {Die.Side.GOLD_COIN, Die.Side.DIAMOND};
         int score = Score.getBonusObjectScore(dieRoll);
         assertEquals(200, score);
     }
 
     @ParameterizedTest
     @DisplayName("Validate score for bonus objects")
-    @EnumSource(DiceSide.class)
-    void testGetBonusObjectScore_AllSides(DiceSide diceSide) {
-        DiceSide[] dieRoll = {diceSide};
+    @EnumSource(Die.Side.class)
+    void testGetBonusObjectScore_AllSides(Die.Side diceSide) {
+        Die.Side[] dieRoll = {diceSide};
         int score = Score.getBonusObjectScore(dieRoll);
 
-        if (diceSide == DiceSide.DIAMOND || diceSide == DiceSide.GOLD_COIN) {
+        if (diceSide == Die.Side.DIAMOND || diceSide == Die.Side.GOLD_COIN) {
             assertEquals(100, score);
         } else {
             assertEquals(0, score);

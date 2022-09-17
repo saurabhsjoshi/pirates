@@ -15,43 +15,6 @@ public class Turn {
     private static final int MAX_DICE = 8;
 
     /**
-     * Enum that indicates the current state of a die.
-     */
-    public enum DieState {
-        HELD,
-        ACTIVE
-    }
-
-    /**
-     * Class that represents a single die.
-     */
-    public static class Die {
-        DiceSide diceSide;
-        DieState state;
-
-        public Die(DiceSide diceSide, DieState state) {
-            this.diceSide = diceSide;
-            this.state = state;
-        }
-
-        public DiceSide getDiceSide() {
-            return diceSide;
-        }
-
-        public void setDiceSide(DiceSide diceSide) {
-            this.diceSide = diceSide;
-        }
-
-        public DieState getState() {
-            return state;
-        }
-
-        public void setState(DieState state) {
-            this.state = state;
-        }
-    }
-
-    /**
      * Map of the id and dice for this turn.
      */
     public List<Die> dice = new ArrayList<>(MAX_DICE);
@@ -59,9 +22,9 @@ public class Turn {
     void roll() {
         // First roll
         if (dice.isEmpty()) {
-            var diceSides = DiceSide.values();
+            var diceSides = Die.Side.values();
             for (int i = 0; i < MAX_DICE; i++) {
-                dice.add(new Die(diceSides[(new Random().nextInt(diceSides.length))], DieState.ACTIVE));
+                dice.add(new Die(diceSides[(new Random().nextInt(diceSides.length))], Die.State.ACTIVE));
             }
         }
     }

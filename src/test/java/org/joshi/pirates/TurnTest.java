@@ -27,7 +27,7 @@ public class TurnTest {
 
         // Validate all die are active
         for (var dice : turn.dice) {
-            assertEquals(Turn.DieState.ACTIVE, dice.state);
+            assertEquals(Die.State.ACTIVE, dice.state);
         }
     }
 }
