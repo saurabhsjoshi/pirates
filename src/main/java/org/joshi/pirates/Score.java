@@ -1,5 +1,9 @@
 package org.joshi.pirates;
 
+import java.util.Arrays;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 /**
  * Class that contains utility functions to calculate score for different aspects of a die roll.
  */
@@ -12,7 +16,19 @@ public class Score {
      * @return score achieved
      */
     public static int getIdenticalObjectScore(DiceSide[] diceSides) {
-        // TODO: Implement
-        return -1;
+        return Arrays.stream(diceSides)
+                .collect(Collectors.groupingBy(Function.identity()))
+                .values()
+                .stream()
+                .map(sides -> switch (sides.size()) {
+                    case 3 -> 100;
+                    case 4 -> 200;
+                    case 5 -> 500;
+                    case 6 -> 1000;
+                    case 7 -> 2000;
+                    case 8 -> 4000;
+                    default -> 0;
+                }).mapToInt(Integer::intValue)
+                .sum();
     }
 }
