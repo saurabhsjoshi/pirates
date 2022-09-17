@@ -33,7 +33,12 @@ public class Score {
     }
 
     public static int getBonusObjectScore(DiceSide[] diceSides) {
-        //TODO: Implement
-        return -1;
+        int score = 0;
+        for (var side : diceSides) {
+            if (side == DiceSide.DIAMOND || side == DiceSide.GOLD_COIN) {
+                score += 100;
+            }
+        }
+        return score;
     }
 }
