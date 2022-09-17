@@ -4,22 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="89cfdd77-2a28-44e5-afad-fb02c86767a1" name="Changes" comment="[CODE] Init project structure&#10;&#10;- Added gradle based project&#10;- Added required version of junit&#10;- Added simple hello world to ensure compile and run works&#10;- Added IntelliJ run configurations">
-      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations/ClientApp.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations/HostApp.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/joshi/ClientApp.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/joshi/HostApp.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/joshi/network/Client.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/joshi/network/Message.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/joshi/network/MessageHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/joshi/network/Server.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/joshi/pirates/Dice.java" afterDir="false" />
+    <list default="true" id="89cfdd77-2a28-44e5-afad-fb02c86767a1" name="Changes" comment="[CODE] Add socket based networking&#10;&#10;- Added server and client classes&#10;- Provides bidirectional communication capabilities using abstract message&#10;- Added simple unit test to validate gradle build and test is working as expected">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/joshi/pirates/DiceSide.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/org/joshi/pirates/Player.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/org/joshi/pirates/HelloTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/joshi/pirates/Score.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/org/joshi/pirates/ScoreTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/joshi/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,6 +25,9 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
         <projects_view>
           <tree_state>
             <expand>
@@ -51,6 +45,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -84,9 +79,10 @@
   <component name="RunAnythingCache">
     <option name="myCommands">
       <command value="gradle build test" />
+      <command value="gradle build" />
     </option>
   </component>
-  <component name="RunManager" selected="Gradle.pirates [build test]">
+  <component name="RunManager" selected="JUnit.ScoreTest">
     <configuration name="pirates [build test]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -100,6 +96,27 @@
           <list>
             <option value="build" />
             <option value="test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="pirates [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -124,18 +141,36 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="ScoreTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="pirates.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.joshi.pirates.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.joshi.pirates" />
+      <option name="MAIN_CLASS_NAME" value="org.joshi.pirates.ScoreTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <list>
       <item itemvalue="Application.HostApp" />
       <item itemvalue="Application.ClientApp" />
       <item itemvalue="Gradle.pirates [build test]" />
+      <item itemvalue="Gradle.pirates [build]" />
       <item itemvalue="JUnit.HelloTest" />
+      <item itemvalue="JUnit.ScoreTest" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.ScoreTest" />
+        <item itemvalue="Gradle.pirates [build]" />
         <item itemvalue="JUnit.HelloTest" />
         <item itemvalue="Gradle.pirates [build test]" />
         <item itemvalue="Application.ClientApp" />
-        <item itemvalue="Application.HostApp" />
       </list>
     </recent_temporary>
   </component>
@@ -156,7 +191,7 @@
       <workItem from="1663210827210" duration="2924000" />
       <workItem from="1663369893556" duration="637000" />
       <workItem from="1663421535605" duration="1041000" />
-      <workItem from="1663423768155" duration="4110000" />
+      <workItem from="1663423768155" duration="9888000" />
     </task>
     <task id="LOCAL-00001" summary="[CODE] Init project structure&#10;&#10;- Added gradle based project&#10;- Added required version of junit&#10;- Added simple hello world to ensure compile and run works&#10;- Added IntelliJ run configurations">
       <created>1662743268333</created>
@@ -165,7 +200,14 @@
       <option name="project" value="LOCAL" />
       <updated>1662743268333</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="[CODE] Add socket based networking&#10;&#10;- Added server and client classes&#10;- Provides bidirectional communication capabilities using abstract message&#10;- Added simple unit test to validate gradle build and test is working as expected">
+      <created>1663428191830</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1663428191830</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -184,7 +226,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="[CODE] Init project structure&#10;&#10;- Added gradle based project&#10;- Added required version of junit&#10;- Added simple hello world to ensure compile and run works&#10;- Added IntelliJ run configurations" />
-    <option name="LAST_COMMIT_MESSAGE" value="[CODE] Init project structure&#10;&#10;- Added gradle based project&#10;- Added required version of junit&#10;- Added simple hello world to ensure compile and run works&#10;- Added IntelliJ run configurations" />
+    <MESSAGE value="[CODE] Add socket based networking&#10;&#10;- Added server and client classes&#10;- Provides bidirectional communication capabilities using abstract message&#10;- Added simple unit test to validate gradle build and test is working as expected" />
+    <option name="LAST_COMMIT_MESSAGE" value="[CODE] Add socket based networking&#10;&#10;- Added server and client classes&#10;- Provides bidirectional communication capabilities using abstract message&#10;- Added simple unit test to validate gradle build and test is working as expected" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
