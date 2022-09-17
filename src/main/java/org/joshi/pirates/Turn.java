@@ -38,8 +38,28 @@ public class Turn {
         }
     }
 
+    /**
+     * Method that checks if the player can re-roll in this turn.
+     */
     ReRollState canRoll() {
-        // TODO: Implement
+        int skulls = 0;
+        int active = 0;
+
+        for (var die : dice) {
+            if (die.state == Die.State.ACTIVE)
+                active++;
+            if (die.diceSide == Die.Side.SKULL)
+                skulls++;
+        }
+
+        if (active < 2) {
+            return ReRollState.NOT_ENOUGH_ACTIVE_DIE;
+        }
+
+        if (skulls == 3) {
+            return ReRollState.THREE_SKULLS;
+        }
+
         return ReRollState.OK;
     }
 }
