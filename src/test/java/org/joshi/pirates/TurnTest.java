@@ -53,16 +53,17 @@ public class TurnTest {
     @Test
     void testCanRoll_ThreeSkulls() {
         Die skull = new Die(Die.Side.SKULL, Die.State.HELD);
-        turn.dice.add(0, skull);
-        turn.dice.add(1, skull);
-        turn.dice.add(2, skull);
+        turn.dice.set(0, skull);
+        turn.dice.set(1, skull);
+        turn.dice.set(2, skull);
         for (int i = 3; i < 8; i++) {
             turn.dice.get(i).setDiceSide(Die.Side.DIAMOND);
+            turn.dice.get(i).setState(Die.State.ACTIVE);
         }
 
         assertEquals(Turn.ReRollState.THREE_SKULLS, turn.canRoll());
 
-        turn.dice.add(3, skull);
+        turn.dice.set(3, skull);
 
         assertEquals(Turn.ReRollState.OK, turn.canRoll());
     }
