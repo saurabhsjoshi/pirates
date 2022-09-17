@@ -2,6 +2,7 @@ package org.joshi.pirates;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * This class represents a turn of a single player consisting on multiple rolls.
@@ -28,6 +29,11 @@ public class Turn {
         DiceSide diceSide;
         DieState state;
 
+        public Die(DiceSide diceSide, DieState state) {
+            this.diceSide = diceSide;
+            this.state = state;
+        }
+
         public DiceSide getDiceSide() {
             return diceSide;
         }
@@ -51,6 +57,12 @@ public class Turn {
     public List<Die> dice = new ArrayList<>(MAX_DICE);
 
     void roll() {
-        // TODO: Implement
+        // First roll
+        if (dice.isEmpty()) {
+            var diceSides = DiceSide.values();
+            for (int i = 0; i < MAX_DICE; i++) {
+                dice.add(new Die(diceSides[(new Random().nextInt(diceSides.length))], DieState.ACTIVE));
+            }
+        }
     }
 }
