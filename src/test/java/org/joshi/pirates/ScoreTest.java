@@ -69,4 +69,20 @@ public class ScoreTest {
         int score = Score.getIdenticalObjectScore(dieRoll);
         assertEquals(getExpectedIdenticalScore(3), score);
     }
+
+    @Test
+    @DisplayName("Validate score for multiple identical objects")
+    void testMultipleIdenticalObject() {
+        DiceSide[] dieRoll = {
+                DiceSide.MONKEY,
+                DiceSide.PARROT,
+                DiceSide.MONKEY,
+                DiceSide.MONKEY,
+                DiceSide.PARROT,
+                DiceSide.PARROT,
+                DiceSide.PARROT
+        };
+        int score = Score.getIdenticalObjectScore(dieRoll);
+        assertEquals(getExpectedIdenticalScore(3) + getExpectedIdenticalScore(4), score);
+    }
 }
