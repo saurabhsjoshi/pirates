@@ -10,8 +10,11 @@ public class SeaBattleCard extends FortuneCard {
      */
     private final int swords;
 
-    public SeaBattleCard(int swords) {
+    private final int bonus;
+
+    public SeaBattleCard(int swords, int bonus) {
         super(Type.SEA_BATTLE);
         this.swords = swords;
+        this.bonus = bonus;
     }
 }

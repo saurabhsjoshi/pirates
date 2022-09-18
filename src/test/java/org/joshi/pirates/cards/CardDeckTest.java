@@ -4,10 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit tests that validate deck of fortune cards.
@@ -21,29 +21,32 @@ public class CardDeckTest {
         cardDeck = new CardDeck();
     }
 
-    public static Set<FortuneCard> getExpectedDeck() {
-        Set<FortuneCard> expectedCards = new HashSet<>();
+    public static List<FortuneCard> getExpectedDeck() {
+        List<FortuneCard> expectedCards = new ArrayList<>(35);
 
-        // Expect 3 treasure chest, captain and sorceress each
+        // 4xChest, 4xSorceress, 4xCaptain, 4xMonkey&Parrot, 4xDiamond, 4xCoin
         for (int i = 0; i < 4; i++) {
             expectedCards.add(new FortuneCard(FortuneCard.Type.TREASURE_CHEST));
-            expectedCards.add(new FortuneCard(FortuneCard.Type.CAPTAIN));
             expectedCards.add(new FortuneCard(FortuneCard.Type.SORCERESS));
-        }
-
-        // Expect 5 diamond, gold cards, monkey business each
-        for (int i = 0; i < 6; i++) {
+            expectedCards.add(new FortuneCard(FortuneCard.Type.CAPTAIN));
+            expectedCards.add(new FortuneCard(FortuneCard.Type.MONKEY_BUSINESS));
             expectedCards.add(new FortuneCard(FortuneCard.Type.DIAMOND));
             expectedCards.add(new FortuneCard(FortuneCard.Type.GOLD));
-            expectedCards.add(new FortuneCard(FortuneCard.Type.MONKEY_BUSINESS));
         }
 
+        // 2x2skulls // 2x2swords(300 bonus) 2x3swords(500 bonus) 2x4swords(1000 bonus)
+        for (int i = 0; i < 2; i++) {
+            expectedCards.add(new SkullCard(2));
+            expectedCards.add(new SeaBattleCard(2, 300));
+            expectedCards.add(new SeaBattleCard(3, 500));
+            expectedCards.add(new SeaBattleCard(4, 1000));
+        }
+
+        //3x1skull
         for (int i = 0; i < 3; i++) {
-            expectedCards.add(new SeaBattleCard(i + 2));
+            expectedCards.add(new SkullCard(1));
         }
 
-        expectedCards.add(new SkullCard(1));
-        expectedCards.add(new SkullCard(2));
         return expectedCards;
     }
 
