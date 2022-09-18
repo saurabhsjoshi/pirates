@@ -91,4 +91,34 @@ public class TurnTest {
         // Even with four skulls, the player should not reach island of skulls
         assertFalse(turn.isOnSkullIsland(turn.dice));
     }
+
+    @DisplayName("Validate that re roll works as expected")
+    @Test
+    void testReRoll() {
+        // Manually set first five held die
+        Die diamond = new Die(Die.Side.DIAMOND, Die.State.HELD);
+        for (int i = 0; i < 5; i++) {
+            turn.dice.set(i, diamond);
+        }
+
+        // Manually set other active die
+        Die gold = new Die(Die.Side.GOLD_COIN, Die.State.ACTIVE);
+        for (int i = 5; i < 8; i++) {
+            turn.dice.set(i, gold);
+        }
+
+        turn.roll();
+
+        // Total number of die should not change
+        assertEquals(8, turn.dice.size());
+
+        // Ensure held die have not changed
+        for (int i = 0; i < 5; i++) {
+            assertSame(turn.dice.get(i), diamond);
+        }
+
+        for (int i = 5; i < 8; i++) {
+            assertNotSame(turn.dice.get(i), gold);
+        }
+    }
 }
