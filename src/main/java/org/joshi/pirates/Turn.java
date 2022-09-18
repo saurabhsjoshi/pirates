@@ -9,9 +9,9 @@ import java.util.Random;
  */
 public class Turn {
 
-    private boolean isFirstRoll;
+    private boolean isFirstRoll = true;
 
-    private boolean isOnIslandOfSkulls;
+    private boolean isOnIslandOfSkulls = false;
 
     /**
      * Enum to indicate if the player can re-roll.
@@ -40,6 +40,8 @@ public class Turn {
                 dice.add(new Die(diceSides[(new Random().nextInt(diceSides.length))], Die.State.ACTIVE));
             }
         }
+
+        isFirstRoll = false;
     }
 
     /**
@@ -71,15 +73,31 @@ public class Turn {
      * Method that checks if the player is on Island of Skulls.
      */
     boolean isOnSkullIsland() {
-        // TODO: Implement
+        if (!isFirstRoll) {
+            return isOnIslandOfSkulls;
+        }
+
+        int skulls = 0;
+
+        for (var die : dice) {
+            if (die.diceSide == Die.Side.SKULL) {
+                skulls++;
+            }
+        }
+
+        if (skulls > 3) {
+            isOnIslandOfSkulls = true;
+            return true;
+        }
+
         return false;
     }
 
     void setFirstRoll(boolean isFirstRoll) {
-        // TODO: Implement
+        this.isFirstRoll = isFirstRoll;
     }
 
     public void setOnIslandOfSkulls(boolean onIslandOfSkulls) {
-        // TODO: Implement
+        isOnIslandOfSkulls = onIslandOfSkulls;
     }
 }
