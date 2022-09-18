@@ -41,12 +41,12 @@ public class TurnTest {
             die.setState(Die.State.HELD);
         }
 
-        assertEquals(Turn.ReRollState.NOT_ENOUGH_ACTIVE_DIE, turn.canRoll());
+        assertEquals(Turn.ReRollState.NOT_ENOUGH_ACTIVE_DIE, turn.canRoll(turn.dice));
 
         turn.dice.get(0).setState(Die.State.ACTIVE);
         turn.dice.get(1).setState(Die.State.ACTIVE);
 
-        assertEquals(Turn.ReRollState.OK, turn.canRoll());
+        assertEquals(Turn.ReRollState.OK, turn.canRoll(turn.dice));
     }
 
     @DisplayName("Test that validates that player cannot re-roll after accumulating three skulls")
@@ -61,11 +61,11 @@ public class TurnTest {
             turn.dice.get(i).setState(Die.State.ACTIVE);
         }
 
-        assertEquals(Turn.ReRollState.THREE_SKULLS, turn.canRoll());
+        assertEquals(Turn.ReRollState.THREE_SKULLS, turn.canRoll(turn.dice));
 
         turn.dice.set(3, skull);
 
-        assertEquals(Turn.ReRollState.OK, turn.canRoll());
+        assertEquals(Turn.ReRollState.OK, turn.canRoll(turn.dice));
     }
 
     @DisplayName("Test that validates that player goes to island of skulls on their first roll of four skulls")
@@ -79,16 +79,16 @@ public class TurnTest {
             turn.dice.set(i, skull);
         }
 
-        assertTrue(turn.isOnSkullIsland());
+        assertTrue(turn.isOnSkullIsland(turn.dice));
         // Forcefully set first roll to false
         turn.setFirstRoll(false);
 
         // Ensure that player remains on island of skulls
-        assertTrue(turn.isOnSkullIsland());
+        assertTrue(turn.isOnSkullIsland(turn.dice));
 
         // Forcefully remove player from island of skulls for second roll
         turn.setOnIslandOfSkulls(false);
         // Even with four skulls, the player should not reach island of skulls
-        assertFalse(turn.isOnSkullIsland());
+        assertFalse(turn.isOnSkullIsland(turn.dice));
     }
 }

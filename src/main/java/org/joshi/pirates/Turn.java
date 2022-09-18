@@ -47,7 +47,7 @@ public class Turn {
     /**
      * Method that checks if the player can re-roll in this turn.
      */
-    ReRollState canRoll() {
+    ReRollState canRoll(List<Die> dice) {
         int skulls = 0;
         int active = 0;
 
@@ -72,7 +72,7 @@ public class Turn {
     /**
      * Method that checks if the player is on Island of Skulls.
      */
-    boolean isOnSkullIsland() {
+    boolean isOnSkullIsland(List<Die> dice) {
         if (!isFirstRoll) {
             return isOnIslandOfSkulls;
         }
