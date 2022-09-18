@@ -33,14 +33,21 @@ public class Turn {
     public List<Die> dice = new ArrayList<>(MAX_DICE);
 
     void roll() {
+        var diceSides = Die.Side.values();
+
         // First roll
         if (dice.isEmpty()) {
-            var diceSides = Die.Side.values();
+
             for (int i = 0; i < MAX_DICE; i++) {
                 dice.add(new Die(diceSides[(new Random().nextInt(diceSides.length))], Die.State.ACTIVE));
             }
         }
 
+        for (int i = 0; i < MAX_DICE; i++) {
+            if (dice.get(i).state == Die.State.ACTIVE) {
+                dice.set(i, new Die(diceSides[(new Random().nextInt(diceSides.length))], Die.State.ACTIVE));
+            }
+        }
         isFirstRoll = false;
     }
 
