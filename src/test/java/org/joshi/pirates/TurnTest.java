@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test cases for each turn consisting of multiple rolls.
@@ -66,5 +66,29 @@ public class TurnTest {
         turn.dice.set(3, skull);
 
         assertEquals(Turn.ReRollState.OK, turn.canRoll());
+    }
+
+    @DisplayName("Test that validates that player goes to island of skulls on their first roll of four skulls")
+    @Test
+    void testSkullIsland() {
+        turn.setFirstRoll(true);
+
+        // Set at least four skulls
+        Die skull = new Die(Die.Side.SKULL, Die.State.ACTIVE);
+        for (int i = 0; i < 4; i++) {
+            turn.dice.set(i, skull);
+        }
+
+        assertTrue(turn.isOnSkullIsland());
+        // Forcefully set first roll to false
+        turn.setFirstRoll(false);
+
+        // Ensure that player remains on island of skulls
+        assertTrue(turn.isOnSkullIsland());
+
+        // Forcefully remove player from island of skulls for second roll
+        turn.setOnIslandOfSkulls(false);
+        // Even with four skulls, the player should not reach island of skulls
+        assertFalse(turn.isOnSkullIsland());
     }
 }

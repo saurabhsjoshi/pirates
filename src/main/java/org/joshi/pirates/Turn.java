@@ -9,6 +9,10 @@ import java.util.Random;
  */
 public class Turn {
 
+    private boolean isFirstRoll;
+
+    private boolean isOnIslandOfSkulls;
+
     /**
      * Enum to indicate if the player can re-roll.
      */
@@ -61,5 +65,21 @@ public class Turn {
         }
 
         return ReRollState.OK;
+    }
+
+    /**
+     * Method that checks if the player is on Island of Skulls.
+     */
+    boolean isOnSkullIsland() {
+        // TODO: Implement
+        return false;
+    }
+
+    void setFirstRoll(boolean isFirstRoll) {
+        // TODO: Implement
+    }
+
+    public void setOnIslandOfSkulls(boolean onIslandOfSkulls) {
+        // TODO: Implement
     }
 }
