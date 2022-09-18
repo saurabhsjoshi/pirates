@@ -21,4 +21,12 @@ public class FortuneCard {
     public FortuneCard(Type type) {
         this.type = type;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof FortuneCard other) {
+            return other.type == this.type;
+        }
+        return false;
+    }
 }

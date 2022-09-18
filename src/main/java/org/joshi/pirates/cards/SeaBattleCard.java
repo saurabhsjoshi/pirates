@@ -17,4 +17,12 @@ public class SeaBattleCard extends FortuneCard {
         this.swords = swords;
         this.bonus = bonus;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof SeaBattleCard other) {
+            return other.swords == this.swords && other.bonus == this.bonus;
+        }
+        return false;
+    }
 }
