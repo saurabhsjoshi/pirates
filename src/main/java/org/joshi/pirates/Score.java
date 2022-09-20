@@ -1,6 +1,7 @@
 package org.joshi.pirates;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -15,8 +16,8 @@ public class Score {
      * @param diceSides the sides of the dice that have been rolled
      * @return score achieved
      */
-    public static int getIdenticalObjectScore(Die.Side[] diceSides) {
-        return Arrays.stream(diceSides)
+    public static int getIdenticalObjectScore(List<Die.Side> diceSides) {
+        return diceSides.stream()
                 .collect(Collectors.groupingBy(Function.identity()))
                 .values()
                 .stream()
@@ -32,7 +33,7 @@ public class Score {
                 .sum();
     }
 
-    public static int getBonusObjectScore(Die.Side[] diceSides) {
+    public static int getBonusObjectScore(List<Die.Side> diceSides) {
         int score = 0;
         for (var side : diceSides) {
             if (side == Die.Side.DIAMOND || side == Die.Side.GOLD_COIN) {

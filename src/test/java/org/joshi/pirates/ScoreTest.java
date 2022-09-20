@@ -7,6 +7,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -41,9 +43,9 @@ public class ScoreTest {
         return IntStream.range(1, 9)
                 .boxed()
                 .map(kind -> {
-                    Die.Side[] dieRoll = new Die.Side[kind];
+                    List<Die.Side> dieRoll = new ArrayList<>(kind);
                     for (int i = 0; i < kind; i++) {
-                        dieRoll[i] = Die.Side.PARROT;
+                        dieRoll.add(Die.Side.PARROT);
                     }
                     return Arguments.of(dieRoll, getExpectedIdenticalScore(kind));
                 });
@@ -52,7 +54,7 @@ public class ScoreTest {
     @ParameterizedTest
     @DisplayName("Validate score for identical objects on die roll")
     @MethodSource("ofKindDieRoll")
-    void testGetIdenticalObjectScore(Die.Side[] dieRoll, int expectedScore) {
+    void testGetIdenticalObjectScore(List<Die.Side> dieRoll, int expectedScore) {
         int score = Score.getIdenticalObjectScore(dieRoll);
         assertEquals(expectedScore, score);
     }
@@ -60,13 +62,13 @@ public class ScoreTest {
     @DisplayName("Validate three of a kind when roll includes other objects")
     @Test
     void testGetIdenticalObjectScore_DifferentObjects() {
-        Die.Side[] dieRoll = {
+        var dieRoll = List.of(
                 Die.Side.MONKEY,
                 Die.Side.PARROT,
                 Die.Side.MONKEY,
                 Die.Side.MONKEY,
                 Die.Side.DIAMOND
-        };
+        );
         int score = Score.getIdenticalObjectScore(dieRoll);
         assertEquals(getExpectedIdenticalScore(3), score);
     }
@@ -74,7 +76,7 @@ public class ScoreTest {
     @Test
     @DisplayName("Validate score for multiple identical objects")
     void testMultipleIdenticalObject() {
-        Die.Side[] dieRoll = {
+        var dieRoll = List.of(
                 Die.Side.MONKEY,
                 Die.Side.PARROT,
                 Die.Side.MONKEY,
@@ -82,7 +84,7 @@ public class ScoreTest {
                 Die.Side.PARROT,
                 Die.Side.PARROT,
                 Die.Side.PARROT
-        };
+        );
         int score = Score.getIdenticalObjectScore(dieRoll);
         assertEquals(getExpectedIdenticalScore(3) + getExpectedIdenticalScore(4), score);
     }
@@ -90,7 +92,7 @@ public class ScoreTest {
     @Test
     @DisplayName("Validate bonus score for diamond and gold")
     void testGetBonusObjectScore() {
-        Die.Side[] dieRoll = {Die.Side.GOLD_COIN, Die.Side.DIAMOND};
+        var dieRoll = List.of(Die.Side.GOLD_COIN, Die.Side.DIAMOND);
         int score = Score.getBonusObjectScore(dieRoll);
         assertEquals(200, score);
     }
@@ -99,7 +101,7 @@ public class ScoreTest {
     @DisplayName("Validate score for bonus objects")
     @EnumSource(Die.Side.class)
     void testGetBonusObjectScore_AllSides(Die.Side diceSide) {
-        Die.Side[] dieRoll = {diceSide};
+        var dieRoll = List.of(diceSide);
         int score = Score.getBonusObjectScore(dieRoll);
 
         if (diceSide == Die.Side.DIAMOND || diceSide == Die.Side.GOLD_COIN) {

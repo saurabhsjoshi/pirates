@@ -5,6 +5,8 @@ import org.joshi.pirates.cards.FortuneCard;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * This class represents a turn of a single player consisting on multiple rolls.
@@ -21,9 +23,7 @@ public class Turn {
      * Enum to indicate if the player can re-roll.
      */
     enum ReRollState {
-        NOT_ENOUGH_ACTIVE_DIE,
-        THREE_SKULLS,
-        OK
+        NOT_ENOUGH_ACTIVE_DIE, THREE_SKULLS, OK
     }
 
     /**
@@ -63,10 +63,8 @@ public class Turn {
         int active = 0;
 
         for (var die : dice) {
-            if (die.state == Die.State.ACTIVE)
-                active++;
-            if (die.diceSide == Die.Side.SKULL)
-                skulls++;
+            if (die.state == Die.State.ACTIVE) active++;
+            if (die.diceSide == Die.Side.SKULL) skulls++;
         }
 
         if (active < 2) {
@@ -113,18 +111,15 @@ public class Turn {
     }
 
     public int complete() {
+        Stream<Die.Side> bonusObj = Stream.empty();
+
         if (fortuneCard.getType() == FortuneCard.Type.GOLD) {
-            return bonusCard(Die.Side.GOLD_COIN);
+            bonusObj = Stream.of(Die.Side.GOLD_COIN);
+        } else if (fortuneCard.getType() == FortuneCard.Type.DIAMOND) {
+            bonusObj = Stream.of(Die.Side.DIAMOND);
         }
 
-        if (fortuneCard.getType() == FortuneCard.Type.DIAMOND) {
-            return bonusCard(Die.Side.DIAMOND);
-        }
-
-        Die.Side[] sides = new Die.Side[MAX_DICE];
-        for (int i = 0; i < dice.size(); i++) {
-            sides[i] = dice.get(i).diceSide;
-        }
+        List<Die.Side> sides = Stream.concat(bonusObj, dice.stream().map(s -> s.diceSide)).collect(Collectors.toList());
 
         var score = Score.getIdenticalObjectScore(sides);
         score += Score.getBonusObjectScore(sides);
@@ -135,17 +130,6 @@ public class Turn {
         }
 
         return score;
-    }
-
-    private int bonusCard(Die.Side bonusObj) {
-        Die.Side[] sides = new Die.Side[MAX_DICE + 1];
-        sides[0] = bonusObj;
-        for (int i = 1; i < dice.size() + 1; i++) {
-            sides[i] = dice.get(i - 1).diceSide;
-        }
-
-        var score = Score.getIdenticalObjectScore(sides);
-        return score + Score.getBonusObjectScore(sides);
     }
 
     public void setFortuneCard(FortuneCard card) {
