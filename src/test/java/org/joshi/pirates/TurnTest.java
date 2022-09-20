@@ -155,4 +155,19 @@ public class TurnTest {
         // 8 of a kind + bonus for each diamond coin
         assertEquals(4800, score);
     }
+
+    @DisplayName("Validate end of the turn score calculation with monkey business card")
+    @Test
+    void testEndTurn_Monkey() {
+        turn.dice.replaceAll(__ -> new Die(Die.Side.MONKEY, Die.State.HELD));
+        turn.dice.set(0, new Die(Die.Side.PARROT, Die.State.HELD));
+
+        turn.setFortuneCard(new FortuneCard(FortuneCard.Type.MONKEY_BUSINESS));
+        var score = turn.complete();
+
+        // 8 of a kind
+        assertEquals(4000, score);
+    }
+
+
 }
