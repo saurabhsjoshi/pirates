@@ -15,6 +15,8 @@ public class Turn {
 
     private boolean isOnIslandOfSkulls = false;
 
+    private FortuneCard fortuneCard;
+
     /**
      * Enum to indicate if the player can re-roll.
      */
@@ -111,11 +113,23 @@ public class Turn {
     }
 
     public int complete() {
-        // TODO: Implement
-        return 0;
+        Die.Side[] sides = new Die.Side[MAX_DICE];
+        for (int i = 0; i < dice.size(); i++) {
+            sides[i] = dice.get(i).diceSide;
+        }
+
+        var score = Score.getIdenticalObjectScore(sides);
+        score += Score.getBonusObjectScore(sides);
+
+        // Captain card
+        if (fortuneCard.getType() == FortuneCard.Type.CAPTAIN) {
+            return score * 2;
+        }
+
+        return score;
     }
 
     public void setFortuneCard(FortuneCard card) {
-        //TODO: Implement
+        this.fortuneCard = card;
     }
 }
