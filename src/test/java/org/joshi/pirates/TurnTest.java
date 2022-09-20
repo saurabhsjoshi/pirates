@@ -123,10 +123,23 @@ public class TurnTest {
 
     @DisplayName("Validate end of the turn score calculation with captain card")
     @Test
-    void testEndTurn() {
+    void testEndTurn_CaptainCard() {
         turn.dice.replaceAll(__ -> new Die(Die.Side.MONKEY, Die.State.HELD));
         turn.setFortuneCard(new FortuneCard(FortuneCard.Type.CAPTAIN));
         var score = turn.complete();
         assertEquals(8000, score);
+    }
+
+    @DisplayName("Validate end of the turn score calculation with gold card")
+    @Test
+    void testEndTurn_Gold() {
+        turn.dice.replaceAll(__ -> new Die(Die.Side.GOLD_COIN, Die.State.HELD));
+        turn.dice.set(0, new Die(Die.Side.MONKEY, Die.State.HELD));
+
+        turn.setFortuneCard(new FortuneCard(FortuneCard.Type.GOLD));
+        var score = turn.complete();
+
+        // 8 of a kind + bonus for each gold coin
+        assertEquals(4800, score);
     }
 }
