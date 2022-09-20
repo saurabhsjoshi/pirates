@@ -1,10 +1,9 @@
 package org.joshi.pirates;
 
+import org.joshi.pirates.cards.FortuneCard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -120,5 +119,14 @@ public class TurnTest {
         for (int i = 5; i < 8; i++) {
             assertNotSame(turn.dice.get(i), gold);
         }
+    }
+
+    @DisplayName("Validate end of the turn score calculation with captain card")
+    @Test
+    void testEndTurn() {
+        turn.dice.replaceAll(__ -> new Die(Die.Side.MONKEY, Die.State.HELD));
+        turn.setFortuneCard(new FortuneCard(FortuneCard.Type.CAPTAIN));
+        var score = turn.complete();
+        assertEquals(8000, score);
     }
 }

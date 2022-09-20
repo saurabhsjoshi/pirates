@@ -1,5 +1,7 @@
 package org.joshi.pirates;
 
+import org.joshi.pirates.cards.FortuneCard;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -106,5 +108,14 @@ public class Turn {
 
     public void setOnIslandOfSkulls(boolean onIslandOfSkulls) {
         isOnIslandOfSkulls = onIslandOfSkulls;
+    }
+
+    public int complete() {
+        // TODO: Implement
+        return 0;
+    }
+
+    public void setFortuneCard(FortuneCard card) {
+        //TODO: Implement
     }
 }
