@@ -113,6 +113,10 @@ public class Turn {
     }
 
     public int complete() {
+        if (fortuneCard.getType() == FortuneCard.Type.GOLD) {
+            return bonusCard(Die.Side.GOLD_COIN);
+        }
+
         Die.Side[] sides = new Die.Side[MAX_DICE];
         for (int i = 0; i < dice.size(); i++) {
             sides[i] = dice.get(i).diceSide;
@@ -127,6 +131,17 @@ public class Turn {
         }
 
         return score;
+    }
+
+    private int bonusCard(Die.Side bonusObj) {
+        Die.Side[] sides = new Die.Side[MAX_DICE + 1];
+        sides[0] = bonusObj;
+        for (int i = 1; i < dice.size() + 1; i++) {
+            sides[i] = dice.get(i - 1).diceSide;
+        }
+
+        var score = Score.getIdenticalObjectScore(sides);
+        return score + Score.getBonusObjectScore(sides);
     }
 
     public void setFortuneCard(FortuneCard card) {
