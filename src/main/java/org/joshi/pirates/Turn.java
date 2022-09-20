@@ -117,6 +117,10 @@ public class Turn {
             return bonusCard(Die.Side.GOLD_COIN);
         }
 
+        if (fortuneCard.getType() == FortuneCard.Type.DIAMOND) {
+            return bonusCard(Die.Side.DIAMOND);
+        }
+
         Die.Side[] sides = new Die.Side[MAX_DICE];
         for (int i = 0; i < dice.size(); i++) {
             sides[i] = dice.get(i).diceSide;
