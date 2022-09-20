@@ -110,6 +110,12 @@ public class Turn {
         isOnIslandOfSkulls = onIslandOfSkulls;
     }
 
+    /**
+     * End this turn and return the score. If the score is negative, it indicates that other players have lost those
+     * points, like in the case of player being on skull island.
+     *
+     * @return score earned this round
+     */
     public int complete() {
         Stream<Die.Side> bonusObj = Stream.empty();
 
@@ -119,7 +125,20 @@ public class Turn {
             bonusObj = Stream.of(Die.Side.DIAMOND);
         }
 
-        List<Die.Side> sides = Stream.concat(bonusObj, dice.stream().map(s -> s.diceSide)).collect(Collectors.toList());
+        List<Die.Side> sides = Stream
+                .concat(bonusObj, dice.stream().map(s -> s.diceSide))
+                .collect(Collectors.toList());
+
+        if (fortuneCard.getType() == FortuneCard.Type.MONKEY_BUSINESS) {
+            sides = sides.stream()
+                    .map(s -> {
+                        if (s == Die.Side.PARROT) {
+                            return Die.Side.MONKEY;
+                        }
+                        return s;
+                    })
+                    .collect(Collectors.toList());
+        }
 
         var score = Score.getIdenticalObjectScore(sides);
         score += Score.getBonusObjectScore(sides);
