@@ -14,23 +14,24 @@ import java.util.stream.Stream;
  */
 public class Turn {
 
+    public enum State {
+        DISQUALIFIED,
+
+        NOT_ENOUGH_ACTIVE_DIE,
+        OK
+    }
+
     private boolean isFirstRoll = true;
 
     private boolean isOnIslandOfSkulls = false;
 
     private boolean sorceressUsed = false;
 
+    private State state = State.OK;
+
     private FortuneCard fortuneCard;
 
-    /**
-     * Enum to indicate if the player can re-roll.
-     */
-    enum ReRollState {
-        NOT_ENOUGH_ACTIVE_DIE, THREE_SKULLS, OK
-    }
-
     public static class SkullActivatedException extends Exception {
-
     }
 
     /**
@@ -121,13 +122,10 @@ public class Turn {
                 die.setState(Die.State.HELD);
             }
         }
-        onSkullIsland(dice);
+        updateState();
     }
 
-    /**
-     * Method that checks if the player can re-roll in this turn.
-     */
-    ReRollState canRoll(List<Die> dice) {
+    private void updateState() {
         int skulls = 0;
         int active = 0;
 
@@ -140,43 +138,28 @@ public class Turn {
             if (die.diceSide == Die.Side.SKULL) skulls++;
         }
 
-        if (active < 2) {
-            return ReRollState.NOT_ENOUGH_ACTIVE_DIE;
-        }
-
         if (skulls == 3) {
-            return ReRollState.THREE_SKULLS;
+            state = State.DISQUALIFIED;
+            return;
         }
 
-        return ReRollState.OK;
+        if (isFirstRoll && skulls > 3) {
+            isOnIslandOfSkulls = true;
+        }
+
+        if (active < 2) {
+            state = State.NOT_ENOUGH_ACTIVE_DIE;
+            return;
+        }
+
+        state = State.OK;
     }
 
     /**
      * Method that checks if the player is on Island of Skulls.
      */
-    boolean onSkullIsland(List<Die> dice) {
-        if (!isFirstRoll) {
-            return isOnIslandOfSkulls;
-        }
-
-        int skulls = 0;
-
-        if (fortuneCard != null && fortuneCard.getType() == FortuneCard.Type.SKULLS) {
-            skulls += ((SkullCard) fortuneCard).getSkulls();
-        }
-
-        for (var die : dice) {
-            if (die.diceSide == Die.Side.SKULL) {
-                skulls++;
-            }
-        }
-
-        if (skulls > 3) {
-            isOnIslandOfSkulls = true;
-            return true;
-        }
-
-        return false;
+    boolean onSkullIsland() {
+        return isOnIslandOfSkulls;
     }
 
     void setFirstRoll(boolean isFirstRoll) {
@@ -185,6 +168,10 @@ public class Turn {
 
     public void setOnIslandOfSkulls(boolean onIslandOfSkulls) {
         isOnIslandOfSkulls = onIslandOfSkulls;
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 
     /**
@@ -237,6 +224,10 @@ public class Turn {
         }
 
         return score;
+    }
+
+    public State getState() {
+        return state;
     }
 
     public void setFortuneCard(FortuneCard card) {

@@ -22,6 +22,7 @@ public class TurnTest {
         turn = new Turn();
         turn.roll();
         turn.setOnIslandOfSkulls(false);
+        turn.setState(Turn.State.OK);
     }
 
     @DisplayName("Validate first roll of a turn")
@@ -40,17 +41,15 @@ public class TurnTest {
     @DisplayName("Test that validates if the player can re-roll based on number of active die")
     @Test
     void testCanRoll_EnoughActiveDie() {
-        for (var die : turn.dice) {
-            die.setDiceSide(Die.Side.DIAMOND);
-            die.setState(Die.State.HELD);
-        }
-
-        assertEquals(Turn.ReRollState.NOT_ENOUGH_ACTIVE_DIE, turn.canRoll(turn.dice));
+        turn.dice.replaceAll(__ -> new Die(Die.Side.DIAMOND, Die.State.HELD));
+        turn.postRoll();
+        assertEquals(turn.getState(), Turn.State.NOT_ENOUGH_ACTIVE_DIE);
 
         turn.dice.get(0).setState(Die.State.ACTIVE);
         turn.dice.get(1).setState(Die.State.ACTIVE);
 
-        assertEquals(Turn.ReRollState.OK, turn.canRoll(turn.dice));
+        turn.postRoll();
+        assertEquals(turn.getState(), Turn.State.OK);
     }
 
     @DisplayName("Test that validates that player cannot re-roll after accumulating three skulls")
@@ -65,11 +64,9 @@ public class TurnTest {
             turn.dice.get(i).setState(Die.State.ACTIVE);
         }
 
-        assertEquals(Turn.ReRollState.THREE_SKULLS, turn.canRoll(turn.dice));
+        turn.postRoll();
 
-        turn.dice.set(3, skull);
-
-        assertEquals(Turn.ReRollState.OK, turn.canRoll(turn.dice));
+        assertEquals(turn.getState(), Turn.State.DISQUALIFIED);
     }
 
     @DisplayName("Test that validates that player cannot re-roll after accumulating three skulls via skulls card")
@@ -80,9 +77,10 @@ public class TurnTest {
         Die skull = new Die(Die.Side.SKULL, Die.State.HELD);
         turn.dice.set(0, skull);
         turn.dice.set(1, skull);
-
-        assertEquals(Turn.ReRollState.THREE_SKULLS, turn.canRoll(turn.dice));
+        turn.postRoll();
+        assertEquals(turn.getState(), Turn.State.DISQUALIFIED);
     }
+
 
     @DisplayName("Test that validates that player goes to island of skulls on their first roll of four skulls")
     @Test
@@ -95,17 +93,21 @@ public class TurnTest {
             turn.dice.set(i, skull);
         }
 
-        assertTrue(turn.onSkullIsland(turn.dice));
+        turn.postRoll();
+        assertTrue(turn.onSkullIsland());
+
         // Forcefully set first roll to false
         turn.setFirstRoll(false);
 
         // Ensure that player remains on island of skulls
-        assertTrue(turn.onSkullIsland(turn.dice));
+        turn.postRoll();
+        assertTrue(turn.onSkullIsland());
 
         // Forcefully remove player from island of skulls for second roll
         turn.setOnIslandOfSkulls(false);
+
         // Even with four skulls, the player should not reach island of skulls
-        assertFalse(turn.onSkullIsland(turn.dice));
+        assertFalse(turn.onSkullIsland());
     }
 
     @DisplayName("Test that validates that player goes to island of skulls on their first roll with skulls card")
@@ -118,8 +120,8 @@ public class TurnTest {
         for (int i = 0; i < 2; i++) {
             turn.dice.set(i, skull);
         }
-
-        assertTrue(turn.onSkullIsland(turn.dice));
+        turn.postRoll();
+        assertTrue(turn.onSkullIsland());
     }
 
     @DisplayName("Validate that re roll works as expected")
