@@ -71,6 +71,18 @@ public class TurnTest {
         assertEquals(Turn.ReRollState.OK, turn.canRoll(turn.dice));
     }
 
+    @DisplayName("Test that validates that player cannot re-roll after accumulating three skulls via skulls card")
+    @Test
+    void testCanRoll_ThreeSkulls_SkullsCard() {
+        turn.dice.replaceAll(__ -> new Die(Die.Side.MONKEY, Die.State.ACTIVE));
+        turn.setFortuneCard(new SkullCard(1));
+        Die skull = new Die(Die.Side.SKULL, Die.State.HELD);
+        turn.dice.set(0, skull);
+        turn.dice.set(1, skull);
+
+        assertEquals(Turn.ReRollState.THREE_SKULLS, turn.canRoll(turn.dice));
+    }
+
     @DisplayName("Test that validates that player goes to island of skulls on their first roll of four skulls")
     @Test
     void testSkullIsland() {
