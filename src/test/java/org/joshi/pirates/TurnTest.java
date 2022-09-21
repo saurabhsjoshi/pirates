@@ -210,8 +210,18 @@ public class TurnTest {
             assertEquals(turn.dice.get(i).state, Die.State.HELD);
         }
 
-        for(int i = 3; i < turn.dice.size(); i++) {
+        for (int i = 3; i < turn.dice.size(); i++) {
             assertEquals(turn.dice.get(i).state, Die.State.ACTIVE);
         }
     }
+
+    @DisplayName("Validate that post roll skulls are marked as being held")
+    @Test
+    void validatePostRollSkullCheck() {
+        turn.dice.replaceAll(__ -> new Die(Die.Side.PARROT, Die.State.ACTIVE));
+        turn.dice.set(0, new Die(Die.Side.SKULL, Die.State.ACTIVE));
+        turn.postRoll();
+        assertEquals(turn.dice.get(0).state, Die.State.HELD);
+    }
+
 }
