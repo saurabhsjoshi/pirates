@@ -145,6 +145,15 @@ public class Turn {
         var score = Score.getIdenticalObjectScore(sides);
         score += Score.getBonusObjectScore(sides);
 
+        if (isOnIslandOfSkulls) {
+            score = 0;
+            for (var die : dice) {
+                if (die.diceSide == Die.Side.SKULL) {
+                    score -= 100;
+                }
+            }
+        }
+
         // Captain card
         if (fortuneCard.getType() == FortuneCard.Type.CAPTAIN) {
             return score * 2;
