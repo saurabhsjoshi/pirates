@@ -81,17 +81,17 @@ public class TurnTest {
             turn.dice.set(i, skull);
         }
 
-        assertTrue(turn.isOnSkullIsland(turn.dice));
+        assertTrue(turn.onSkullIsland(turn.dice));
         // Forcefully set first roll to false
         turn.setFirstRoll(false);
 
         // Ensure that player remains on island of skulls
-        assertTrue(turn.isOnSkullIsland(turn.dice));
+        assertTrue(turn.onSkullIsland(turn.dice));
 
         // Forcefully remove player from island of skulls for second roll
         turn.setOnIslandOfSkulls(false);
         // Even with four skulls, the player should not reach island of skulls
-        assertFalse(turn.isOnSkullIsland(turn.dice));
+        assertFalse(turn.onSkullIsland(turn.dice));
     }
 
     @DisplayName("Validate that re roll works as expected")

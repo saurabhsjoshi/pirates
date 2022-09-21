@@ -76,7 +76,7 @@ public class Turn {
                 die.setState(Die.State.HELD);
             }
         }
-        isOnSkullIsland(dice);
+        onSkullIsland(dice);
     }
 
     /**
@@ -105,7 +105,7 @@ public class Turn {
     /**
      * Method that checks if the player is on Island of Skulls.
      */
-    boolean isOnSkullIsland(List<Die> dice) {
+    boolean onSkullIsland(List<Die> dice) {
         if (!isFirstRoll) {
             return isOnIslandOfSkulls;
         }
