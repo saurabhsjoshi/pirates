@@ -16,4 +16,7 @@ public class SkullCard extends FortuneCard {
         return false;
     }
 
+    public int getSkulls() {
+        return skulls;
+    }
 }

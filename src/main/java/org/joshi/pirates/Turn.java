@@ -1,6 +1,7 @@
 package org.joshi.pirates;
 
 import org.joshi.pirates.cards.FortuneCard;
+import org.joshi.pirates.cards.SkullCard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,6 +112,10 @@ public class Turn {
         }
 
         int skulls = 0;
+
+        if(fortuneCard != null && fortuneCard.getType() == FortuneCard.Type.SKULLS) {
+            skulls += ((SkullCard) fortuneCard).getSkulls();
+        }
 
         for (var die : dice) {
             if (die.diceSide == Die.Side.SKULL) {
