@@ -169,5 +169,20 @@ public class TurnTest {
         assertEquals(4000, score);
     }
 
+    @DisplayName("Validate end of the turn score calculation does not include skulls")
+    @Test
+    void testEndTurn_IgnoreSkulls() {
+        turn.dice.replaceAll(__ -> new Die(Die.Side.SKULL, Die.State.HELD));
+        turn.dice.set(0, new Die(Die.Side.PARROT, Die.State.HELD));
+        turn.dice.set(1, new Die(Die.Side.PARROT, Die.State.HELD));
+        turn.dice.set(2, new Die(Die.Side.PARROT, Die.State.HELD));
+
+        turn.setFortuneCard(new FortuneCard(FortuneCard.Type.MONKEY_BUSINESS));
+        var score = turn.complete();
+
+        // skulls should be ignored and only 3 of kind parrots should be used to calculate score
+        assertEquals(100, score);
+    }
+
 
 }
