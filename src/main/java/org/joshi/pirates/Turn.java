@@ -59,7 +59,16 @@ public class Turn {
      * @throws SkullActivatedException exception is thrown when the player attempts to activate a skull
      */
     void active(List<Integer> index) throws SkullActivatedException {
-        // TODO: Implement
+        // Check for skulls
+        for (var i : index) {
+            if (dice.get(i).getDiceSide() == Die.Side.SKULL) {
+                throw new SkullActivatedException();
+            }
+        }
+
+        for (var i : index) {
+            dice.get(i).setState(Die.State.ACTIVE);
+        }
     }
 
     void roll() {
