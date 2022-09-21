@@ -126,7 +126,9 @@ public class Turn {
         }
 
         List<Die.Side> sides = Stream
-                .concat(bonusObj, dice.stream().map(s -> s.diceSide))
+                .concat(bonusObj, dice.stream()
+                        .filter(s -> s.diceSide != Die.Side.SKULL)
+                        .map(s -> s.diceSide))
                 .collect(Collectors.toList());
 
         if (fortuneCard.getType() == FortuneCard.Type.MONKEY_BUSINESS) {
