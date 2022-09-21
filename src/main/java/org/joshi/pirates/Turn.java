@@ -18,6 +18,8 @@ public class Turn {
 
     private boolean isOnIslandOfSkulls = false;
 
+    private boolean sorceressUsed = false;
+
     private FortuneCard fortuneCard;
 
     /**
@@ -59,11 +61,30 @@ public class Turn {
      * @throws SkullActivatedException exception is thrown when the player attempts to activate a skull
      */
     void active(List<Integer> index) throws SkullActivatedException {
+        int skull = 0;
+
         // Check for skulls
         for (var i : index) {
             if (dice.get(i).getDiceSide() == Die.Side.SKULL) {
-                throw new SkullActivatedException();
+                skull++;
             }
+        }
+
+        boolean invalidSkulls = false;
+        if (fortuneCard != null && fortuneCard.getType() == FortuneCard.Type.SORCERESS && !sorceressUsed) {
+            if (skull > 1) {
+                invalidSkulls = true;
+            } else {
+                sorceressUsed = true;
+            }
+        } else {
+            if (skull != 0) {
+                invalidSkulls = true;
+            }
+        }
+
+        if (invalidSkulls) {
+            throw new SkullActivatedException();
         }
 
         for (var i : index) {
