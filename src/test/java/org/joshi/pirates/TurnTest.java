@@ -25,6 +25,7 @@ public class TurnTest {
     @DisplayName("Validate first roll of a turn")
     @Test
     void testFirstRoll() {
+        turn.dice.replaceAll(__ -> new Die(Die.Side.MONKEY, Die.State.ACTIVE));
         // Validate that eight die are present in a turn
         assertEquals(8, turn.dice.size());
 

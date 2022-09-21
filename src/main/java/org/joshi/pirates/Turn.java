@@ -56,6 +56,8 @@ public class Turn {
             for (int i = 0; i < MAX_DICE; i++) {
                 dice.add(new Die(diceSides[(new Random().nextInt(diceSides.length))], Die.State.ACTIVE));
             }
+            postRoll();
+            return;
         }
 
         for (int i = 0; i < MAX_DICE; i++) {
@@ -64,10 +66,17 @@ public class Turn {
             }
         }
         isFirstRoll = false;
+        postRoll();
     }
 
     void postRoll() {
-        // TODO: Implement
+        // Check skulls
+        for (var die : dice) {
+            if (die.diceSide == Die.Side.SKULL) {
+                die.setState(Die.State.HELD);
+            }
+        }
+        isOnSkullIsland(dice);
     }
 
     /**
