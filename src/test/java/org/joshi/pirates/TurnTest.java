@@ -184,5 +184,19 @@ public class TurnTest {
         assertEquals(100, score);
     }
 
+    @DisplayName("Validate end of the turn score calculation for when player is on island of skulls")
+    @Test
+    void testEndTurn_IslandOfSkulls() {
+        turn.dice.replaceAll(__ -> new Die(Die.Side.SKULL, Die.State.HELD));
+        turn.dice.set(0, new Die(Die.Side.PARROT, Die.State.HELD));
+        turn.setOnIslandOfSkulls(true);
+
+        turn.setFortuneCard(new FortuneCard(FortuneCard.Type.MONKEY_BUSINESS));
+        var score = turn.complete();
+
+        // 7 skulls (7 X 100)
+        assertEquals(-700, score);
+    }
+
 
 }
