@@ -258,6 +258,25 @@ public class TurnTest {
         }
     }
 
+    @DisplayName("Validate activation of one skull using sorceress card.")
+    @Test
+    void testActive_Sorceress() {
+        turn.dice.replaceAll(__ -> new Die(Die.Side.GOLD_COIN, Die.State.HELD));
+        turn.dice.set(0, new Die(Die.Side.SKULL, Die.State.HELD));
+        turn.dice.set(1, new Die(Die.Side.SKULL, Die.State.HELD));
+
+        turn.setFortuneCard(new FortuneCard(FortuneCard.Type.SORCERESS));
+
+        // Cannot activate more than one skull
+        assertThrows(Turn.SkullActivatedException.class, () -> turn.active(List.of(0, 1)));
+
+        // Allow activation one skull
+        assertDoesNotThrow(() -> turn.active(List.of(0)));
+
+        // Should not be allowed to activate it again
+        assertThrows(Turn.SkullActivatedException.class, () -> turn.active(List.of(1)));
+    }
+
     @DisplayName("Validate that post roll skulls are marked as being held")
     @Test
     void validatePostRollSkullCheck() {
