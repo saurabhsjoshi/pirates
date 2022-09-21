@@ -87,6 +87,10 @@ public class Turn {
         int skulls = 0;
         int active = 0;
 
+        if (fortuneCard instanceof SkullCard skullCard) {
+            skulls += skullCard.getSkulls();
+        }
+
         for (var die : dice) {
             if (die.state == Die.State.ACTIVE) active++;
             if (die.diceSide == Die.Side.SKULL) skulls++;
@@ -113,7 +117,7 @@ public class Turn {
 
         int skulls = 0;
 
-        if(fortuneCard != null && fortuneCard.getType() == FortuneCard.Type.SKULLS) {
+        if (fortuneCard != null && fortuneCard.getType() == FortuneCard.Type.SKULLS) {
             skulls += ((SkullCard) fortuneCard).getSkulls();
         }
 
