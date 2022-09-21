@@ -1,6 +1,7 @@
 package org.joshi.pirates;
 
 import org.joshi.pirates.cards.FortuneCard;
+import org.joshi.pirates.cards.SkullCard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -92,6 +93,20 @@ public class TurnTest {
         turn.setOnIslandOfSkulls(false);
         // Even with four skulls, the player should not reach island of skulls
         assertFalse(turn.onSkullIsland(turn.dice));
+    }
+
+    @DisplayName("Test that validates that player goes to island of skulls on their first roll with skulls card")
+    @Test
+    void testSkullIsland_SkullsCard() {
+        turn.setFirstRoll(true);
+        turn.setFortuneCard(new SkullCard(2));
+        turn.dice.replaceAll(__ -> new Die(Die.Side.MONKEY, Die.State.HELD));
+        Die skull = new Die(Die.Side.SKULL, Die.State.ACTIVE);
+        for (int i = 0; i < 2; i++) {
+            turn.dice.set(i, skull);
+        }
+
+        assertTrue(turn.onSkullIsland(turn.dice));
     }
 
     @DisplayName("Validate that re roll works as expected")
