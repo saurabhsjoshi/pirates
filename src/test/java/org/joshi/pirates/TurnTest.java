@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -198,5 +200,18 @@ public class TurnTest {
         assertEquals(-700, score);
     }
 
+    @DisplayName("Validated that when user marks dice for hold they are set to held state")
+    @Test
+    void testHold() {
+        turn.dice.replaceAll(__ -> new Die(Die.Side.GOLD_COIN, Die.State.ACTIVE));
+        turn.hold(List.of(0, 1, 2));
 
+        for (int i = 0; i < 3; i++) {
+            assertEquals(turn.dice.get(i).state, Die.State.HELD);
+        }
+
+        for(int i = 3; i < turn.dice.size(); i++) {
+            assertEquals(turn.dice.get(i).state, Die.State.ACTIVE);
+        }
+    }
 }

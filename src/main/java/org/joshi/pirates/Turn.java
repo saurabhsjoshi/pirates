@@ -36,6 +36,14 @@ public class Turn {
      */
     public List<Die> dice = new ArrayList<>(MAX_DICE);
 
+    /**
+     * Mark the die with given index as being held
+     * @param index list of indexes to mark as held
+     */
+    void hold(List<Integer> index) {
+        //TODO: Implement
+    }
+
     void roll() {
         var diceSides = Die.Side.values();
 
