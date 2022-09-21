@@ -27,6 +27,10 @@ public class Turn {
         NOT_ENOUGH_ACTIVE_DIE, THREE_SKULLS, OK
     }
 
+    public static class SkullActivatedException extends Exception {
+
+    }
+
     /**
      * Maximum number of dice that can be played in a turn.
      */
@@ -46,6 +50,16 @@ public class Turn {
         for (var i : index) {
             dice.get(i).setState(Die.State.HELD);
         }
+    }
+
+    /**
+     * Mark the die with given index as active allowing it to be re-rolled.
+     *
+     * @param index list of index to mark as active
+     * @throws SkullActivatedException exception is thrown when the player attempts to activate a skull
+     */
+    void active(List<Integer> index) throws SkullActivatedException {
+        // TODO: Implement
     }
 
     void roll() {

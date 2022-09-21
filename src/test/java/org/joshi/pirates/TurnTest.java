@@ -21,6 +21,7 @@ public class TurnTest {
     void setup() {
         turn = new Turn();
         turn.roll();
+        turn.setOnIslandOfSkulls(false);
     }
 
     @DisplayName("Validate first roll of a turn")
@@ -239,6 +240,20 @@ public class TurnTest {
         }
 
         for (int i = 3; i < turn.dice.size(); i++) {
+            assertEquals(turn.dice.get(i).state, Die.State.ACTIVE);
+        }
+    }
+
+    @DisplayName("Validated that when user marks dice for active they are set to active state unless they are skulls")
+    @Test
+    void testActive_Skulls() {
+        turn.dice.replaceAll(__ -> new Die(Die.Side.GOLD_COIN, Die.State.HELD));
+        turn.dice.set(0, new Die(Die.Side.SKULL, Die.State.HELD));
+
+        assertThrows(Turn.SkullActivatedException.class, () -> turn.active(List.of(0, 1, 2)));
+
+        assertDoesNotThrow(() -> turn.active(List.of(1, 2)));
+        for (int i = 1; i < 3; i++) {
             assertEquals(turn.dice.get(i).state, Die.State.ACTIVE);
         }
     }
