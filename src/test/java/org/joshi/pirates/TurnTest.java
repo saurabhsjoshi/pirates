@@ -6,6 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -286,6 +288,32 @@ public class TurnTest {
         turn.dice.set(0, new Die(Die.Side.SKULL, Die.State.ACTIVE));
         turn.postRoll();
         assertEquals(turn.dice.get(0).state, Die.State.HELD);
+    }
+
+
+    @DisplayName("Validate that rolls can be rigged")
+    @Test
+    void testRollRigging() {
+        List<List<Die>> riggedRolls = new ArrayList<>();
+
+        // Insert rigged rolls
+        riggedRolls.add(new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.PARROT, Die.State.HELD))));
+        riggedRolls.add(new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.DIAMOND, Die.State.HELD))));
+        riggedRolls.add(new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.GOLD_COIN, Die.State.HELD))));
+
+        // Setup new turn
+        turn = new Turn();
+        turn.setRiggedRolls(riggedRolls);
+
+        turn.roll();
+        assertEquals(turn.getDice(), riggedRolls.get(0));
+
+        turn.roll();
+        assertEquals(turn.getDice(), riggedRolls.get(1));
+
+        turn.roll();
+        assertEquals(turn.getDice(), riggedRolls.get(2));
+
     }
 
 }
