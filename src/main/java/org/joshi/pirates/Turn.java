@@ -227,10 +227,14 @@ public class Turn {
         }
 
         // Sea battle
-        if(fortuneCard instanceof SeaBattleCard seaBattleCard) {
+        if (fortuneCard instanceof SeaBattleCard seaBattleCard) {
             var count = dice.stream()
                     .filter(die -> die.diceSide == Die.Side.SWORD)
                     .count();
+
+            if (count != seaBattleCard.getSwords()) {
+                return 0;
+            }
 
             return score + seaBattleCard.getBonus();
         }
