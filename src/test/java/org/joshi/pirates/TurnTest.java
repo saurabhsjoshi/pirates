@@ -388,4 +388,20 @@ public class TurnTest {
         assertFalse(turn.onSkullIsland());
     }
 
+    @DisplayName("Validate bonus is received with Sea Battle")
+    @Test
+    void testSeaBattle_Bonus() {
+        List<List<Die>> riggedRolls = new ArrayList<>(List.of(new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.PARROT, Die.State.ACTIVE)))));
+        riggedRolls.get(0).set(0, new Die(Die.Side.SWORD, Die.State.ACTIVE));
+        riggedRolls.get(0).set(1, new Die(Die.Side.SWORD, Die.State.ACTIVE));
+        turn.setRiggedRolls(riggedRolls);
+        turn.setFortuneCard(new SeaBattleCard(2, 300));
+        turn.roll();
+
+        var score = turn.complete();
+
+        // 6 of a kind 1000 + sea battle bonus of 300
+        assertEquals(1300, score);
+    }
+
 }
