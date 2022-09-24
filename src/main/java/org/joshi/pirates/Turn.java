@@ -4,7 +4,6 @@ import org.joshi.pirates.cards.FortuneCard;
 import org.joshi.pirates.cards.SeaBattleCard;
 import org.joshi.pirates.cards.SkullCard;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -184,6 +183,12 @@ public class Turn {
      * @return score earned this round
      */
     public int complete() {
+
+        // If player is dead they get no score
+        if (state == State.DISQUALIFIED) {
+            return 0;
+        }
+
         Stream<Die.Side> bonusObj = Stream.empty();
 
         if (fortuneCard.getType() == FortuneCard.Type.GOLD) {
