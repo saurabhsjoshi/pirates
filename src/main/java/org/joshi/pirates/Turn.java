@@ -1,6 +1,7 @@
 package org.joshi.pirates;
 
 import org.joshi.pirates.cards.FortuneCard;
+import org.joshi.pirates.cards.SeaBattleCard;
 import org.joshi.pirates.cards.SkullCard;
 
 import java.sql.Array;
@@ -223,6 +224,15 @@ public class Turn {
         // Captain card
         if (fortuneCard.getType() == FortuneCard.Type.CAPTAIN) {
             return score * 2;
+        }
+
+        // Sea battle
+        if(fortuneCard instanceof SeaBattleCard seaBattleCard) {
+            var count = dice.stream()
+                    .filter(die -> die.diceSide == Die.Side.SWORD)
+                    .count();
+
+            return score + seaBattleCard.getBonus();
         }
 
         return score;

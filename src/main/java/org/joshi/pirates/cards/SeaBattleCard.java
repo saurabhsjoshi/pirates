@@ -25,4 +25,12 @@ public class SeaBattleCard extends FortuneCard {
         }
         return false;
     }
+
+    public int getSwords() {
+        return swords;
+    }
+
+    public int getBonus() {
+        return bonus;
+    }
 }
