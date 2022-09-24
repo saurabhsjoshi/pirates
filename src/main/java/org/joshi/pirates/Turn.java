@@ -43,12 +43,25 @@ public class Turn {
     /**
      * Map of the id and dice for this turn.
      */
-    private List<Die> dice = new ArrayList<>(MAX_DICE);
+    private final List<Die> dice = new ArrayList<>(MAX_DICE);
 
     /**
      * List containing rigged rolls that this turn will have.
      */
-    private List<List<Die>> riggedRolls = new ArrayList<>();
+    private final List<List<RiggedReRoll>> riggedRolls = new ArrayList<>();
+
+    /**
+     * Class that allows rolls to be rigged for individual die.
+     */
+    public static class RiggedReRoll {
+        int index;
+        Die die;
+
+        public RiggedReRoll(int index, Die die) {
+            this.index = index;
+            this.die = die;
+        }
+    }
 
     /**
      * Mark the die with given index as being held.
@@ -123,7 +136,10 @@ public class Turn {
 
     void postRoll() {
         if (!riggedRolls.isEmpty()) {
-            dice = riggedRolls.remove(0);
+            var riggedRoll = riggedRolls.remove(0);
+            for (var roll : riggedRoll) {
+                dice.set(roll.index, roll.die);
+            }
         }
 
         // Check skulls
@@ -267,12 +283,18 @@ public class Turn {
     }
 
     /**
-     * Setup rigged rolls.
+     * Setup rigged rolls for the whole game.
      *
      * @param riggedRolls list of rolls in sequential order
      */
     public void setRiggedRolls(List<List<Die>> riggedRolls) {
-        this.riggedRolls = new ArrayList<>(riggedRolls);
+        for (var roll : riggedRolls) {
+            List<RiggedReRoll> riggedRoll = new ArrayList<>();
+            for (int i = 0; i < roll.size(); i++) {
+                riggedRoll.add(new RiggedReRoll(i, roll.get(i)));
+            }
+            this.riggedRolls.add(riggedRoll);
+        }
     }
 
     public List<Die> getDice() {
