@@ -153,7 +153,7 @@ public class Turn {
             return;
         }
 
-        if (isFirstRoll && skulls > 3) {
+        if (isFirstRoll && skulls > 3 && fortuneCard.getType() != FortuneCard.Type.SEA_BATTLE) {
             isOnIslandOfSkulls = true;
         }
 
