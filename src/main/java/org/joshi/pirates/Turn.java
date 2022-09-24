@@ -261,7 +261,9 @@ public class Turn {
      * @param dieIndex list of indices
      */
     public void addToChest(List<Integer> dieIndex) {
-        //TODO: Implement
+        for (var i : dieIndex) {
+            dice.get(i).state = Die.State.IN_TREASURE_CHEST;
+        }
     }
 
     /**
