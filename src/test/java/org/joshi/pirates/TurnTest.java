@@ -282,6 +282,8 @@ public class TurnTest {
         roll.set(1, skull);
         roll.set(2, skull);
         riggedRolls.add(roll);
+
+        turn.setFortuneCard(new FortuneCard(FortuneCard.Type.GOLD));
         turn.setRiggedRolls(riggedRolls);
 
         turn.roll();

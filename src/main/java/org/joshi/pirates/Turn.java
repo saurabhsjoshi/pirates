@@ -164,13 +164,11 @@ public class Turn {
             if (die.diceSide == Die.Side.SKULL) skulls++;
         }
 
-        if (skulls == 3) {
-            state = State.DISQUALIFIED;
-            return;
-        }
-
         if (isFirstRoll && skulls > 3 && fortuneCard.getType() != FortuneCard.Type.SEA_BATTLE) {
             isOnIslandOfSkulls = true;
+        } else if (skulls > 2 && !isOnIslandOfSkulls) {
+            state = State.DISQUALIFIED;
+            return;
         }
 
         if (active < 2) {
@@ -202,7 +200,11 @@ public class Turn {
 
         // If player is dead they get no score
         if (state == State.DISQUALIFIED) {
-            return 0;
+            if (fortuneCard.getType() != FortuneCard.Type.TREASURE_CHEST) {
+                return 0;
+            }
+            // Only die that are protected will be used for scoring
+            dice.removeIf(die -> die.state != Die.State.IN_TREASURE_CHEST);
         }
 
         Stream<Die.Side> bonusObj = Stream.empty();
