@@ -273,6 +273,25 @@ public class TurnTest {
         assertEquals(-700, score);
     }
 
+    @DisplayName("Validate end of score calculation when player is dead")
+    @Test
+    void testScore_Dead() {
+        List<List<Die>> riggedRolls = new ArrayList<>();
+        List<Die> roll = new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.DIAMOND, Die.State.HELD)));
+        Die skull = new Die(Die.Side.SKULL, Die.State.HELD);
+        roll.set(0, skull);
+        roll.set(1, skull);
+        roll.set(2, skull);
+        riggedRolls.add(roll);
+        turn.setRiggedRolls(riggedRolls);
+
+        turn.roll();
+
+        var score = turn.complete();
+
+        assertEquals(0, score);
+    }
+
     @DisplayName("Validated that when user marks dice for hold they are set to held state")
     @Test
     void testHold() {
