@@ -465,4 +465,40 @@ public class TurnTest {
             assertEquals(Die.State.IN_TREASURE_CHEST, die.state);
         }
     }
+
+    @DisplayName("Validate die in treasure chest are calculated even if player is dead")
+    @Test
+    void validateTreasureChestScore() {
+        List<List<Turn.RiggedReRoll>> riggedRolls = new ArrayList<>();
+
+        // First roll
+        List<Turn.RiggedReRoll> roll = new ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            roll.add(new Turn.RiggedReRoll(i, new Die(Die.Side.PARROT, Die.State.ACTIVE)));
+        }
+        riggedRolls.add(roll);
+
+        // Second roll will set skulls causing player to be disqualified.
+        roll = new ArrayList<>();
+        for (int i = 3; i < 8; i++) {
+            roll.add(new Turn.RiggedReRoll(i, new Die(Die.Side.SKULL, Die.State.ACTIVE)));
+        }
+
+        riggedRolls.add(roll);
+
+        turn.setRiggedReRolls(riggedRolls);
+        turn.setFortuneCard(new FortuneCard(FortuneCard.Type.TREASURE_CHEST));
+
+        turn.roll();
+        turn.addToChest(List.of(0, 1, 2));
+        turn.roll();
+
+        // Ensure user is dead
+        assertEquals(turn.getState(), Turn.State.DISQUALIFIED);
+
+        var score = turn.complete();
+
+        // Still should score for three parrots (100)
+        assertEquals(100, score);
+    }
 }

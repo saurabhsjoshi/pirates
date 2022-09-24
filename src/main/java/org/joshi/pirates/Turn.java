@@ -297,6 +297,10 @@ public class Turn {
         }
     }
 
+    public void setRiggedReRolls(List<List<RiggedReRoll>> riggedRolls) {
+        this.riggedRolls.addAll(riggedRolls);
+    }
+
     public List<Die> getDice() {
         return dice;
     }
