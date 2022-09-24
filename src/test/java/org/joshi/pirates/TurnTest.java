@@ -8,7 +8,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -440,4 +439,30 @@ public class TurnTest {
         assertEquals(0, score);
     }
 
+    @DisplayName("Validate die in treasure chest are not re-rolled")
+    @Test
+    void testTreasureChest() {
+        List<List<Die>> riggedRolls = new ArrayList<>(
+                List.of(new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.PARROT, Die.State.ACTIVE))))
+        );
+
+        turn.setFortuneCard(new FortuneCard(FortuneCard.Type.TREASURE_CHEST));
+        turn.setRiggedRolls(riggedRolls);
+
+        turn.roll();
+
+        turn.addToChest(List.of(0, 1, 2));
+
+        turn.roll();
+
+
+        //Validate that protected die are not re-rolled
+        var dice = turn.getDice();
+
+        for (int i = 0; i < 3; i++) {
+            var die = dice.get(i);
+            assertEquals(die.getDiceSide(), Die.Side.PARROT);
+            assertEquals(Die.State.IN_TREASURE_CHEST, die.state);
+        }
+    }
 }

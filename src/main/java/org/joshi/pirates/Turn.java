@@ -256,6 +256,15 @@ public class Turn {
     }
 
     /**
+     * Add die with given indices to the treasure chest.
+     *
+     * @param dieIndex list of indices
+     */
+    public void addToChest(List<Integer> dieIndex) {
+        //TODO: Implement
+    }
+
+    /**
      * Setup rigged rolls.
      *
      * @param riggedRolls list of rolls in sequential order

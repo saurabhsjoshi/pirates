@@ -25,7 +25,9 @@ public class Die {
      */
     public enum State {
         HELD,
-        ACTIVE
+        ACTIVE,
+
+        IN_TREASURE_CHEST
     }
 
     /**
