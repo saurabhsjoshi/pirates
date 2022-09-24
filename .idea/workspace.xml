@@ -6,7 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="89cfdd77-2a28-44e5-afad-fb02c86767a1" name="Changes" comment="[REFACTOR] Refactored turn test to use rigging&#10;&#10;- Instead of manually setting each die, the tests now use rigging to ensure all code include the roll is exercised">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/joshi/pirates/Die.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/joshi/pirates/Die.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/joshi/pirates/Turn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/joshi/pirates/Turn.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/joshi/pirates/TurnTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/joshi/pirates/TurnTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,7 +83,7 @@
       <command value="gradle build" />
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.All in pirates.test">
+  <component name="RunManager" selected="JUnit.TurnTest">
     <configuration name="All in pirates.test" type="JUnit" factoryName="JUnit">
       <module name="pirates.test" />
       <option name="PACKAGE_NAME" value="" />
@@ -125,7 +126,7 @@
       <workItem from="1663423768155" duration="23892000" />
       <workItem from="1663512855486" duration="14831000" />
       <workItem from="1663544179937" duration="9297000" />
-      <workItem from="1664049776831" duration="5800000" />
+      <workItem from="1664049776831" duration="6949000" />
     </task>
     <task id="LOCAL-00001" summary="[CODE] Init project structure&#10;&#10;- Added gradle based project&#10;- Added required version of junit&#10;- Added simple hello world to ensure compile and run works&#10;- Added IntelliJ run configurations">
       <created>1662743268333</created>
@@ -351,7 +352,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664055600471</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="[REFACTOR] Refactored turn test to use rigging&#10;&#10;- Instead of manually setting each die, the tests now use rigging to ensure all code include the roll is exercised">
+      <created>1664055732444</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1664055732444</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -404,6 +412,6 @@
     <SUITE FILE_PATH="coverage/pirates$TurnTest.ic" NAME="TurnTest Coverage Results" MODIFIED="1664055606680" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>org.joshi.pirates.*</FILTER>
     </SUITE>
-    <SUITE FILE_PATH="coverage/pirates$All_in_pirates_test.ic" NAME="All in pirates.test Coverage Results" MODIFIED="1664055619997" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/pirates$All_in_pirates_test.ic" NAME="All in pirates.test Coverage Results" MODIFIED="1664055658714" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

@@ -1,6 +1,7 @@
 package org.joshi.pirates;
 
 import org.joshi.pirates.cards.FortuneCard;
+import org.joshi.pirates.cards.SeaBattleCard;
 import org.joshi.pirates.cards.SkullCard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -115,6 +116,7 @@ public class TurnTest {
         riggedRolls.add(roll);
         riggedRolls.add(roll);
         turn.setRiggedRolls(riggedRolls);
+        turn.setFortuneCard(new FortuneCard(FortuneCard.Type.GOLD));
 
         turn.roll();
 
@@ -372,6 +374,18 @@ public class TurnTest {
         turn.roll();
         assertEquals(turn.getDice(), riggedRolls.get(2));
 
+    }
+
+    @DisplayName("Validate player cannot go to Island of the Dead when in Sea Battle")
+    @Test
+    void testSeaBattle_IslandOfDead() {
+        List<List<Die>> riggedRolls = new ArrayList<>(List.of(new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.SKULL, Die.State.ACTIVE)))));
+        turn.setRiggedRolls(riggedRolls);
+        turn.setFortuneCard(new SeaBattleCard(2, 300));
+
+        turn.roll();
+
+        assertFalse(turn.onSkullIsland());
     }
 
 }
