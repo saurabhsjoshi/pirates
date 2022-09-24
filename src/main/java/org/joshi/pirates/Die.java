@@ -16,14 +16,6 @@ public class Die {
         return diceSide;
     }
 
-    public void setDiceSide(Side diceSide) {
-        this.diceSide = diceSide;
-    }
-
-    public State getState() {
-        return state;
-    }
-
     public void setState(State state) {
         this.state = state;
     }

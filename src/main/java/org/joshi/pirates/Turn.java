@@ -43,12 +43,12 @@ public class Turn {
     /**
      * Map of the id and dice for this turn.
      */
-    public List<Die> dice = new ArrayList<>(MAX_DICE);
+    private List<Die> dice = new ArrayList<>(MAX_DICE);
 
     /**
      * List containing rigged rolls that this turn will have.
      */
-    public List<List<Die>> riggedRolls = new ArrayList<>();
+    private List<List<Die>> riggedRolls = new ArrayList<>();
 
     /**
      * Mark the die with given index as being held.
@@ -172,16 +172,8 @@ public class Turn {
         return isOnIslandOfSkulls;
     }
 
-    void setFirstRoll(boolean isFirstRoll) {
-        this.isFirstRoll = isFirstRoll;
-    }
-
     public void setOnIslandOfSkulls(boolean onIslandOfSkulls) {
         isOnIslandOfSkulls = onIslandOfSkulls;
-    }
-
-    public void setState(State state) {
-        this.state = state;
     }
 
     /**
