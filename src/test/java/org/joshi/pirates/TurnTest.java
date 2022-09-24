@@ -404,4 +404,21 @@ public class TurnTest {
         assertEquals(1300, score);
     }
 
+    @DisplayName("Validate player score is zero if Sea Battle fails")
+    @Test
+    void testSeaBattle_Fail() {
+        List<List<Die>> riggedRolls = new ArrayList<>(List.of(new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.PARROT, Die.State.ACTIVE)))));
+        riggedRolls.get(0).set(0, new Die(Die.Side.SWORD, Die.State.ACTIVE));
+        riggedRolls.get(0).set(1, new Die(Die.Side.SWORD, Die.State.ACTIVE));
+
+        turn.setRiggedRolls(riggedRolls);
+        turn.setFortuneCard(new SeaBattleCard(3, 500));
+
+        turn.roll();
+
+        var score = turn.complete();
+
+        assertEquals(0, score);
+    }
+
 }
