@@ -3,6 +3,7 @@ package org.joshi.pirates;
 import org.joshi.pirates.cards.FortuneCard;
 import org.joshi.pirates.cards.SkullCard;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -43,6 +44,11 @@ public class Turn {
      * Map of the id and dice for this turn.
      */
     public List<Die> dice = new ArrayList<>(MAX_DICE);
+
+    /**
+     * List containing rigged rolls that this turn will have.
+     */
+    public List<List<Die>> riggedRolls = new ArrayList<>();
 
     /**
      * Mark the die with given index as being held.
@@ -116,6 +122,10 @@ public class Turn {
     }
 
     void postRoll() {
+        if (!riggedRolls.isEmpty()) {
+            dice = riggedRolls.remove(0);
+        }
+
         // Check skulls
         for (var die : dice) {
             if (die.diceSide == Die.Side.SKULL) {
@@ -232,5 +242,18 @@ public class Turn {
 
     public void setFortuneCard(FortuneCard card) {
         this.fortuneCard = card;
+    }
+
+    /**
+     * Setup rigged rolls.
+     *
+     * @param riggedRolls list of rolls in sequential order
+     */
+    public void setRiggedRolls(List<List<Die>> riggedRolls) {
+        this.riggedRolls = new ArrayList<>(riggedRolls);
+    }
+
+    public List<Die> getDice() {
+        return dice;
     }
 }
