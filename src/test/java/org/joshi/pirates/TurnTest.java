@@ -381,7 +381,7 @@ public class TurnTest {
     void testSeaBattle_IslandOfDead() {
         List<List<Die>> riggedRolls = new ArrayList<>(List.of(new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.SKULL, Die.State.ACTIVE)))));
         turn.setRiggedRolls(riggedRolls);
-        turn.setFortuneCard(new SeaBattleCard(2, 300));
+        turn.setFortuneCard(new SeaBattleCard(2));
 
         turn.roll();
 
@@ -395,7 +395,7 @@ public class TurnTest {
         riggedRolls.get(0).set(0, new Die(Die.Side.SWORD, Die.State.ACTIVE));
         riggedRolls.get(0).set(1, new Die(Die.Side.SWORD, Die.State.ACTIVE));
         turn.setRiggedRolls(riggedRolls);
-        turn.setFortuneCard(new SeaBattleCard(2, 300));
+        turn.setFortuneCard(new SeaBattleCard(2));
         turn.roll();
 
         var score = turn.complete();
@@ -412,7 +412,7 @@ public class TurnTest {
         riggedRolls.get(0).set(1, new Die(Die.Side.SWORD, Die.State.ACTIVE));
 
         turn.setRiggedRolls(riggedRolls);
-        turn.setFortuneCard(new SeaBattleCard(3, 500));
+        turn.setFortuneCard(new SeaBattleCard(3));
 
         turn.roll();
 

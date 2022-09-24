@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="89cfdd77-2a28-44e5-afad-fb02c86767a1" name="Changes" comment="[CODE] Add bonus received with sea battle card">
+    <list default="true" id="89cfdd77-2a28-44e5-afad-fb02c86767a1" name="Changes" comment="[CODE] Player receives no score when they fail sea battle">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/joshi/pirates/Turn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/joshi/pirates/Turn.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/joshi/pirates/cards/CardDeck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/joshi/pirates/cards/CardDeck.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/joshi/pirates/cards/SeaBattleCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/joshi/pirates/cards/SeaBattleCard.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/org/joshi/pirates/TurnTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/joshi/pirates/TurnTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/joshi/pirates/cards/CardDeckTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/joshi/pirates/cards/CardDeckTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,7 +85,7 @@
       <command value="gradle build" />
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.TurnTest.testSeaBattle_Fail">
+  <component name="RunManager" selected="JUnit.All in pirates.test">
     <configuration name="All in pirates.test" type="JUnit" factoryName="JUnit">
       <module name="pirates.test" />
       <option name="PACKAGE_NAME" value="" />
@@ -162,7 +164,7 @@
       <workItem from="1663423768155" duration="23892000" />
       <workItem from="1663512855486" duration="14831000" />
       <workItem from="1663544179937" duration="9297000" />
-      <workItem from="1664049776831" duration="7795000" />
+      <workItem from="1664049776831" duration="7966000" />
     </task>
     <task id="LOCAL-00001" summary="[CODE] Init project structure&#10;&#10;- Added gradle based project&#10;- Added required version of junit&#10;- Added simple hello world to ensure compile and run works&#10;- Added IntelliJ run configurations">
       <created>1662743268333</created>
@@ -430,7 +432,21 @@
       <option name="project" value="LOCAL" />
       <updated>1664057496879</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="[TEST] Add test to validate player receives no score when they fail sea battle">
+      <created>1664057680218</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1664057680218</updated>
+    </task>
+    <task id="LOCAL-00040" summary="[CODE] Player receives no score when they fail sea battle">
+      <created>1664057689936</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1664057689936</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -448,8 +464,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="[REFACTOR] Refactored all classes and enums related to a die&#10;- Consolidated die, its state and side under a single class&#10;- Renamed classes by dropping reference to die or dice as they are now inner classes of dice&#10;- Improved encapsulation of die related methods and classes" />
-    <MESSAGE value="[TEST] Add test case for re-roll restrictions&#10;&#10;- Added test case for three skull restriction&#10;- Added validation for not having enough active die" />
     <MESSAGE value="[TEST] Add test case for re-roll restrictions&#10;&#10;- Fixed typo" />
     <MESSAGE value="[CODE] Added function to validate re-roll restrictions" />
     <MESSAGE value="[TEST] Add test to validate if player goes to island of skulls" />
@@ -473,7 +487,9 @@
     <MESSAGE value="[CODE] Player does not go to skull island when sea battle fortune card is active" />
     <MESSAGE value="[TEST] Add test to validate bonus received with sea battle card" />
     <MESSAGE value="[CODE] Add bonus received with sea battle card" />
-    <option name="LAST_COMMIT_MESSAGE" value="[CODE] Add bonus received with sea battle card" />
+    <MESSAGE value="[TEST] Add test to validate player receives no score when they fail sea battle" />
+    <MESSAGE value="[CODE] Player receives no score when they fail sea battle" />
+    <option name="LAST_COMMIT_MESSAGE" value="[CODE] Player receives no score when they fail sea battle" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

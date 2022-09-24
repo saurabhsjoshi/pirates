@@ -37,9 +37,9 @@ public class CardDeckTest {
         // 2x2skulls // 2x2swords(300 bonus) 2x3swords(500 bonus) 2x4swords(1000 bonus)
         for (int i = 0; i < 2; i++) {
             expectedCards.add(new SkullCard(2));
-            expectedCards.add(new SeaBattleCard(2, 300));
-            expectedCards.add(new SeaBattleCard(3, 500));
-            expectedCards.add(new SeaBattleCard(4, 1000));
+            expectedCards.add(new SeaBattleCard(2));
+            expectedCards.add(new SeaBattleCard(3));
+            expectedCards.add(new SeaBattleCard(4));
         }
 
         //3x1skull

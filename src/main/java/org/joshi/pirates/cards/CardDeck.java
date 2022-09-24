@@ -29,9 +29,9 @@ public class CardDeck {
         // 2x2skulls 2x2swords(300 bonus) 2x3swords(500 bonus) 2x4swords(1000 bonus)
         for (int i = 24; i < 26; i++) {
             cards[i] = new SkullCard(2);
-            cards[i + 2] = new SeaBattleCard(2, 300);
-            cards[i + 4] = new SeaBattleCard(3, 500);
-            cards[i + 6] = new SeaBattleCard(4, 1000);
+            cards[i + 2] = new SeaBattleCard(2);
+            cards[i + 4] = new SeaBattleCard(3);
+            cards[i + 6] = new SeaBattleCard(4);
         }
 
         for (int i = 32; i < 35; i++) {

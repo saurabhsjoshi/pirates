@@ -12,10 +12,17 @@ public class SeaBattleCard extends FortuneCard {
 
     private final int bonus;
 
-    public SeaBattleCard(int swords, int bonus) {
+    public SeaBattleCard(int swords) {
         super(Type.SEA_BATTLE);
         this.swords = swords;
-        this.bonus = bonus;
+
+        switch (swords) {
+            case 2 -> bonus = 300;
+            case 3 -> bonus = 500;
+            case 4 -> bonus = 1000;
+            default -> bonus = 0;
+        }
+
     }
 
     @Override
