@@ -56,4 +56,27 @@ public class GameTest {
         player = game.startTurn();
         assertEquals(player, player1.getPlayerId());
     }
+
+    @DisplayName("Validate completion of player turn works as expected")
+    @Test
+    void validateCompleteTurn() {
+        game.addPlayer(player1);
+        game.addPlayer(player2);
+        game.addPlayer(player3);
+
+        var player = game.startTurn();
+        game.endTurn(1000);
+
+        player = game.startTurn();
+        game.endTurn(2000);
+
+        player = game.startTurn();
+        game.endTurn(1500);
+
+        var players = game.getPlayers();
+
+        assertEquals(1000, players.get(0).getScore());
+        assertEquals(2000, players.get(1).getScore());
+        assertEquals(1500, players.get(2).getScore());
+    }
 }

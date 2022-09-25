@@ -40,4 +40,12 @@ public class Game {
         }
         return players.get(currentPlayer++).getPlayerId();
     }
+
+    public void endTurn(int score) {
+        //TODO: Implement
+    }
+
+    public ArrayList<Player> getPlayers() {
+        return players;
+    }
 }

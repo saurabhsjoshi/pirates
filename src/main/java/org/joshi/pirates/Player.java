@@ -23,4 +23,8 @@ public class Player {
     public PlayerId getPlayerId() {
         return playerId;
     }
+
+    public int getScore() {
+        return score;
+    }
 }
