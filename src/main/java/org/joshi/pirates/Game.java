@@ -13,6 +13,8 @@ public class Game {
 
     int currentPlayer = 0;
 
+    PlayerId winner = null;
+
     /**
      * Identifier of the player who has crossed winning number of points.
      */
@@ -64,6 +66,23 @@ public class Game {
         }
 
         currentPlayer++;
+
+        // Check if game has ended
+        int maxScore = -1;
+        int maxPlayer = -1;
+
+        if (currentPlayer == finalPlayer) {
+            for (int i = 0; i < players.size(); i++) {
+                if (players.get(i).getScore() > maxScore) {
+                    maxPlayer = i;
+                    maxScore = players.get(i).getScore();
+                }
+            }
+
+            if (maxScore >= MAX_SCORE) {
+                winner = players.get(maxPlayer).getPlayerId();
+            }
+        }
     }
 
     boolean isFinalRound() {
@@ -75,7 +94,6 @@ public class Game {
     }
 
     boolean ended() {
-        // TODO: Implement
-        return false;
+        return winner != null;
     }
 }
