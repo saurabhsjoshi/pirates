@@ -56,6 +56,11 @@ public class Game {
         currentPlayer++;
     }
 
+    boolean isFinalRound() {
+        //TODO: Implement
+        return false;
+    }
+
     public ArrayList<Player> getPlayers() {
         return players;
     }

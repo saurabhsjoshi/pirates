@@ -104,6 +104,21 @@ public class GameTest {
         assertEquals(500, players.get(0).getScore());
         assertEquals(1500, players.get(1).getScore());
         assertEquals(0, players.get(2).getScore());
+    }
 
+    @DisplayName("Validate if the final round is identified correctly.")
+    @Test
+    void validateFinalRound() {
+        game.addPlayer(player1);
+        game.addPlayer(player2);
+        game.addPlayer(player3);
+
+        game.startTurn();
+        game.endTurn(1000);
+
+        game.startTurn();
+        game.endTurn(3000);
+
+        assertTrue(game.isFinalRound());
     }
 }
