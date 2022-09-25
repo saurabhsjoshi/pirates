@@ -5,8 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GameTest {
     private Player player1;
@@ -36,5 +35,25 @@ public class GameTest {
 
         game.addPlayer(player3);
         assertTrue(game.canPlay());
+    }
+
+    @DisplayName("Validate the game correctly selects next player.")
+    @Test
+    void validateNextTurn() {
+        game.addPlayer(player1);
+        game.addPlayer(player2);
+        game.addPlayer(player3);
+
+        var player = game.startTurn();
+        assertEquals(player, player1.getPlayerId());
+
+        player = game.startTurn();
+        assertEquals(player, player2.getPlayerId());
+
+        player = game.startTurn();
+        assertEquals(player, player3.getPlayerId());
+
+        player = game.startTurn();
+        assertEquals(player, player1.getPlayerId());
     }
 }

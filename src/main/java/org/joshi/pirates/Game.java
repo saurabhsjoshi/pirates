@@ -26,4 +26,14 @@ public class Game {
     public boolean canPlay() {
         return players.size() == 3;
     }
+
+    /**
+     * Start turn of the player
+     *
+     * @return player id of the player whose turn to start
+     */
+    public PlayerId startTurn() {
+        //TODO: Implement
+        return new PlayerId("TEST", "TEST");
+    }
 }

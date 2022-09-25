@@ -19,4 +19,8 @@ public class Player {
         this.playerId = playerId;
         this.score = 0;
     }
+
+    public PlayerId getPlayerId() {
+        return playerId;
+    }
 }
