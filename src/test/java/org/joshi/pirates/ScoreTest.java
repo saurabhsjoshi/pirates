@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ScoreTest {
 
@@ -43,9 +43,9 @@ public class ScoreTest {
         return IntStream.range(1, 9)
                 .boxed()
                 .map(kind -> {
-                    List<Die.Side> dieRoll = new ArrayList<>(kind);
+                    List<Die> dieRoll = new ArrayList<>(kind);
                     for (int i = 0; i < kind; i++) {
-                        dieRoll.add(Die.Side.PARROT);
+                        dieRoll.add(new Die(Die.Side.PARROT, Die.State.ACTIVE));
                     }
                     return Arguments.of(dieRoll, getExpectedIdenticalScore(kind));
                 });
@@ -54,9 +54,16 @@ public class ScoreTest {
     @ParameterizedTest
     @DisplayName("Validate score for identical objects on die roll")
     @MethodSource("ofKindDieRoll")
-    void testGetIdenticalObjectScore(List<Die.Side> dieRoll, int expectedScore) {
-        int score = Score.getIdenticalObjectScore(dieRoll);
+    void testGetIdenticalObjectScore(List<Die> dieRoll, int expectedScore) {
+        int score = Score.getIdenticalDiceScore(dieRoll);
         assertEquals(expectedScore, score);
+        for (var die : dieRoll) {
+            if (score == 0) {
+                assertFalse(die.isUsed());
+                continue;
+            }
+            assertTrue(die.isUsed());
+        }
     }
 
     @DisplayName("Validate three of a kind when roll includes other objects")

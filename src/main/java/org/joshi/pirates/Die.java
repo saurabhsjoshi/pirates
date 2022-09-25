@@ -7,6 +7,8 @@ public class Die {
     Side diceSide;
     State state;
 
+    private boolean used = false;
+
     public Die(Side diceSide, State state) {
         this.diceSide = diceSide;
         this.state = state;
@@ -28,6 +30,14 @@ public class Die {
         ACTIVE,
 
         IN_TREASURE_CHEST
+    }
+
+    public void setUsed(boolean used) {
+        this.used = used;
+    }
+
+    public boolean isUsed() {
+        return used;
     }
 
     /**

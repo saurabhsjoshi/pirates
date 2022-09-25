@@ -33,6 +33,26 @@ public class Score {
                 .sum();
     }
 
+    /**
+     * Function that computes user score based on given dice. The dice provided in the list will be marked as 'used' if
+     * they are used as part of the calculation.
+     *
+     * @param dice list of die that have been rolled
+     * @return computed score
+     */
+    public static int getIdenticalDiceScore(List<Die> dice) {
+        //TODO:
+        return 0;
+    }
+
+    private static void setUsed(Die.Side side, List<Die> dice) {
+        for (var die : dice) {
+            if (die.getDiceSide() == side) {
+                die.setUsed(true);
+            }
+        }
+    }
+
     public static int getBonusObjectScore(List<Die.Side> diceSides) {
         int score = 0;
         for (var side : diceSides) {
