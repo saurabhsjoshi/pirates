@@ -53,14 +53,7 @@ public class Turn {
     /**
      * Class that allows rolls to be rigged for individual die.
      */
-    public static class RiggedReRoll {
-        int index;
-        Die die;
-
-        public RiggedReRoll(int index, Die die) {
-            this.index = index;
-            this.die = die;
-        }
+    public record RiggedReRoll(int index, Die die) {
     }
 
     /**
@@ -207,33 +200,31 @@ public class Turn {
             dice.removeIf(die -> die.state != Die.State.IN_TREASURE_CHEST);
         }
 
-        Stream<Die.Side> bonusObj = Stream.empty();
+        Stream<Die> bonusObj = Stream.empty();
 
         if (fortuneCard.getType() == FortuneCard.Type.GOLD) {
-            bonusObj = Stream.of(Die.Side.GOLD_COIN);
+            bonusObj = Stream.of(new Die(Die.Side.GOLD_COIN, Die.State.HELD));
         } else if (fortuneCard.getType() == FortuneCard.Type.DIAMOND) {
-            bonusObj = Stream.of(Die.Side.DIAMOND);
+            bonusObj = Stream.of(new Die(Die.Side.DIAMOND, Die.State.HELD));
         }
 
-        List<Die.Side> sides = Stream
+        List<Die> sides = Stream
                 .concat(bonusObj, dice.stream()
-                        .filter(s -> s.diceSide != Die.Side.SKULL)
-                        .map(s -> s.diceSide))
+                        .filter(s -> s.diceSide != Die.Side.SKULL))
                 .collect(Collectors.toList());
 
         if (fortuneCard.getType() == FortuneCard.Type.MONKEY_BUSINESS) {
             sides = sides.stream()
-                    .map(s -> {
-                        if (s == Die.Side.PARROT) {
-                            return Die.Side.MONKEY;
+                    .peek(s -> {
+                        if (s.getDiceSide() == Die.Side.PARROT) {
+                            s.diceSide = Die.Side.MONKEY;
                         }
-                        return s;
                     })
                     .collect(Collectors.toList());
         }
 
-        var score = Score.getIdenticalObjectScore(sides);
-        score += Score.getBonusObjectScore(sides);
+        var score = Score.getIdenticalDiceScore(sides);
+        score += Score.getBonusDieScore(sides);
 
         if (isOnIslandOfSkulls) {
             score = 0;
