@@ -231,6 +231,28 @@ public class Turn {
         var score = Score.getIdenticalDiceScore(sides);
         score += Score.getBonusDieScore(sides);
 
+        // Sea battle
+        if (fortuneCard instanceof SeaBattleCard seaBattleCard) {
+            var count = dice.stream()
+                    .filter(die -> die.diceSide == Die.Side.SWORD)
+                    .count();
+
+            if (count != seaBattleCard.getSwords()) {
+                return 0;
+            }
+
+            // Only in case of two swords we need to mark these dice as used for full chest calculation
+            if (count == 2) {
+                for (var die : sides) {
+                    if (die.getDiceSide() == Die.Side.SWORD) {
+                        die.setUsed(true);
+                    }
+                }
+            }
+
+            score += seaBattleCard.getBonus();
+        }
+
         boolean isFullChest = !hasSkulls;
 
         for (var die : sides) {
@@ -256,19 +278,6 @@ public class Turn {
         // Captain card
         if (fortuneCard.getType() == FortuneCard.Type.CAPTAIN) {
             return score * 2;
-        }
-
-        // Sea battle
-        if (fortuneCard instanceof SeaBattleCard seaBattleCard) {
-            var count = dice.stream()
-                    .filter(die -> die.diceSide == Die.Side.SWORD)
-                    .count();
-
-            if (count != seaBattleCard.getSwords()) {
-                return 0;
-            }
-
-            return score + seaBattleCard.getBonus();
         }
 
         return score;
