@@ -7,9 +7,16 @@ import java.util.ArrayList;
  */
 public class Game {
 
+    private static final int MAX_SCORE = 3000;
+
     private final ArrayList<Player> players = new ArrayList<>(3);
 
     int currentPlayer = 0;
+
+    /**
+     * Identifier of the player who has crossed winning number of points.
+     */
+    int finalPlayer = -1;
 
     /**
      * Method to add player to this game.
@@ -51,14 +58,16 @@ public class Game {
             }
         } else {
             players.get(currentPlayer).addScore(score);
+            if (finalPlayer == -1 && players.get(currentPlayer).getScore() >= MAX_SCORE) {
+                finalPlayer = currentPlayer;
+            }
         }
 
         currentPlayer++;
     }
 
     boolean isFinalRound() {
-        //TODO: Implement
-        return false;
+        return finalPlayer != -1;
     }
 
     public ArrayList<Player> getPlayers() {
