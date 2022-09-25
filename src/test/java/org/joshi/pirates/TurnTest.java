@@ -422,8 +422,8 @@ public class TurnTest {
 
         var score = turn.complete();
 
-        // 6 of a kind 1000 + sea battle bonus of 300
-        assertEquals(1300, score);
+        // 6 of a kind 1000 + sea battle bonus of 300 + 500 treasure chest
+        assertEquals(1800, score);
     }
 
     @DisplayName("Validate player score is zero if Sea Battle fails")
@@ -530,5 +530,34 @@ public class TurnTest {
 
         // 3 x monkeys, 3 x swords (200)  2 x gold coins (200) full chest (500) * 2 captain
         assertEquals(score, 1800);
+    }
+
+
+    @DisplayName("Validate full chest with 2 sword sea battle")
+    @Test
+    void testFullChest_SeaBattle() {
+        List<Die> roll = new ArrayList<>(List.of(
+                new Die(Die.Side.SWORD, Die.State.HELD),
+                new Die(Die.Side.SWORD, Die.State.HELD),
+                new Die(Die.Side.MONKEY, Die.State.HELD),
+                new Die(Die.Side.MONKEY, Die.State.HELD),
+                new Die(Die.Side.MONKEY, Die.State.HELD),
+                new Die(Die.Side.MONKEY, Die.State.HELD),
+                new Die(Die.Side.GOLD_COIN, Die.State.HELD),
+                new Die(Die.Side.GOLD_COIN, Die.State.HELD)
+        ));
+
+        List<List<Die>> riggedRolls = new ArrayList<>(List.of(roll));
+
+        turn.setFortuneCard(new SeaBattleCard(2));
+        turn.setRiggedRolls(riggedRolls);
+
+        turn.roll();
+
+        var score = turn.complete();
+
+        // 4 x monkeys (200), 2 x gold coins (200), 2 x sword sea battle (300) + full chest (500)
+        assertEquals(1200, score);
+
     }
 }
