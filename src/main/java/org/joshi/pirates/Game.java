@@ -1,9 +1,13 @@
 package org.joshi.pirates;
 
+import java.util.ArrayList;
+
 /**
  * This class represents a single game.
  */
 public class Game {
+
+    private final ArrayList<Player> players = new ArrayList<>(3);
 
     /**
      * Method to add player to this game.
@@ -11,7 +15,7 @@ public class Game {
      * @param player the player to add
      */
     public void addPlayer(Player player) {
-        // TODO: Implement
+        players.add(player);
     }
 
     /**
@@ -20,7 +24,6 @@ public class Game {
      * @return true if it can start
      */
     public boolean canPlay() {
-        // TODO: Implement
-        return true;
+        return players.size() == 3;
     }
 }
