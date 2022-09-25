@@ -46,12 +46,15 @@ public class GameTest {
 
         var player = game.startTurn();
         assertEquals(player, player1.getPlayerId());
+        game.endTurn(1000);
 
         player = game.startTurn();
         assertEquals(player, player2.getPlayerId());
+        game.endTurn(1000);
 
         player = game.startTurn();
         assertEquals(player, player3.getPlayerId());
+        game.endTurn(1000);
 
         player = game.startTurn();
         assertEquals(player, player1.getPlayerId());

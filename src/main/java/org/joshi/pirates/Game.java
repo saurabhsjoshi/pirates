@@ -38,11 +38,12 @@ public class Game {
         if (currentPlayer == 3) {
             currentPlayer = 0;
         }
-        return players.get(currentPlayer++).getPlayerId();
+        return players.get(currentPlayer).getPlayerId();
     }
 
     public void endTurn(int score) {
-        //TODO: Implement
+        players.get(currentPlayer).addScore(score);
+        currentPlayer++;
     }
 
     public ArrayList<Player> getPlayers() {
