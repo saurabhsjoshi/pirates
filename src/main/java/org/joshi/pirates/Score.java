@@ -68,6 +68,16 @@ public class Score {
 
         return score;
     }
+    public static int getBonusDieScore(List<Die> dice) {
+        int score = 0;
+        for (var die : dice) {
+            if (die.getDiceSide() == Die.Side.DIAMOND || die.getDiceSide() == Die.Side.GOLD_COIN) {
+                score += 100;
+                die.setUsed(true);
+            }
+        }
+        return score;
+    }
 
     private static void setUsed(Die.Side side, List<Die> dice) {
         for (var die : dice) {

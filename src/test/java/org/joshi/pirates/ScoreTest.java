@@ -69,14 +69,15 @@ public class ScoreTest {
     @DisplayName("Validate three of a kind when roll includes other objects")
     @Test
     void testGetIdenticalObjectScore_DifferentObjects() {
+
         var dieRoll = List.of(
-                Die.Side.MONKEY,
-                Die.Side.PARROT,
-                Die.Side.MONKEY,
-                Die.Side.MONKEY,
-                Die.Side.DIAMOND
+                new Die(Die.Side.MONKEY, Die.State.ACTIVE),
+                new Die(Die.Side.PARROT, Die.State.ACTIVE),
+                new Die(Die.Side.MONKEY, Die.State.ACTIVE),
+                new Die(Die.Side.MONKEY, Die.State.ACTIVE),
+                new Die(Die.Side.DIAMOND, Die.State.ACTIVE)
         );
-        int score = Score.getIdenticalObjectScore(dieRoll);
+        int score = Score.getIdenticalDiceScore(dieRoll);
         assertEquals(getExpectedIdenticalScore(3), score);
     }
 
@@ -84,23 +85,26 @@ public class ScoreTest {
     @DisplayName("Validate score for multiple identical objects")
     void testMultipleIdenticalObject() {
         var dieRoll = List.of(
-                Die.Side.MONKEY,
-                Die.Side.PARROT,
-                Die.Side.MONKEY,
-                Die.Side.MONKEY,
-                Die.Side.PARROT,
-                Die.Side.PARROT,
-                Die.Side.PARROT
+                new Die(Die.Side.MONKEY, Die.State.ACTIVE),
+                new Die(Die.Side.PARROT, Die.State.ACTIVE),
+                new Die(Die.Side.MONKEY, Die.State.ACTIVE),
+                new Die(Die.Side.MONKEY, Die.State.ACTIVE),
+                new Die(Die.Side.PARROT, Die.State.ACTIVE),
+                new Die(Die.Side.PARROT, Die.State.ACTIVE),
+                new Die(Die.Side.PARROT, Die.State.ACTIVE)
         );
-        int score = Score.getIdenticalObjectScore(dieRoll);
+        int score = Score.getIdenticalDiceScore(dieRoll);
         assertEquals(getExpectedIdenticalScore(3) + getExpectedIdenticalScore(4), score);
     }
 
     @Test
     @DisplayName("Validate bonus score for diamond and gold")
     void testGetBonusObjectScore() {
-        var dieRoll = List.of(Die.Side.GOLD_COIN, Die.Side.DIAMOND);
-        int score = Score.getBonusObjectScore(dieRoll);
+        var dieRoll = List.of(
+                new Die(Die.Side.GOLD_COIN, Die.State.ACTIVE),
+                new Die(Die.Side.DIAMOND, Die.State.ACTIVE)
+        );
+        int score = Score.getBonusDieScore(dieRoll);
         assertEquals(200, score);
     }
 
@@ -108,9 +112,8 @@ public class ScoreTest {
     @DisplayName("Validate score for bonus objects")
     @EnumSource(Die.Side.class)
     void testGetBonusObjectScore_AllSides(Die.Side diceSide) {
-        var dieRoll = List.of(diceSide);
-        int score = Score.getBonusObjectScore(dieRoll);
-
+        var dieRoll = List.of(new Die(diceSide, Die.State.ACTIVE));
+        int score = Score.getBonusDieScore(dieRoll);
         if (diceSide == Die.Side.DIAMOND || diceSide == Die.Side.GOLD_COIN) {
             assertEquals(100, score);
         } else {
