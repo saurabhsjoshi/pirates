@@ -17,9 +17,9 @@ public class GameTest {
 
     @BeforeEach
     void setup() {
-        Player player1 = new Player("player1", "player1");
-        Player player2 = new Player("player2", "player2");
-        Player player3 = new Player("player3", "player3");
+        Player player1 = new Player(new PlayerId("player1", "player1"));
+        Player player2 = new Player(new PlayerId("player2", "player2"));
+        Player player3 = new Player(new PlayerId("player3", "player3"));
 
         game = new Game();
     }
