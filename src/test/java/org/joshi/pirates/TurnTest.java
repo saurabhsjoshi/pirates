@@ -201,7 +201,9 @@ public class TurnTest {
         turn.roll();
 
         var score = turn.complete();
-        assertEquals(8000, score);
+
+        // 8 x monkey 4000 + 500 full chest * 2 captain
+        assertEquals(9000, score);
     }
 
     @DisplayName("Validate end of the turn score calculation with gold card")
@@ -251,8 +253,8 @@ public class TurnTest {
 
         var score = turn.complete();
 
-        // 8 of a kind
-        assertEquals(4000, score);
+        // 8 of a kind + 500 full chest
+        assertEquals(4500, score);
     }
 
     @DisplayName("Validate end of the turn score calculation for when player is on island of skulls")
@@ -502,5 +504,31 @@ public class TurnTest {
 
         // Still should score for three parrots (100)
         assertEquals(100, score);
+    }
+
+    @DisplayName("Validate full chest and captain card")
+    @Test
+    void testFullChest() {
+        List<Die> roll = new ArrayList<>(List.of(
+                new Die(Die.Side.MONKEY, Die.State.HELD),
+                new Die(Die.Side.MONKEY, Die.State.HELD),
+                new Die(Die.Side.MONKEY, Die.State.HELD),
+                new Die(Die.Side.SWORD, Die.State.HELD),
+                new Die(Die.Side.SWORD, Die.State.HELD),
+                new Die(Die.Side.SWORD, Die.State.HELD),
+                new Die(Die.Side.GOLD_COIN, Die.State.HELD),
+                new Die(Die.Side.GOLD_COIN, Die.State.HELD)
+        ));
+        List<List<Die>> riggedRolls = new ArrayList<>(List.of(roll));
+
+        turn.setFortuneCard(new FortuneCard(FortuneCard.Type.CAPTAIN));
+        turn.setRiggedRolls(riggedRolls);
+
+        turn.roll();
+
+        var score = turn.complete();
+
+        // 3 x monkeys, 3 x swords (200)  2 x gold coins (200) full chest (500) * 2 captain
+        assertEquals(score, 1800);
     }
 }
