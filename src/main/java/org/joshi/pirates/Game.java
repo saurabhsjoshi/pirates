@@ -42,7 +42,17 @@ public class Game {
     }
 
     public void endTurn(int score) {
-        players.get(currentPlayer).addScore(score);
+        if (score < 0) {
+            // Player was on island of skulls, update other player scores
+            for (int i = 0; i < 3; i++) {
+                if (i != currentPlayer) {
+                    players.get(i).addScore(score);
+                }
+            }
+        } else {
+            players.get(currentPlayer).addScore(score);
+        }
+
         currentPlayer++;
     }
 
