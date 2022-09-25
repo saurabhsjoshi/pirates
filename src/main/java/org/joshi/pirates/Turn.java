@@ -190,6 +190,7 @@ public class Turn {
      * @return score earned this round
      */
     public int complete() {
+        var expectedChestSize = dice.size();
 
         // If player is dead they get no score
         if (state == State.DISQUALIFIED) {
@@ -204,14 +205,18 @@ public class Turn {
 
         if (fortuneCard.getType() == FortuneCard.Type.GOLD) {
             bonusObj = Stream.of(new Die(Die.Side.GOLD_COIN, Die.State.HELD));
+            expectedChestSize++;
         } else if (fortuneCard.getType() == FortuneCard.Type.DIAMOND) {
             bonusObj = Stream.of(new Die(Die.Side.DIAMOND, Die.State.HELD));
+            expectedChestSize++;
         }
 
         List<Die> sides = Stream
                 .concat(bonusObj, dice.stream()
                         .filter(s -> s.diceSide != Die.Side.SKULL))
                 .collect(Collectors.toList());
+
+        boolean hasSkulls = sides.size() != expectedChestSize;
 
         if (fortuneCard.getType() == FortuneCard.Type.MONKEY_BUSINESS) {
             sides = sides.stream()
@@ -225,6 +230,19 @@ public class Turn {
 
         var score = Score.getIdenticalDiceScore(sides);
         score += Score.getBonusDieScore(sides);
+
+        boolean isFullChest = !hasSkulls;
+
+        for (var die : sides) {
+            if (!die.isUsed()) {
+                isFullChest = false;
+                break;
+            }
+        }
+
+        if (isFullChest) {
+            score += 500;
+        }
 
         if (isOnIslandOfSkulls) {
             score = 0;
