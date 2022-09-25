@@ -121,4 +121,31 @@ public class GameTest {
 
         assertTrue(game.isFinalRound());
     }
+
+    @DisplayName("Validate game ends as expected after final round")
+    @Test
+    void validateGameEnd() {
+        game.addPlayer(player1);
+        game.addPlayer(player2);
+        game.addPlayer(player3);
+
+        game.startTurn();
+        game.endTurn(1000);
+        assertFalse(game.ended());
+
+        game.startTurn();
+        game.endTurn(3000);
+
+        assertFalse(game.ended());
+        assertTrue(game.isFinalRound());
+
+        game.startTurn();
+        game.endTurn(2000);
+        assertFalse(game.ended());
+
+        game.startTurn();
+        game.endTurn(500);
+
+        assertTrue(game.ended());
+    }
 }

@@ -73,4 +73,9 @@ public class Game {
     public ArrayList<Player> getPlayers() {
         return players;
     }
+
+    boolean ended() {
+        // TODO: Implement
+        return false;
+    }
 }
