@@ -148,4 +148,34 @@ public class GameTest {
 
         assertTrue(game.ended());
     }
+
+
+    @DisplayName("Validate game does not end if player reduces other player scores")
+    @Test
+    void validateGameEnd_IslandOfSkulls() {
+        game.addPlayer(player1);
+        game.addPlayer(player2);
+        game.addPlayer(player3);
+
+        game.startTurn();
+        game.endTurn(1000);
+        assertFalse(game.ended());
+
+        game.startTurn();
+        game.endTurn(3000);
+
+        assertFalse(game.ended());
+        assertTrue(game.isFinalRound());
+
+        game.startTurn();
+        game.endTurn(-500);
+
+        assertFalse(game.ended());
+
+        game.startTurn();
+        game.endTurn(500);
+
+        assertFalse(game.isFinalRound());
+        assertFalse(game.ended());
+    }
 }
