@@ -9,6 +9,8 @@ public class Game {
 
     private final ArrayList<Player> players = new ArrayList<>(3);
 
+    int currentPlayer = 0;
+
     /**
      * Method to add player to this game.
      *
@@ -33,7 +35,9 @@ public class Game {
      * @return player id of the player whose turn to start
      */
     public PlayerId startTurn() {
-        //TODO: Implement
-        return new PlayerId("TEST", "TEST");
+        if (currentPlayer == 3) {
+            currentPlayer = 0;
+        }
+        return players.get(currentPlayer++).getPlayerId();
     }
 }
