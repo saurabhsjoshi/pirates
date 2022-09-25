@@ -81,6 +81,8 @@ public class Game {
 
             if (maxScore >= MAX_SCORE) {
                 winner = players.get(maxPlayer).getPlayerId();
+            } else {
+                finalPlayer = -1;
             }
         }
     }
