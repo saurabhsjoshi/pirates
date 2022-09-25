@@ -41,8 +41,32 @@ public class Score {
      * @return computed score
      */
     public static int getIdenticalDiceScore(List<Die> dice) {
-        //TODO:
-        return 0;
+        var diceSide = dice.stream()
+                .map(die -> die.diceSide)
+                .collect(Collectors.groupingBy(Function.identity()));
+
+        int score = 0;
+
+        for (var side : diceSide.entrySet()) {
+            var size = side.getValue().size();
+
+            if (size < 3) {
+                continue;
+            }
+
+            score += switch (side.getValue().size()) {
+                case 3 -> 100;
+                case 4 -> 200;
+                case 5 -> 500;
+                case 6 -> 1000;
+                case 7 -> 2000;
+                case 8 -> 4000;
+                default -> 0;
+            };
+            setUsed(side.getKey(), dice);
+        }
+
+        return score;
     }
 
     private static void setUsed(Die.Side side, List<Die> dice) {
