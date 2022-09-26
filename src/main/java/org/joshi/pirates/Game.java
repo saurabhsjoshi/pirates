@@ -121,4 +121,13 @@ public class Game {
     FortuneCard getCurrentCard() {
         return currentCard;
     }
+
+    /**
+     * Allows the next fortune card to be rigged.
+     *
+     * @param fortuneCard next fortune card
+     */
+    void setRiggedFortuneCard(FortuneCard fortuneCard) {
+        //TODO: Implement
+    }
 }

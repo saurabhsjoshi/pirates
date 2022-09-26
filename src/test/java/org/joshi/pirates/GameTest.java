@@ -1,6 +1,7 @@
 package org.joshi.pirates;
 
 
+import org.joshi.pirates.cards.FortuneCard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -220,9 +221,25 @@ public class GameTest {
         game.addPlayer(player2);
         game.addPlayer(player3);
 
-        for(int i = 0; i < 36; i++) {
+        for (int i = 0; i < 36; i++) {
             game.startTurn();
         }
         assertNotNull(game.getCurrentCard());
+    }
+
+    @DisplayName("Validate rigging of fortune card works as expected")
+    @Test
+    void validateRiggedFortuneCard() {
+        game.addPlayer(player1);
+        game.addPlayer(player2);
+        game.addPlayer(player3);
+
+        FortuneCard card = new FortuneCard(FortuneCard.Type.DIAMOND);
+        game.setRiggedFortuneCard(card);
+
+        game.startTurn();
+
+        // Validate same instance
+        assertSame(card, game.getCurrentCard());
     }
 }
