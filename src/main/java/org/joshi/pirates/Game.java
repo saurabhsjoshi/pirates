@@ -1,5 +1,6 @@
 package org.joshi.pirates;
 
+import org.joshi.pirates.cards.CardDeck;
 import org.joshi.pirates.cards.FortuneCard;
 
 import java.util.ArrayList;
@@ -21,6 +22,17 @@ public class Game {
      * Identifier of the player who has crossed winning number of points.
      */
     int finalPlayer = -1;
+
+    /**
+     * The current card.
+     */
+    private FortuneCard currentCard = null;
+
+    private final CardDeck cardDeck = new CardDeck();
+
+    public Game() {
+        cardDeck.shuffle();
+    }
 
     /**
      * Method to add player to this game.
@@ -49,6 +61,7 @@ public class Game {
         if (currentPlayer == 3) {
             currentPlayer = 0;
         }
+        currentCard = cardDeck.top();
         return players.get(currentPlayer).getPlayerId();
     }
 
@@ -102,7 +115,6 @@ public class Game {
     }
 
     FortuneCard getCurrentCard() {
-        //TODO: Implement
-        return null;
+        return currentCard;
     }
 }
