@@ -1,7 +1,6 @@
 package org.joshi.pirates;
 
 
-import org.joshi.pirates.cards.FortuneCard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -104,6 +103,29 @@ public class GameTest {
         var players = game.getPlayers();
         assertEquals(500, players.get(0).getScore());
         assertEquals(1500, players.get(1).getScore());
+        assertEquals(0, players.get(2).getScore());
+    }
+
+    @DisplayName("Validate player score cannot be negative")
+    @Test
+    void validateCompleteTurn_NoNegative() {
+        game.addPlayer(player1);
+        game.addPlayer(player2);
+        game.addPlayer(player3);
+
+        game.startTurn();
+        game.endTurn(1000);
+
+        game.startTurn();
+        game.endTurn(300);
+
+        game.startTurn();
+        game.endTurn(-500);
+
+        var players = game.getPlayers();
+
+        assertEquals(500, players.get(0).getScore());
+        assertEquals(0, players.get(1).getScore());
         assertEquals(0, players.get(2).getScore());
     }
 
