@@ -28,6 +28,11 @@ public class Game {
      */
     private FortuneCard currentCard = null;
 
+    /**
+     * Rigged fortune card for next turn.
+     */
+    private FortuneCard riggedCard = null;
+
     private final CardDeck cardDeck = new CardDeck();
 
     public Game() {
@@ -66,6 +71,10 @@ public class Game {
             cardDeck.shuffle();
         }
         currentCard = cardDeck.top();
+        if (riggedCard != null) {
+            currentCard = riggedCard;
+            riggedCard = null;
+        }
         return players.get(currentPlayer).getPlayerId();
     }
 
@@ -128,6 +137,6 @@ public class Game {
      * @param fortuneCard next fortune card
      */
     void setRiggedFortuneCard(FortuneCard fortuneCard) {
-        //TODO: Implement
+        riggedCard = fortuneCard;
     }
 }
