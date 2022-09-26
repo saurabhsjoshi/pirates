@@ -212,4 +212,17 @@ public class GameTest {
         game.startTurn();
         assertNotNull(game.getCurrentCard());
     }
+
+    @DisplayName("Validate that the card deck rolls over if it runs out of cards")
+    @Test
+    void validateCardDraw_Rollover() {
+        game.addPlayer(player1);
+        game.addPlayer(player2);
+        game.addPlayer(player3);
+
+        for(int i = 0; i < 36; i++) {
+            game.startTurn();
+        }
+        assertNotNull(game.getCurrentCard());
+    }
 }
