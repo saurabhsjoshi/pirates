@@ -1,5 +1,7 @@
 package org.joshi.pirates;
 
+import org.joshi.pirates.cards.FortuneCard;
+
 import java.util.ArrayList;
 
 /**
@@ -97,5 +99,10 @@ public class Game {
 
     boolean ended() {
         return winner != null;
+    }
+
+    FortuneCard getCurrentCard() {
+        //TODO: Implement
+        return null;
     }
 }

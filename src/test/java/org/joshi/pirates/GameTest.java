@@ -1,6 +1,7 @@
 package org.joshi.pirates;
 
 
+import org.joshi.pirates.cards.FortuneCard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -177,5 +178,16 @@ public class GameTest {
 
         assertFalse(game.isFinalRound());
         assertFalse(game.ended());
+    }
+
+    @DisplayName("Validate a card is drawn after turn starts")
+    @Test
+    void validateCardDraw() {
+        game.addPlayer(player1);
+        game.addPlayer(player2);
+        game.addPlayer(player3);
+
+        game.startTurn();
+        assertNotNull(game.getCurrentCard());
     }
 }
