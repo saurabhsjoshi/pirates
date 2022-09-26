@@ -30,5 +30,10 @@ public class Player {
 
     public void addScore(int score) {
         this.score += score;
+
+        // Score can never be negative.
+        if (this.score < 0) {
+            this.score = 0;
+        }
     }
 }
