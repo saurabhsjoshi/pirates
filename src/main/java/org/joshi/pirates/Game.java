@@ -61,6 +61,10 @@ public class Game {
         if (currentPlayer == 3) {
             currentPlayer = 0;
         }
+
+        if (cardDeck.isEmpty()) {
+            cardDeck.shuffle();
+        }
         currentCard = cardDeck.top();
         return players.get(currentPlayer).getPlayerId();
     }
