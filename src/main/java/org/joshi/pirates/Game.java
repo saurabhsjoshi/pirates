@@ -114,11 +114,11 @@ public class Game {
         return players;
     }
 
-    boolean ended() {
+    public boolean ended() {
         return winner != null;
     }
 
-    FortuneCard getCurrentCard() {
+    public FortuneCard getCurrentCard() {
         return currentCard;
     }
 

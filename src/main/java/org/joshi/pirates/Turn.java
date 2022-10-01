@@ -56,7 +56,7 @@ public class Turn {
      *
      * @param index list of indexes to mark as held
      */
-    void hold(List<Integer> index) {
+    public void hold(List<Integer> index) {
         for (var i : index) {
             dice.get(i).setState(Die.State.HELD);
         }
@@ -68,7 +68,7 @@ public class Turn {
      * @param index list of index to mark as active
      * @throws SkullActivatedException exception is thrown when the player attempts to activate a skull
      */
-    void active(List<Integer> index) throws SkullActivatedException {
+    public void active(List<Integer> index) throws SkullActivatedException {
         int skull = 0;
 
         // Check for skulls
@@ -100,7 +100,7 @@ public class Turn {
         }
     }
 
-    void roll() {
+    public void roll() {
         var diceSides = Die.Side.values();
 
         // First roll
@@ -120,7 +120,7 @@ public class Turn {
         isFirstRoll = false;
     }
 
-    void postRoll() {
+    public void postRoll() {
         // Check skulls
         for (var die : dice) {
             if (die.diceSide == Die.Side.SKULL) {
