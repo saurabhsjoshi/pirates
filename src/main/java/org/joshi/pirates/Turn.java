@@ -46,14 +46,9 @@ public class Turn {
     private final List<Die> dice = new ArrayList<>(MAX_DICE);
 
     /**
-     * List containing rigged rolls that this turn will have.
+     * Class that allows rigging of die.
      */
-    private final List<List<RiggedReRoll>> riggedRolls = new ArrayList<>();
-
-    /**
-     * Class that allows rolls to be rigged for individual die.
-     */
-    public record RiggedReRoll(int index, Die die) {
+    public record RiggedDie(int index, Die die) {
     }
 
     /**
@@ -114,7 +109,6 @@ public class Turn {
             for (int i = 0; i < MAX_DICE; i++) {
                 dice.add(new Die(diceSides[(new Random().nextInt(diceSides.length))], Die.State.ACTIVE));
             }
-            postRoll();
             return;
         }
 
@@ -124,17 +118,9 @@ public class Turn {
             }
         }
         isFirstRoll = false;
-        postRoll();
     }
 
     void postRoll() {
-        if (!riggedRolls.isEmpty()) {
-            var riggedRoll = riggedRolls.remove(0);
-            for (var roll : riggedRoll) {
-                dice.set(roll.index, roll.die);
-            }
-        }
-
         // Check skulls
         for (var die : dice) {
             if (die.diceSide == Die.Side.SKULL) {
@@ -303,22 +289,14 @@ public class Turn {
     }
 
     /**
-     * Setup rigged rolls for the whole game.
+     * Rig the dice.
      *
-     * @param riggedRolls list of rolls in sequential order
+     * @param riggedDice list of rigged die
      */
-    public void setRiggedRolls(List<List<Die>> riggedRolls) {
-        for (var roll : riggedRolls) {
-            List<RiggedReRoll> riggedRoll = new ArrayList<>();
-            for (int i = 0; i < roll.size(); i++) {
-                riggedRoll.add(new RiggedReRoll(i, roll.get(i)));
-            }
-            this.riggedRolls.add(riggedRoll);
+    public void setRiggedDice(List<RiggedDie> riggedDice) {
+        for (var roll : riggedDice) {
+            dice.set(roll.index, roll.die);
         }
-    }
-
-    public void setRiggedReRolls(List<List<RiggedReRoll>> riggedRolls) {
-        this.riggedRolls.addAll(riggedRolls);
     }
 
     public List<Die> getDice() {

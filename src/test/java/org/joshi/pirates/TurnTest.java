@@ -8,7 +8,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,11 +27,17 @@ public class TurnTest {
     @DisplayName("Validate first roll of a turn")
     @Test
     void testFirstRoll() {
-        List<List<Die>> riggedRolls = new ArrayList<>();
-        riggedRolls.add(new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.MONKEY, Die.State.ACTIVE))));
-        turn.setRiggedRolls(riggedRolls);
 
         turn.roll();
+
+        List<Turn.RiggedDie> riggedDice = new ArrayList<>();
+
+        for (int i = 0; i < 8; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.MONKEY, Die.State.ACTIVE)));
+        }
+
+        turn.setRiggedDice(riggedDice);
+        turn.postRoll();
 
         var dice = turn.getDice();
 
@@ -48,19 +53,29 @@ public class TurnTest {
     @DisplayName("Test that validates if the player can re-roll based on number of active die")
     @Test
     void testCanRoll_EnoughActiveDie() {
-        List<List<Die>> riggedRolls = new ArrayList<>();
-
-        riggedRolls.add(new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.DIAMOND, Die.State.HELD))));
-        riggedRolls.add(new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.DIAMOND, Die.State.HELD))));
-        riggedRolls.get(1).get(0).setState(Die.State.ACTIVE);
-        riggedRolls.get(1).get(1).setState(Die.State.ACTIVE);
-        turn.setRiggedRolls(riggedRolls);
 
         turn.roll();
 
-        assertEquals(turn.getState(), Turn.State.NOT_ENOUGH_ACTIVE_DIE);
+        List<Turn.RiggedDie> riggedDice = new ArrayList<>();
+        // Rig the dice
+        for (int i = 0; i < 8; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.DIAMOND, Die.State.HELD)));
+        }
+        turn.setRiggedDice(riggedDice);
+
+        turn.postRoll();
+
+        assertEquals(Turn.State.NOT_ENOUGH_ACTIVE_DIE, turn.getState());
 
         turn.roll();
+
+        riggedDice = new ArrayList<>();
+        for (int i = 0; i < 2; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.DIAMOND, Die.State.ACTIVE)));
+        }
+
+        turn.setRiggedDice(riggedDice);
+        turn.postRoll();
 
         assertEquals(turn.getState(), Turn.State.OK);
     }
@@ -68,16 +83,20 @@ public class TurnTest {
     @DisplayName("Test that validates that player cannot re-roll after accumulating three skulls")
     @Test
     void testCanRoll_ThreeSkulls() {
-        List<List<Die>> riggedRolls = new ArrayList<>();
-        List<Die> roll = new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.DIAMOND, Die.State.HELD)));
-        Die skull = new Die(Die.Side.SKULL, Die.State.HELD);
-        roll.set(0, skull);
-        roll.set(1, skull);
-        roll.set(2, skull);
-        riggedRolls.add(roll);
-        turn.setRiggedRolls(riggedRolls);
-
         turn.roll();
+
+        List<Turn.RiggedDie> riggedDice = new ArrayList<>();
+
+        // Rig the die
+        for (int i = 0; i < 3; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.SKULL, Die.State.HELD)));
+        }
+        for (int i = 3; i < 8; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.DIAMOND, Die.State.HELD)));
+        }
+
+        turn.setRiggedDice(riggedDice);
+        turn.postRoll();
 
         assertEquals(turn.getState(), Turn.State.DISQUALIFIED);
     }
@@ -85,50 +104,53 @@ public class TurnTest {
     @DisplayName("Test that validates that player cannot re-roll after accumulating three skulls via skulls card")
     @Test
     void testCanRoll_ThreeSkulls_SkullsCard() {
-        List<List<Die>> riggedRolls = new ArrayList<>();
-        List<Die> roll = new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.DIAMOND, Die.State.HELD)));
-        Die skull = new Die(Die.Side.SKULL, Die.State.HELD);
-        roll.set(0, skull);
-        roll.set(1, skull);
-        riggedRolls.add(roll);
-
-        turn.setRiggedRolls(riggedRolls);
         turn.setFortuneCard(new SkullCard(1));
-
         turn.roll();
+
+        List<Turn.RiggedDie> riggedDice = new ArrayList<>();
+
+        // Rig the die
+        for (int i = 0; i < 2; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.SKULL, Die.State.HELD)));
+        }
+        for (int i = 2; i < 8; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.DIAMOND, Die.State.HELD)));
+        }
+
+        turn.setRiggedDice(riggedDice);
+        turn.postRoll();
 
         assertEquals(turn.getState(), Turn.State.DISQUALIFIED);
     }
 
-
     @DisplayName("Test that validates that player goes to island of skulls on their first roll of four skulls")
     @Test
     void testSkullIsland() {
-        List<List<Die>> riggedRolls = new ArrayList<>();
-        List<Die> roll = new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.DIAMOND, Die.State.HELD)));
-        // Set at least four skulls
-        Die skull = new Die(Die.Side.SKULL, Die.State.ACTIVE);
-        for (int i = 0; i < 4; i++) {
-            roll.set(i, skull);
-        }
-        riggedRolls.add(roll);
-        riggedRolls.add(roll);
-        riggedRolls.add(roll);
-        turn.setRiggedRolls(riggedRolls);
         turn.setFortuneCard(new FortuneCard(FortuneCard.Type.GOLD));
-
         turn.roll();
 
+        List<Turn.RiggedDie> riggedDice = new ArrayList<>();
+        // Rig the die
+        for (int i = 0; i < 4; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.SKULL, Die.State.HELD)));
+        }
+        for (int i = 4; i < 8; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.DIAMOND, Die.State.HELD)));
+        }
+        turn.setRiggedDice(riggedDice);
+        turn.postRoll();
         assertTrue(turn.onSkullIsland());
 
         // Ensure that player remains on island of skulls
         turn.roll();
+        turn.postRoll();
         assertTrue(turn.onSkullIsland());
 
         // Forcefully remove player from island of skulls for second roll
         turn.setOnIslandOfSkulls(false);
 
         turn.roll();
+        turn.postRoll();
         // Even with four skulls, the player should not reach island of skulls
         assertFalse(turn.onSkullIsland());
     }
@@ -136,19 +158,21 @@ public class TurnTest {
     @DisplayName("Test that validates that player goes to island of skulls on their first roll with skulls card")
     @Test
     void testSkullIsland_SkullsCard() {
-        List<List<Die>> riggedRolls = new ArrayList<>();
-        List<Die> roll = new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.MONKEY, Die.State.HELD)));
-        // Set at least four skulls
-        Die skull = new Die(Die.Side.SKULL, Die.State.ACTIVE);
-        for (int i = 0; i < 2; i++) {
-            roll.set(i, skull);
-        }
-        riggedRolls.add(roll);
-
-        turn.setRiggedRolls(riggedRolls);
         turn.setFortuneCard(new SkullCard(2));
-
         turn.roll();
+
+        List<Turn.RiggedDie> riggedDice = new ArrayList<>();
+        for (int i = 0; i < 2; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.SKULL, Die.State.HELD)));
+        }
+
+        for (int i = 2; i < 8; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.MONKEY, Die.State.HELD)));
+        }
+
+        turn.setRiggedDice(riggedDice);
+        turn.postRoll();
+
 
         assertTrue(turn.onSkullIsland());
     }
@@ -156,24 +180,19 @@ public class TurnTest {
     @DisplayName("Validate that re roll works as expected")
     @Test
     void testReRoll() {
-        List<Die> roll = new ArrayList<>();
-
-        // Manually set first five held die
-        Die diamond = new Die(Die.Side.DIAMOND, Die.State.HELD);
-        for (int i = 0; i < 5; i++) {
-            roll.add(diamond);
-        }
-
-        // Manually set other active die
-        Die gold = new Die(Die.Side.GOLD_COIN, Die.State.ACTIVE);
-        for (int i = 0; i < 3; i++) {
-            roll.add(gold);
-        }
-
-        List<List<Die>> riggedRolls = new ArrayList<>(List.of(roll));
-        turn.setRiggedRolls(riggedRolls);
-
         turn.roll();
+
+        List<Turn.RiggedDie> riggedDice = new ArrayList<>();
+
+        for (int i = 0; i < 5; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.DIAMOND, Die.State.HELD)));
+        }
+        for (int i = 5; i < 8; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.GOLD_COIN, Die.State.ACTIVE)));
+        }
+
+        turn.setRiggedDice(riggedDice);
+        turn.postRoll();
         turn.roll();
 
         var dice = turn.getDice();
@@ -184,21 +203,28 @@ public class TurnTest {
 
         // Ensure held die have not changed
         for (int i = 0; i < 5; i++) {
-            assertSame(dice.get(i), diamond);
+            assertSame(dice.get(i), riggedDice.get(i).die());
         }
 
         for (int i = 5; i < 8; i++) {
-            assertNotSame(dice.get(i), gold);
+            assertNotSame(dice.get(i), riggedDice.get(i).die());
         }
     }
 
     @DisplayName("Validate end of the turn score calculation with captain card")
     @Test
     void testEndTurn_CaptainCard() {
-        List<List<Die>> riggedRolls = new ArrayList<>(List.of(Collections.nCopies(8, new Die(Die.Side.MONKEY, Die.State.ACTIVE))));
+
         turn.setFortuneCard(new FortuneCard(FortuneCard.Type.CAPTAIN));
-        turn.setRiggedRolls(riggedRolls);
         turn.roll();
+
+        List<Turn.RiggedDie> riggedDice = new ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.MONKEY, Die.State.ACTIVE)));
+        }
+        turn.setRiggedDice(riggedDice);
+        turn.postRoll();
+
 
         var score = turn.complete();
 
@@ -209,13 +235,18 @@ public class TurnTest {
     @DisplayName("Validate end of the turn score calculation with gold card")
     @Test
     void testEndTurn_Gold() {
-        List<List<Die>> riggedRolls = new ArrayList<>(List.of(new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.GOLD_COIN, Die.State.HELD)))));
-        riggedRolls.get(0).set(0, new Die(Die.Side.MONKEY, Die.State.HELD));
 
-        turn.setRiggedRolls(riggedRolls);
         turn.setFortuneCard(new FortuneCard(FortuneCard.Type.GOLD));
-
         turn.roll();
+
+        List<Turn.RiggedDie> riggedDice = new ArrayList<>();
+        riggedDice.add(new Turn.RiggedDie(0, new Die(Die.Side.MONKEY, Die.State.HELD)));
+
+        for (int i = 1; i < 8; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.GOLD_COIN, Die.State.HELD)));
+        }
+        turn.setRiggedDice(riggedDice);
+        turn.postRoll();
 
         var score = turn.complete();
 
@@ -226,13 +257,20 @@ public class TurnTest {
     @DisplayName("Validate end of the turn score calculation with diamond card")
     @Test
     void testEndTurn_Diamond() {
-        List<List<Die>> riggedRolls = new ArrayList<>(List.of(new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.DIAMOND, Die.State.HELD)))));
-        riggedRolls.get(0).set(0, new Die(Die.Side.MONKEY, Die.State.HELD));
 
-        turn.setRiggedRolls(riggedRolls);
         turn.setFortuneCard(new FortuneCard(FortuneCard.Type.DIAMOND));
-
         turn.roll();
+
+        List<Turn.RiggedDie> riggedDice = new ArrayList<>();
+        riggedDice.add(new Turn.RiggedDie(0, new Die(Die.Side.MONKEY, Die.State.HELD)));
+
+        for (int i = 1; i < 8; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.DIAMOND, Die.State.HELD)));
+        }
+
+        turn.setRiggedDice(riggedDice);
+        turn.postRoll();
+
 
         var score = turn.complete();
 
@@ -243,13 +281,17 @@ public class TurnTest {
     @DisplayName("Validate end of the turn score calculation with monkey business card")
     @Test
     void testEndTurn_Monkey() {
-        List<List<Die>> riggedRolls = new ArrayList<>(List.of(new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.MONKEY, Die.State.HELD)))));
-        riggedRolls.get(0).set(0, new Die(Die.Side.PARROT, Die.State.HELD));
-
-        turn.setRiggedRolls(riggedRolls);
         turn.setFortuneCard(new FortuneCard(FortuneCard.Type.MONKEY_BUSINESS));
-
         turn.roll();
+
+        List<Turn.RiggedDie> riggedDice = new ArrayList<>();
+        riggedDice.add(new Turn.RiggedDie(0, new Die(Die.Side.PARROT, Die.State.HELD)));
+        for (int i = 1; i < 8; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.MONKEY, Die.State.HELD)));
+        }
+
+        turn.setRiggedDice(riggedDice);
+        turn.postRoll();
 
         var score = turn.complete();
 
@@ -260,13 +302,16 @@ public class TurnTest {
     @DisplayName("Validate end of the turn score calculation for when player is on island of skulls")
     @Test
     void testEndTurn_IslandOfSkulls() {
-        List<List<Die>> riggedRolls = new ArrayList<>(List.of(new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.SKULL, Die.State.HELD)))));
-        riggedRolls.get(0).set(0, new Die(Die.Side.PARROT, Die.State.HELD));
-
-        turn.setRiggedRolls(riggedRolls);
         turn.setFortuneCard(new FortuneCard(FortuneCard.Type.MONKEY_BUSINESS));
-
         turn.roll();
+
+        List<Turn.RiggedDie> riggedDice = new ArrayList<>();
+        riggedDice.add(new Turn.RiggedDie(0, new Die(Die.Side.PARROT, Die.State.HELD)));
+        for (int i = 1; i < 8; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.SKULL, Die.State.HELD)));
+        }
+        turn.setRiggedDice(riggedDice);
+        turn.postRoll();
 
         var score = turn.complete();
 
@@ -277,18 +322,18 @@ public class TurnTest {
     @DisplayName("Validate end of score calculation when player is dead")
     @Test
     void testScore_Dead() {
-        List<List<Die>> riggedRolls = new ArrayList<>();
-        List<Die> roll = new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.DIAMOND, Die.State.HELD)));
-        Die skull = new Die(Die.Side.SKULL, Die.State.HELD);
-        roll.set(0, skull);
-        roll.set(1, skull);
-        roll.set(2, skull);
-        riggedRolls.add(roll);
-
         turn.setFortuneCard(new FortuneCard(FortuneCard.Type.GOLD));
-        turn.setRiggedRolls(riggedRolls);
-
         turn.roll();
+
+        List<Turn.RiggedDie> riggedDice = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.SKULL, Die.State.HELD)));
+        }
+        for (int i = 3; i < 8; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.DIAMOND, Die.State.HELD)));
+        }
+        turn.setRiggedDice(riggedDice);
+        turn.postRoll();
 
         var score = turn.complete();
 
@@ -298,16 +343,15 @@ public class TurnTest {
     @DisplayName("Validated that when user marks dice for hold they are set to held state")
     @Test
     void testHold() {
-        List<Die> roll = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
-            roll.add(new Die(Die.Side.GOLD_COIN, Die.State.ACTIVE));
-        }
-
-        List<List<Die>> riggedRolls = new ArrayList<>(List.of(roll));
-        turn.setRiggedRolls(riggedRolls);
-
         turn.roll();
 
+        List<Turn.RiggedDie> riggedDice = new ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.GOLD_COIN, Die.State.ACTIVE)));
+        }
+
+        turn.setRiggedDice(riggedDice);
+        turn.postRoll();
         turn.hold(List.of(0, 1, 2));
 
         var dice = turn.getDice();
@@ -324,11 +368,17 @@ public class TurnTest {
     @DisplayName("Validated that when user marks dice for active they are set to active state unless they are skulls")
     @Test
     void testActive_Skulls() {
-        List<List<Die>> riggedRolls = new ArrayList<>(List.of(new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.GOLD_COIN, Die.State.HELD)))));
-        riggedRolls.get(0).set(0, new Die(Die.Side.SKULL, Die.State.HELD));
-        turn.setRiggedRolls(riggedRolls);
 
         turn.roll();
+
+        List<Turn.RiggedDie> riggedDice = new ArrayList<>();
+        riggedDice.add(new Turn.RiggedDie(0, new Die(Die.Side.SKULL, Die.State.HELD)));
+        for (int i = 1; i < 8; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.GOLD_COIN, Die.State.HELD)));
+        }
+
+        turn.setRiggedDice(riggedDice);
+        turn.postRoll();
 
         assertThrows(Turn.SkullActivatedException.class, () -> turn.active(List.of(0, 1, 2)));
         assertDoesNotThrow(() -> turn.active(List.of(1, 2)));
@@ -341,14 +391,17 @@ public class TurnTest {
     @DisplayName("Validate activation of one skull using sorceress card.")
     @Test
     void testActive_Sorceress() {
-        List<List<Die>> riggedRolls = new ArrayList<>(List.of(new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.GOLD_COIN, Die.State.HELD)))));
-        riggedRolls.get(0).set(0, new Die(Die.Side.SKULL, Die.State.HELD));
-        riggedRolls.get(0).set(1, new Die(Die.Side.SKULL, Die.State.HELD));
-
-        turn.setRiggedRolls(riggedRolls);
         turn.setFortuneCard(new FortuneCard(FortuneCard.Type.SORCERESS));
-
         turn.roll();
+
+        List<Turn.RiggedDie> riggedDice = new ArrayList<>();
+        riggedDice.add(new Turn.RiggedDie(0, new Die(Die.Side.SKULL, Die.State.HELD)));
+        riggedDice.add(new Turn.RiggedDie(1, new Die(Die.Side.SKULL, Die.State.HELD)));
+        for (int i = 2; i < 8; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.GOLD_COIN, Die.State.HELD)));
+        }
+        turn.setRiggedDice(riggedDice);
+        turn.postRoll();
 
         // Cannot activate more than one skull
         assertThrows(Turn.SkullActivatedException.class, () -> turn.active(List.of(0, 1)));
@@ -363,62 +416,48 @@ public class TurnTest {
     @DisplayName("Validate that post roll skulls are marked as being held")
     @Test
     void validatePostRollSkullCheck() {
-        List<List<Die>> riggedRolls = new ArrayList<>(List.of(new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.PARROT, Die.State.ACTIVE)))));
-        riggedRolls.get(0).set(0, new Die(Die.Side.SKULL, Die.State.ACTIVE));
-        turn.setRiggedRolls(riggedRolls);
-
         turn.roll();
+
+        List<Turn.RiggedDie> riggedDice = new ArrayList<>();
+        riggedDice.add(new Turn.RiggedDie(0, new Die(Die.Side.SKULL, Die.State.ACTIVE)));
+        for (int i = 1; i < 8; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.PARROT, Die.State.ACTIVE)));
+        }
+
+        turn.setRiggedDice(riggedDice);
+        turn.postRoll();
 
         assertEquals(turn.getDice().get(0).state, Die.State.HELD);
-    }
-
-
-    @DisplayName("Validate that rolls can be rigged")
-    @Test
-    void testRollRigging() {
-        List<List<Die>> riggedRolls = new ArrayList<>();
-
-        // Insert rigged rolls
-        riggedRolls.add(new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.PARROT, Die.State.HELD))));
-        riggedRolls.add(new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.DIAMOND, Die.State.HELD))));
-        riggedRolls.add(new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.GOLD_COIN, Die.State.HELD))));
-
-        // Setup new turn
-        turn = new Turn();
-        turn.setRiggedRolls(riggedRolls);
-
-        turn.roll();
-        assertEquals(turn.getDice(), riggedRolls.get(0));
-
-        turn.roll();
-        assertEquals(turn.getDice(), riggedRolls.get(1));
-
-        turn.roll();
-        assertEquals(turn.getDice(), riggedRolls.get(2));
-
     }
 
     @DisplayName("Validate player cannot go to Island of the Dead when in Sea Battle")
     @Test
     void testSeaBattle_IslandOfDead() {
-        List<List<Die>> riggedRolls = new ArrayList<>(List.of(new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.SKULL, Die.State.ACTIVE)))));
-        turn.setRiggedRolls(riggedRolls);
+        List<Turn.RiggedDie> riggedDice = new ArrayList<>();
         turn.setFortuneCard(new SeaBattleCard(2));
-
         turn.roll();
-
+        for (int i = 0; i < 8; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.SKULL, Die.State.ACTIVE)));
+        }
+        turn.setRiggedDice(riggedDice);
         assertFalse(turn.onSkullIsland());
     }
 
     @DisplayName("Validate bonus is received with Sea Battle")
     @Test
     void testSeaBattle_Bonus() {
-        List<List<Die>> riggedRolls = new ArrayList<>(List.of(new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.PARROT, Die.State.ACTIVE)))));
-        riggedRolls.get(0).set(0, new Die(Die.Side.SWORD, Die.State.ACTIVE));
-        riggedRolls.get(0).set(1, new Die(Die.Side.SWORD, Die.State.ACTIVE));
-        turn.setRiggedRolls(riggedRolls);
+
         turn.setFortuneCard(new SeaBattleCard(2));
         turn.roll();
+
+        List<Turn.RiggedDie> riggedDice = new ArrayList<>();
+        riggedDice.add(new Turn.RiggedDie(0, new Die(Die.Side.SWORD, Die.State.ACTIVE)));
+        riggedDice.add(new Turn.RiggedDie(1, new Die(Die.Side.SWORD, Die.State.ACTIVE)));
+        for (int i = 2; i < 8; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.PARROT, Die.State.ACTIVE)));
+        }
+        turn.setRiggedDice(riggedDice);
+        turn.postRoll();
 
         var score = turn.complete();
 
@@ -429,14 +468,18 @@ public class TurnTest {
     @DisplayName("Validate player score is zero if Sea Battle fails")
     @Test
     void testSeaBattle_Fail() {
-        List<List<Die>> riggedRolls = new ArrayList<>(List.of(new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.PARROT, Die.State.ACTIVE)))));
-        riggedRolls.get(0).set(0, new Die(Die.Side.SWORD, Die.State.ACTIVE));
-        riggedRolls.get(0).set(1, new Die(Die.Side.SWORD, Die.State.ACTIVE));
-
-        turn.setRiggedRolls(riggedRolls);
         turn.setFortuneCard(new SeaBattleCard(3));
-
         turn.roll();
+
+        List<Turn.RiggedDie> riggedDice = new ArrayList<>();
+        riggedDice.add(new Turn.RiggedDie(0, new Die(Die.Side.SWORD, Die.State.ACTIVE)));
+        riggedDice.add(new Turn.RiggedDie(1, new Die(Die.Side.SWORD, Die.State.ACTIVE)));
+        for (int i = 2; i < 8; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.PARROT, Die.State.ACTIVE)));
+        }
+
+        turn.setRiggedDice(riggedDice);
+        turn.postRoll();
 
         var score = turn.complete();
 
@@ -446,19 +489,20 @@ public class TurnTest {
     @DisplayName("Validate die in treasure chest are not re-rolled")
     @Test
     void testTreasureChest() {
-        List<List<Die>> riggedRolls = new ArrayList<>(
-                List.of(new ArrayList<>(Collections.nCopies(8, new Die(Die.Side.PARROT, Die.State.ACTIVE))))
-        );
 
         turn.setFortuneCard(new FortuneCard(FortuneCard.Type.TREASURE_CHEST));
-        turn.setRiggedRolls(riggedRolls);
-
         turn.roll();
 
+        List<Turn.RiggedDie> riggedDice = new ArrayList<>();
+
+        for (int i = 0; i < 5; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.PARROT, Die.State.ACTIVE)));
+        }
+
+        turn.setRiggedDice(riggedDice);
         turn.addToChest(List.of(0, 1, 2));
-
+        turn.postRoll();
         turn.roll();
-
 
         //Validate that protected die are not re-rolled
         var dice = turn.getDice();
@@ -473,32 +517,22 @@ public class TurnTest {
     @DisplayName("Validate die in treasure chest are calculated even if player is dead")
     @Test
     void validateTreasureChestScore() {
-        List<List<Turn.RiggedReRoll>> riggedRolls = new ArrayList<>();
-
-        // First roll
-        List<Turn.RiggedReRoll> roll = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
-            roll.add(new Turn.RiggedReRoll(i, new Die(Die.Side.PARROT, Die.State.ACTIVE)));
-        }
-        riggedRolls.add(roll);
-
-        // Second roll will set skulls causing player to be disqualified.
-        roll = new ArrayList<>();
-        for (int i = 3; i < 8; i++) {
-            roll.add(new Turn.RiggedReRoll(i, new Die(Die.Side.SKULL, Die.State.ACTIVE)));
-        }
-
-        riggedRolls.add(roll);
-
-        turn.setRiggedReRolls(riggedRolls);
         turn.setFortuneCard(new FortuneCard(FortuneCard.Type.TREASURE_CHEST));
 
-        turn.roll();
-        turn.addToChest(List.of(0, 1, 2));
-        turn.roll();
+        List<Turn.RiggedDie> riggedDice = new ArrayList<>();
 
-        // Ensure user is dead
-        assertEquals(turn.getState(), Turn.State.DISQUALIFIED);
+        for (int i = 0; i < 5; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.PARROT, Die.State.ACTIVE)));
+        }
+        for (int i = 5; i < 8; i++) {
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.SKULL, Die.State.ACTIVE)));
+        }
+
+        turn.roll();
+        turn.setRiggedDice(riggedDice);
+        turn.addToChest(List.of(0, 1, 2));
+        turn.postRoll();
+
 
         var score = turn.complete();
 
@@ -509,22 +543,21 @@ public class TurnTest {
     @DisplayName("Validate full chest and captain card")
     @Test
     void testFullChest() {
-        List<Die> roll = new ArrayList<>(List.of(
-                new Die(Die.Side.MONKEY, Die.State.HELD),
-                new Die(Die.Side.MONKEY, Die.State.HELD),
-                new Die(Die.Side.MONKEY, Die.State.HELD),
-                new Die(Die.Side.SWORD, Die.State.HELD),
-                new Die(Die.Side.SWORD, Die.State.HELD),
-                new Die(Die.Side.SWORD, Die.State.HELD),
-                new Die(Die.Side.GOLD_COIN, Die.State.HELD),
-                new Die(Die.Side.GOLD_COIN, Die.State.HELD)
-        ));
-        List<List<Die>> riggedRolls = new ArrayList<>(List.of(roll));
-
         turn.setFortuneCard(new FortuneCard(FortuneCard.Type.CAPTAIN));
-        turn.setRiggedRolls(riggedRolls);
-
         turn.roll();
+
+        List<Turn.RiggedDie> riggedDice = new ArrayList<>();
+        riggedDice.add(new Turn.RiggedDie(0, new Die(Die.Side.MONKEY, Die.State.HELD)));
+        riggedDice.add(new Turn.RiggedDie(1, new Die(Die.Side.MONKEY, Die.State.HELD)));
+        riggedDice.add(new Turn.RiggedDie(2, new Die(Die.Side.MONKEY, Die.State.HELD)));
+        riggedDice.add(new Turn.RiggedDie(3, new Die(Die.Side.SWORD, Die.State.HELD)));
+        riggedDice.add(new Turn.RiggedDie(4, new Die(Die.Side.SWORD, Die.State.HELD)));
+        riggedDice.add(new Turn.RiggedDie(5, new Die(Die.Side.SWORD, Die.State.HELD)));
+        riggedDice.add(new Turn.RiggedDie(6, new Die(Die.Side.GOLD_COIN, Die.State.HELD)));
+        riggedDice.add(new Turn.RiggedDie(7, new Die(Die.Side.GOLD_COIN, Die.State.HELD)));
+
+        turn.setRiggedDice(riggedDice);
+        turn.postRoll();
 
         var score = turn.complete();
 
@@ -536,28 +569,26 @@ public class TurnTest {
     @DisplayName("Validate full chest with 2 sword sea battle")
     @Test
     void testFullChest_SeaBattle() {
-        List<Die> roll = new ArrayList<>(List.of(
-                new Die(Die.Side.SWORD, Die.State.HELD),
-                new Die(Die.Side.SWORD, Die.State.HELD),
-                new Die(Die.Side.MONKEY, Die.State.HELD),
-                new Die(Die.Side.MONKEY, Die.State.HELD),
-                new Die(Die.Side.MONKEY, Die.State.HELD),
-                new Die(Die.Side.MONKEY, Die.State.HELD),
-                new Die(Die.Side.GOLD_COIN, Die.State.HELD),
-                new Die(Die.Side.GOLD_COIN, Die.State.HELD)
-        ));
-
-        List<List<Die>> riggedRolls = new ArrayList<>(List.of(roll));
 
         turn.setFortuneCard(new SeaBattleCard(2));
-        turn.setRiggedRolls(riggedRolls);
-
         turn.roll();
+
+        List<Turn.RiggedDie> riggedDice = new ArrayList<>();
+        riggedDice.add(new Turn.RiggedDie(0, new Die(Die.Side.SWORD, Die.State.HELD)));
+        riggedDice.add(new Turn.RiggedDie(1, new Die(Die.Side.SWORD, Die.State.HELD)));
+        riggedDice.add(new Turn.RiggedDie(2, new Die(Die.Side.MONKEY, Die.State.HELD)));
+        riggedDice.add(new Turn.RiggedDie(3, new Die(Die.Side.MONKEY, Die.State.HELD)));
+        riggedDice.add(new Turn.RiggedDie(4, new Die(Die.Side.MONKEY, Die.State.HELD)));
+        riggedDice.add(new Turn.RiggedDie(5, new Die(Die.Side.MONKEY, Die.State.HELD)));
+        riggedDice.add(new Turn.RiggedDie(6, new Die(Die.Side.GOLD_COIN, Die.State.HELD)));
+        riggedDice.add(new Turn.RiggedDie(7, new Die(Die.Side.GOLD_COIN, Die.State.HELD)));
+
+        turn.setRiggedDice(riggedDice);
+        turn.postRoll();
 
         var score = turn.complete();
 
         // 4 x monkeys (200), 2 x gold coins (200), 2 x sword sea battle (300) + full chest (500)
         assertEquals(1200, score);
-
     }
 }
