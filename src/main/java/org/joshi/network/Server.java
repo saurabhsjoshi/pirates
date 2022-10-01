@@ -17,12 +17,11 @@ public class Server {
      */
     private static final Map<String, ClientHandler> clients = new ConcurrentHashMap<>();
 
-    private final MessageHandler messageHandler;
+    private MessageHandler messageHandler;
     private final ServerSocket socket;
 
-    public Server(int socketPort, MessageHandler messageHandler) throws IOException {
+    public Server(int socketPort) throws IOException {
         socket = new ServerSocket(socketPort);
-        this.messageHandler = messageHandler;
     }
 
     /**
@@ -48,6 +47,10 @@ public class Server {
      */
     public void stop() throws IOException {
         socket.close();
+    }
+
+    public void setMessageHandler(MessageHandler messageHandler) {
+        this.messageHandler = messageHandler;
     }
 
     /**

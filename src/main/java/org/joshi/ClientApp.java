@@ -1,6 +1,7 @@
 package org.joshi;
 
 import org.joshi.network.Client;
+import org.joshi.network.MessageHandler;
 
 import java.io.IOException;
 
@@ -10,10 +11,13 @@ import java.io.IOException;
 public class ClientApp {
 
     public static void main(String[] args) throws IOException {
-        Client client = new Client(6794, (senderId, msg) -> {
-            //TODO: Handle messages
-        });
 
+        Client client = new Client(6794);
+
+        MessageHandler handler = (senderId, msg) -> {
+        };
+
+        client.setMessageHandler(handler);
         client.start();
     }
 }

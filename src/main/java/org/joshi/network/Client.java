@@ -6,15 +6,14 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class Client {
-    private final MessageHandler messageHandler;
+    private MessageHandler messageHandler;
     private final Socket socket;
 
     private final ObjectOutputStream out;
 
-    public Client(int socketPort, MessageHandler messageHandler) throws IOException {
+    public Client(int socketPort) throws IOException {
         socket = new Socket("localhost", socketPort);
         out = new ObjectOutputStream(socket.getOutputStream());
-        this.messageHandler = messageHandler;
     }
 
     public void start() {
@@ -32,6 +31,10 @@ public class Client {
         });
 
         clientThread.start();
+    }
+
+    public void setMessageHandler(MessageHandler messageHandler) {
+        this.messageHandler = messageHandler;
     }
 
     public void sendMsg(Message message) throws IOException {

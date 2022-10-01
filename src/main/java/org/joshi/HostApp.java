@@ -1,5 +1,6 @@
 package org.joshi;
 
+import org.joshi.network.MessageHandler;
 import org.joshi.network.Server;
 
 import java.io.IOException;
@@ -10,11 +11,12 @@ import java.io.IOException;
 public class HostApp {
 
     public static void main(String[] args) throws IOException {
-        System.out.println("Starting server");
-        Server server = new Server(6794, (senderId, msg) -> {
-            // TODO: Handle messages from clients
+        final Server server = new Server(6794);
+        MessageHandler handler = ((senderId, msg) -> {
+
         });
 
+        server.setMessageHandler(handler);
         server.start(2);
     }
 }
