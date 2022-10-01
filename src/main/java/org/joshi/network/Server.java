@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * TCP server that allows sending and receiving messages.
  */
-public class Server implements MsgPublisher {
+public class Server {
 
     /**
      * A map containing the uuid and associated client handler.
@@ -53,12 +53,13 @@ public class Server implements MsgPublisher {
         this.messageHandler = messageHandler;
     }
 
-    @Override
-    public void sendMsg(Message message) {
+
+    public void broadcast(Message message) {
         for (var client : clients.values()) {
             try {
                 client.sendMsg(message);
             } catch (IOException e) {
+                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }

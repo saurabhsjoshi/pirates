@@ -114,7 +114,7 @@ public class Game {
         }
     }
 
-    boolean isFinalRound() {
+    public boolean isFinalRound() {
         return finalPlayer != -1;
     }
 
@@ -124,6 +124,10 @@ public class Game {
 
     public boolean ended() {
         return winner != null;
+    }
+
+    public PlayerId getWinner() {
+        return winner;
     }
 
     public FortuneCard getCurrentCard() {

@@ -5,6 +5,8 @@ import org.joshi.network.Server;
 import org.joshi.pirates.Game;
 import org.joshi.pirates.Player;
 import org.joshi.pirates.PlayerId;
+import org.joshi.pirates.TurnResult;
+import org.joshi.pirates.msg.PlayerScoreMsg;
 import org.joshi.pirates.msg.RegisterUsrMsg;
 import org.joshi.pirates.msg.StartTurnMsg;
 import org.joshi.pirates.msg.TurnEndMsg;
@@ -12,6 +14,7 @@ import org.joshi.pirates.ui.ConsoleUtils;
 import org.joshi.pirates.ui.PlayerTurn;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 
@@ -21,7 +24,7 @@ import java.util.concurrent.CountDownLatch;
 public class HostApp {
     private static final CountDownLatch gameEndLatch = new CountDownLatch(1);
 
-    private Game game;
+    private final Game game;
 
     private Player host;
 
@@ -34,12 +37,14 @@ public class HostApp {
         app.start();
     }
 
-    void start() throws IOException, InterruptedException {
-        host = new Player(new PlayerId(UUID.randomUUID().toString(), ConsoleUtils.userPrompt("Enter username")));
-        server = new Server(6794);
-
+    public HostApp() {
         // Create a game instance
         game = new Game(MAX_PLAYERS);
+    }
+
+    void start() throws IOException, InterruptedException {
+        host = new Player(new PlayerId(UUID.randomUUID().toString(), ConsoleUtils.userPrompt("Enter username to start server")));
+        server = new Server(6794);
 
         // Add host to the game
         game.addPlayer(host);
@@ -47,6 +52,7 @@ public class HostApp {
 
         MessageHandler handler = ((senderId, msg) -> {
             switch (msg.getType()) {
+
                 case RegisterUsrMsg.TYPE -> {
                     game.addPlayer(new Player(new PlayerId(senderId, ((RegisterUsrMsg) msg).getUsername())));
                     if (game.canPlay()) {
@@ -55,14 +61,7 @@ public class HostApp {
                     }
                 }
 
-                case TurnEndMsg.TYPE -> {
-                    game.endTurn(((TurnEndMsg) msg).getResult());
-                    if (game.ended()) {
-                        gameEndLatch.countDown();
-                    } else {
-                        startTurn(game.startTurn());
-                    }
-                }
+                case TurnEndMsg.TYPE -> postTurn(((TurnEndMsg) msg).getResult());
             }
         });
 
@@ -73,15 +72,33 @@ public class HostApp {
 
         // Wait for game to end
         gameEndLatch.await();
-        server.stop();
+    }
+
+    void postTurn(TurnResult result) throws IOException {
+        game.endTurn(result);
+
+        if (game.ended()) {
+            ConsoleUtils.printWinner(game.getWinner().username());
+            gameEndLatch.countDown();
+            server.stop();
+            return;
+        }
+
+        ConsoleUtils.printPlayerScores(game.getPlayers());
+
+        server.broadcast(new PlayerScoreMsg(new ArrayList<>(game.getPlayers())));
+
+        if (game.isFinalRound()) {
+            ConsoleUtils.printSysMsg("FINAL ROUND");
+        }
+
+        startTurn(game.startTurn());
     }
 
     void startTurn(PlayerId playerId) throws IOException {
         if (playerId == host.getPlayerId()) {
-            PlayerTurn playerTurn = new PlayerTurn(server, game.getCurrentCard());
-            var result = playerTurn.start();
-            game.endTurn(result);
-            startTurn(game.startTurn());
+            PlayerTurn playerTurn = new PlayerTurn(game.getCurrentCard());
+            postTurn(playerTurn.start());
             return;
         }
 

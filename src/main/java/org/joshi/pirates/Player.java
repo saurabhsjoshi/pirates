@@ -1,9 +1,11 @@
 package org.joshi.pirates;
 
+import java.io.Serializable;
+
 /**
  * This class indicates a player in the game.
  */
-public class Player {
+public class Player implements Serializable {
 
     /**
      * Unique identifier for this player.
@@ -13,11 +15,10 @@ public class Player {
     /**
      * Current score of the player.
      */
-    private int score;
+    private Integer score = 0;
 
     public Player(PlayerId playerId) {
         this.playerId = playerId;
-        this.score = 0;
     }
 
     public PlayerId getPlayerId() {
@@ -26,6 +27,10 @@ public class Player {
 
     public int getScore() {
         return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 
     public void addScore(int score) {

@@ -1,6 +1,5 @@
 package org.joshi.pirates.ui;
 
-import org.joshi.network.MsgPublisher;
 import org.joshi.pirates.Turn;
 import org.joshi.pirates.TurnResult;
 import org.joshi.pirates.cards.FortuneCard;
@@ -9,11 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerTurn {
-    private final MsgPublisher publisher;
     private final FortuneCard fortuneCard;
 
-    public PlayerTurn(MsgPublisher publisher, FortuneCard card) {
-        this.publisher = publisher;
+    public PlayerTurn(FortuneCard card) {
         this.fortuneCard = card;
     }
 
@@ -41,11 +38,16 @@ public class PlayerTurn {
 
                 if (turn.getState() == Turn.State.DISQUALIFIED) {
                     ConsoleUtils.printSysMsg("YOU ARE DISQUALIFIED (3 SKULLS)");
-                    return new TurnResult(false, 0);
+                    return turn.complete();
                 }
 
                 var result = ConsoleUtils.printRoundOptions(fortuneCard);
+                if (result.isBlank()) {
+                    continue;
+                }
+
                 var split = result.split("\\s+");
+
                 List<Integer> index = new ArrayList<>();
 
                 switch (result.charAt(0)) {

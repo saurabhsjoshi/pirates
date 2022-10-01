@@ -2,6 +2,7 @@ package org.joshi;
 
 import org.joshi.network.Client;
 import org.joshi.network.MessageHandler;
+import org.joshi.pirates.msg.PlayerScoreMsg;
 import org.joshi.pirates.msg.RegisterUsrMsg;
 import org.joshi.pirates.msg.StartTurnMsg;
 import org.joshi.pirates.msg.TurnEndMsg;
@@ -22,11 +23,13 @@ public class ClientApp {
 
         MessageHandler handler = (senderId, msg) -> {
             switch (msg.getType()) {
-                case StartTurnMsg.TYPE:
-                    PlayerTurn turn = new PlayerTurn(client, ((StartTurnMsg) msg).getFortuneCard());
+                case StartTurnMsg.TYPE -> {
+                    PlayerTurn turn = new PlayerTurn(((StartTurnMsg) msg).getFortuneCard());
                     var result = turn.start();
                     client.sendMsg(new TurnEndMsg(result));
-                    break;
+                }
+
+                case PlayerScoreMsg.TYPE -> ConsoleUtils.printPlayerScores(((PlayerScoreMsg) msg).getPlayers());
             }
 
         };

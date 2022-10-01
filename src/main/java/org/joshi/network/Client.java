@@ -5,7 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class Client implements MsgPublisher {
+public class Client {
     private MessageHandler messageHandler;
     private final Socket socket;
 

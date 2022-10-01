@@ -1,6 +1,7 @@
 package org.joshi.pirates.ui;
 
 import org.joshi.pirates.Die;
+import org.joshi.pirates.Player;
 import org.joshi.pirates.cards.FortuneCard;
 import org.joshi.pirates.cards.SeaBattleCard;
 import org.joshi.pirates.cards.SkullCard;
@@ -28,8 +29,9 @@ public class ConsoleUtils {
     }
 
     public static String printRoundOptions(FortuneCard card) {
+        printSysMsg("OPTIONS");
         System.out.println("1. Set die as active");
-        System.out.println("2. Set die as held");
+        System.out.println("2. Hold dice");
         System.out.println("3. Re roll");
 
         if (card.getType() == FortuneCard.Type.TREASURE_CHEST) {
@@ -60,7 +62,6 @@ public class ConsoleUtils {
     }
 
     public static void startRoundMsg(FortuneCard card) {
-        System.out.println("\n\n\n");
         System.out.println("FORTUNE CARD: " + fortuneCard(card));
     }
 
@@ -68,8 +69,20 @@ public class ConsoleUtils {
         printSysMsg("DICE STATE");
         for (int i = 0; i < dice.size(); i++) {
             var die = dice.get(i);
-            System.out.println(i + ":" + die.getDiceSide().name() + "(" + die.getState() + ")");
+            System.out.printf("%-1s %-10s %-10s\n", i, die.getDiceSide().name(), die.getState().name());
         }
+    }
+
+
+    public static void printPlayerScores(List<Player> players) {
+        printSysMsg("PLAYER SCORES");
+        for (var player : players) {
+            System.out.println(player.getPlayerId().username() + ": " + player.getScore());
+        }
+    }
+
+    public static void printWinner(String winner) {
+        printSysMsg("WINNER IS " + winner);
     }
 
     public static void printSysMsg(String msg) {
