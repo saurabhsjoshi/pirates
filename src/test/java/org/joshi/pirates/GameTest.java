@@ -47,15 +47,15 @@ public class GameTest {
 
         var player = game.startTurn();
         assertEquals(player, player1.getPlayerId());
-        game.endTurn(1000);
+        game.endTurn(new TurnResult(false, 1000));
 
         player = game.startTurn();
         assertEquals(player, player2.getPlayerId());
-        game.endTurn(1000);
+        game.endTurn(new TurnResult(false, 1000));
 
         player = game.startTurn();
         assertEquals(player, player3.getPlayerId());
-        game.endTurn(1000);
+        game.endTurn(new TurnResult(false, 1000));
 
         player = game.startTurn();
         assertEquals(player, player1.getPlayerId());
@@ -69,13 +69,13 @@ public class GameTest {
         game.addPlayer(player3);
 
         game.startTurn();
-        game.endTurn(1000);
+        game.endTurn(new TurnResult(false, 1000));
 
         game.startTurn();
-        game.endTurn(2000);
+        game.endTurn(new TurnResult(false, 2000));
 
         game.startTurn();
-        game.endTurn(1500);
+        game.endTurn(new TurnResult(false, 1500));
 
         var players = game.getPlayers();
 
@@ -93,13 +93,13 @@ public class GameTest {
         game.addPlayer(player3);
 
         game.startTurn();
-        game.endTurn(1000);
+        game.endTurn(new TurnResult(false, 1000));
 
         game.startTurn();
-        game.endTurn(2000);
+        game.endTurn(new TurnResult(false, 2000));
 
         game.startTurn();
-        game.endTurn(-500);
+        game.endTurn(new TurnResult(true, -500));
 
         var players = game.getPlayers();
         assertEquals(500, players.get(0).getScore());
@@ -115,13 +115,13 @@ public class GameTest {
         game.addPlayer(player3);
 
         game.startTurn();
-        game.endTurn(1000);
+        game.endTurn(new TurnResult(false, 1000));
 
         game.startTurn();
-        game.endTurn(300);
+        game.endTurn(new TurnResult(false, 300));
 
         game.startTurn();
-        game.endTurn(-500);
+        game.endTurn(new TurnResult(true, -500));
 
         var players = game.getPlayers();
 
@@ -138,10 +138,10 @@ public class GameTest {
         game.addPlayer(player3);
 
         game.startTurn();
-        game.endTurn(1000);
+        game.endTurn(new TurnResult(false, 1000));
 
         game.startTurn();
-        game.endTurn(3000);
+        game.endTurn(new TurnResult(false, 3000));
 
         assertTrue(game.isFinalRound());
     }
@@ -154,21 +154,21 @@ public class GameTest {
         game.addPlayer(player3);
 
         game.startTurn();
-        game.endTurn(1000);
+        game.endTurn(new TurnResult(false, 1000));
         assertFalse(game.ended());
 
         game.startTurn();
-        game.endTurn(3000);
+        game.endTurn(new TurnResult(false, 3000));
 
         assertFalse(game.ended());
         assertTrue(game.isFinalRound());
 
         game.startTurn();
-        game.endTurn(2000);
+        game.endTurn(new TurnResult(false, 2000));
         assertFalse(game.ended());
 
         game.startTurn();
-        game.endTurn(500);
+        game.endTurn(new TurnResult(false, 500));
 
         assertTrue(game.ended());
     }
@@ -182,22 +182,22 @@ public class GameTest {
         game.addPlayer(player3);
 
         game.startTurn();
-        game.endTurn(1000);
+        game.endTurn(new TurnResult(false, 1000));
         assertFalse(game.ended());
 
         game.startTurn();
-        game.endTurn(3000);
+        game.endTurn(new TurnResult(false, 3000));
 
         assertFalse(game.ended());
         assertTrue(game.isFinalRound());
 
         game.startTurn();
-        game.endTurn(-500);
+        game.endTurn(new TurnResult(true, -500));
 
         assertFalse(game.ended());
 
         game.startTurn();
-        game.endTurn(500);
+        game.endTurn(new TurnResult(false, 500));
 
         assertFalse(game.isFinalRound());
         assertFalse(game.ended());

@@ -78,16 +78,16 @@ public class Game {
         return players.get(currentPlayer).getPlayerId();
     }
 
-    public void endTurn(int score) {
-        if (score < 0) {
+    public void endTurn(TurnResult result) {
+        if (result.islandOfDead()) {
             // Player was on island of skulls, update other player scores
             for (int i = 0; i < 3; i++) {
                 if (i != currentPlayer) {
-                    players.get(i).addScore(score);
+                    players.get(i).addScore(result.score());
                 }
             }
         } else {
-            players.get(currentPlayer).addScore(score);
+            players.get(currentPlayer).addScore(result.score());
             if (finalPlayer == -1 && players.get(currentPlayer).getScore() >= MAX_SCORE) {
                 finalPlayer = currentPlayer;
             }

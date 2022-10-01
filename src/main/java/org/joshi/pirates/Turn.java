@@ -175,13 +175,13 @@ public class Turn {
      *
      * @return score earned this round
      */
-    public int complete() {
+    public TurnResult complete() {
         var expectedChestSize = dice.size();
 
         // If player is dead they get no score
         if (state == State.DISQUALIFIED) {
             if (fortuneCard.getType() != FortuneCard.Type.TREASURE_CHEST) {
-                return 0;
+                return new TurnResult(false, 0);
             }
             // Only die that are protected will be used for scoring
             dice.removeIf(die -> die.state != Die.State.IN_TREASURE_CHEST);
@@ -224,7 +224,7 @@ public class Turn {
                     .count();
 
             if (count != seaBattleCard.getSwords()) {
-                return 0;
+                return new TurnResult(false, -seaBattleCard.getBonus());
             }
 
             // Only in case of two swords we need to mark these dice as used for full chest calculation
@@ -263,10 +263,10 @@ public class Turn {
 
         // Captain card
         if (fortuneCard.getType() == FortuneCard.Type.CAPTAIN) {
-            return score * 2;
+            return new TurnResult(isOnIslandOfSkulls, score * 2);
         }
 
-        return score;
+        return new TurnResult(isOnIslandOfSkulls, score);
     }
 
     public State getState() {

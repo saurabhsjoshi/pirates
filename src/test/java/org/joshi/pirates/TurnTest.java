@@ -226,7 +226,7 @@ public class TurnTest {
         turn.postRoll();
 
 
-        var score = turn.complete();
+        var score = turn.complete().score();
 
         // 8 x monkey 4000 + 500 full chest * 2 captain
         assertEquals(9000, score);
@@ -248,7 +248,7 @@ public class TurnTest {
         turn.setRiggedDice(riggedDice);
         turn.postRoll();
 
-        var score = turn.complete();
+        var score = turn.complete().score();
 
         // 8 of a kind + bonus for each gold coin
         assertEquals(4800, score);
@@ -272,7 +272,7 @@ public class TurnTest {
         turn.postRoll();
 
 
-        var score = turn.complete();
+        var score = turn.complete().score();
 
         // 8 of a kind + bonus for each diamond coin
         assertEquals(4800, score);
@@ -293,7 +293,7 @@ public class TurnTest {
         turn.setRiggedDice(riggedDice);
         turn.postRoll();
 
-        var score = turn.complete();
+        var score = turn.complete().score();
 
         // 8 of a kind + 500 full chest
         assertEquals(4500, score);
@@ -313,7 +313,7 @@ public class TurnTest {
         turn.setRiggedDice(riggedDice);
         turn.postRoll();
 
-        var score = turn.complete();
+        var score = turn.complete().score();
 
         // 7 skulls (7 X 100)
         assertEquals(-700, score);
@@ -335,7 +335,7 @@ public class TurnTest {
         turn.setRiggedDice(riggedDice);
         turn.postRoll();
 
-        var score = turn.complete();
+        var score = turn.complete().score();
 
         assertEquals(0, score);
     }
@@ -459,7 +459,7 @@ public class TurnTest {
         turn.setRiggedDice(riggedDice);
         turn.postRoll();
 
-        var score = turn.complete();
+        var score = turn.complete().score();
 
         // 6 of a kind 1000 + sea battle bonus of 300 + 500 treasure chest
         assertEquals(1800, score);
@@ -468,7 +468,8 @@ public class TurnTest {
     @DisplayName("Validate player score is zero if Sea Battle fails")
     @Test
     void testSeaBattle_Fail() {
-        turn.setFortuneCard(new SeaBattleCard(3));
+        var seaCard = new SeaBattleCard(3);
+        turn.setFortuneCard(seaCard);
         turn.roll();
 
         List<Turn.RiggedDie> riggedDice = new ArrayList<>();
@@ -481,9 +482,9 @@ public class TurnTest {
         turn.setRiggedDice(riggedDice);
         turn.postRoll();
 
-        var score = turn.complete();
+        var score = turn.complete().score();
 
-        assertEquals(0, score);
+        assertEquals(-seaCard.getBonus(), score);
     }
 
     @DisplayName("Validate die in treasure chest are not re-rolled")
@@ -534,7 +535,7 @@ public class TurnTest {
         turn.postRoll();
 
 
-        var score = turn.complete();
+        var score = turn.complete().score();
 
         // Still should score for three parrots (100)
         assertEquals(100, score);
@@ -559,7 +560,7 @@ public class TurnTest {
         turn.setRiggedDice(riggedDice);
         turn.postRoll();
 
-        var score = turn.complete();
+        var score = turn.complete().score();
 
         // 3 x monkeys, 3 x swords (200)  2 x gold coins (200) full chest (500) * 2 captain
         assertEquals(score, 1800);
@@ -586,7 +587,7 @@ public class TurnTest {
         turn.setRiggedDice(riggedDice);
         turn.postRoll();
 
-        var score = turn.complete();
+        var score = turn.complete().score();
 
         // 4 x monkeys (200), 2 x gold coins (200), 2 x sword sea battle (300) + full chest (500)
         assertEquals(1200, score);
