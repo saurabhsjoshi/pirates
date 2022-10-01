@@ -235,9 +235,9 @@ public class GameTest {
         game.addPlayer(player3);
 
         FortuneCard card = new FortuneCard(FortuneCard.Type.DIAMOND);
-        game.setRiggedFortuneCard(card);
 
         game.startTurn();
+        game.setRiggedFortuneCard(card);
 
         // Validate same instance
         assertSame(card, game.getCurrentCard());
