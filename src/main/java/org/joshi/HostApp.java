@@ -30,19 +30,42 @@ public class HostApp {
 
     private Server server;
 
-    private int MAX_PLAYERS = 3;
+    private final boolean riggingEnabled;
+
+    private final int MAX_PLAYERS;
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        HostApp app = new HostApp();
+        int players = 3;
+        boolean rigged = false;
+
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equals("PLAYERS")) {
+                players = Integer.parseInt(args[i + i]);
+                i++;
+                continue;
+            }
+
+            if (args[i].equals("RIGGED")) {
+                rigged = true;
+            }
+        }
+        HostApp app = new HostApp(rigged, players);
         app.start();
     }
 
-    public HostApp() {
+    public HostApp(boolean riggingEnabled, int maxPlayers) {
+        this.riggingEnabled = riggingEnabled;
+        MAX_PLAYERS = maxPlayers;
+
         // Create a game instance
         game = new Game(MAX_PLAYERS);
     }
 
     void start() throws IOException, InterruptedException {
+        if (riggingEnabled) {
+            ConsoleUtils.printSysMsg("RIGGING ENABLED");
+        }
+
         host = new Player(new PlayerId(UUID.randomUUID().toString(), ConsoleUtils.userPrompt("Enter username to start server")));
         server = new Server(6794);
 
@@ -67,6 +90,12 @@ public class HostApp {
 
         server.setMessageHandler(handler);
 
+        // Single player
+        if (MAX_PLAYERS == 1) {
+            ConsoleUtils.startGameMsg();
+            startTurn(game.startTurn());
+        }
+
         // Wait for two players to join
         server.start(MAX_PLAYERS - 1);
 
@@ -78,6 +107,7 @@ public class HostApp {
         game.endTurn(result);
 
         if (game.ended()) {
+            ConsoleUtils.printPlayerScores(game.getPlayers());
             ConsoleUtils.printWinner(game.getWinner().username());
             gameEndLatch.countDown();
             server.stop();
@@ -97,7 +127,7 @@ public class HostApp {
 
     void startTurn(PlayerId playerId) throws IOException {
         if (playerId == host.getPlayerId()) {
-            PlayerTurn playerTurn = new PlayerTurn(game.getCurrentCard());
+            PlayerTurn playerTurn = new PlayerTurn(game.getCurrentCard(), riggingEnabled);
             postTurn(playerTurn.start());
             return;
         }

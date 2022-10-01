@@ -18,13 +18,24 @@ import java.util.concurrent.CountDownLatch;
 public class ClientApp {
     private static final CountDownLatch gameEndLatch = new CountDownLatch(1);
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    private final boolean rigged;
+
+    public ClientApp(boolean rigged) {
+        this.rigged = rigged;
+    }
+
+    public void start() throws IOException, InterruptedException {
+
+        if (rigged) {
+            ConsoleUtils.printSysMsg("RIGGING ENABLED");
+        }
+
         Client client = new Client(6794);
 
         MessageHandler handler = (senderId, msg) -> {
             switch (msg.getType()) {
                 case StartTurnMsg.TYPE -> {
-                    PlayerTurn turn = new PlayerTurn(((StartTurnMsg) msg).getFortuneCard());
+                    PlayerTurn turn = new PlayerTurn(((StartTurnMsg) msg).getFortuneCard(), rigged);
                     var result = turn.start();
                     client.sendMsg(new TurnEndMsg(result));
                 }
@@ -40,4 +51,19 @@ public class ClientApp {
         client.sendMsg(new RegisterUsrMsg(ConsoleUtils.userPrompt("Enter username")));
         gameEndLatch.await();
     }
+
+    public static void main(String[] args) throws IOException, InterruptedException {
+        boolean rigged = false;
+        for (var arg : args) {
+            if (arg.equals("RIGGED")) {
+                rigged = true;
+                break;
+            }
+        }
+
+        ClientApp clientApp = new ClientApp(rigged);
+        clientApp.start();
+    }
+
+
 }

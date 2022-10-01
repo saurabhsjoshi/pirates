@@ -66,10 +66,6 @@ public class Game {
      * @return player id of the player whose turn to start
      */
     public PlayerId startTurn() {
-        if (currentPlayer == MAX_PLAYERS) {
-            currentPlayer = 0;
-        }
-
         if (cardDeck.isEmpty()) {
             cardDeck.shuffle();
         }
@@ -93,6 +89,9 @@ public class Game {
         }
 
         currentPlayer++;
+        if (currentPlayer == MAX_PLAYERS) {
+            currentPlayer = 0;
+        }
 
         // Check if game has ended
         int maxScore = -1;
