@@ -40,6 +40,10 @@ public class Die {
         return used;
     }
 
+    public State getState() {
+        return state;
+    }
+
     /**
      * All possible sides of a die.
      */

@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * TCP server that allows sending and receiving messages.
  */
-public class Server {
+public class Server implements MsgPublisher {
 
     /**
      * A map containing the uuid and associated client handler.
@@ -53,6 +53,17 @@ public class Server {
         this.messageHandler = messageHandler;
     }
 
+    @Override
+    public void sendMsg(Message message) {
+        for (var client : clients.values()) {
+            try {
+                client.sendMsg(message);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     /**
      * Class that handles each client.
      */
@@ -78,11 +89,15 @@ public class Server {
             try {
                 out = new ObjectOutputStream(socket.getOutputStream());
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-                Message msg = (Message) in.readObject();
-                if (msg != null) {
-                    messageHandler.onMessage(id, msg);
+
+                while (true) {
+                    Message msg = (Message) in.readObject();
+                    if (msg != null) {
+                        messageHandler.onMessage(id, msg);
+                    }
                 }
             } catch (Exception ex) {
+                ex.printStackTrace();
                 System.out.println("Socket closed due to exception.");
             }
         }

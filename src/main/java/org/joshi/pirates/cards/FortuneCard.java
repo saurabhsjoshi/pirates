@@ -1,9 +1,11 @@
 package org.joshi.pirates.cards;
 
+import java.io.Serializable;
+
 /**
  * Class that represents a fortune card.
  */
-public class FortuneCard {
+public class FortuneCard implements Serializable {
 
     public enum Type {
         TREASURE_CHEST,

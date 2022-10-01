@@ -12,7 +12,9 @@ public class Game {
 
     private static final int MAX_SCORE = 3000;
 
-    private final ArrayList<Player> players = new ArrayList<>(3);
+    private final int MAX_PLAYERS;
+
+    private final ArrayList<Player> players;
 
     int currentPlayer = 0;
 
@@ -30,8 +32,14 @@ public class Game {
 
     private final CardDeck cardDeck = new CardDeck();
 
-    public Game() {
+    public Game(int maxPlayers) {
+        MAX_PLAYERS = maxPlayers;
+        players = new ArrayList<>(MAX_PLAYERS);
         cardDeck.shuffle();
+    }
+
+    public Game() {
+        this(3);
     }
 
     /**
@@ -49,7 +57,7 @@ public class Game {
      * @return true if it can start
      */
     public boolean canPlay() {
-        return players.size() == 3;
+        return players.size() == MAX_PLAYERS;
     }
 
     /**
@@ -58,7 +66,7 @@ public class Game {
      * @return player id of the player whose turn to start
      */
     public PlayerId startTurn() {
-        if (currentPlayer == 3) {
+        if (currentPlayer == MAX_PLAYERS) {
             currentPlayer = 0;
         }
 
@@ -72,7 +80,7 @@ public class Game {
     public void endTurn(TurnResult result) {
         if (result.islandOfDead()) {
             // Player was on island of skulls, update other player scores
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < MAX_PLAYERS; i++) {
                 if (i != currentPlayer) {
                     players.get(i).addScore(result.score());
                 }

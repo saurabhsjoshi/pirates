@@ -130,7 +130,7 @@ public class Turn {
         updateState();
     }
 
-    private void updateState() {
+    public void updateState() {
         int skulls = 0;
         int active = 0;
 
@@ -297,6 +297,10 @@ public class Turn {
         for (var roll : riggedDice) {
             dice.set(roll.index, roll.die);
         }
+    }
+
+    public boolean isOnIslandOfSkulls() {
+        return isOnIslandOfSkulls;
     }
 
     public List<Die> getDice() {
