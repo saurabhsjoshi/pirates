@@ -297,7 +297,7 @@ public class SinglePlayerAcceptanceTest {
         assertEquals(4800, score);
     }
 
-    @DisplayName("score first roll with nothing but 2 diamonds and 2 coins and FC is captain (SC 800)")
+    @DisplayName("R52: score first roll with nothing but 2 diamonds and 2 coins and FC is captain (SC 800)")
     @Test
     void R52() throws IOException {
         setRiggedFc(new FortuneCard(FortuneCard.Type.CAPTAIN));
@@ -324,5 +324,45 @@ public class SinglePlayerAcceptanceTest {
 
         int score = getPlayerScore();
         assertEquals(800, score);
+    }
+
+    @DisplayName("R53: get set of 2 monkeys on first roll, get 3rd monkey on 2nd roll (SC 200 since FC is coin)")
+    @Test
+    void R53() throws IOException {
+        defaultRiggedCard();
+
+        // 2 monkeys
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(1, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(2, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(3, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(4, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(5, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(6, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(7, new Die(Die.Side.PARROT))
+        ));
+
+        // Hold monkeys
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "2 0 1");
+
+        // Re-roll
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "3");
+
+        // get 3rd monkey
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(2, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(5, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(6, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(7, new Die(Die.Side.PARROT))
+        ));
+
+        //End turn
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "0");
+
+        assertEquals(200, getPlayerScore());
     }
 }
