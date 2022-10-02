@@ -259,6 +259,10 @@ public class Turn {
                     score -= 100;
                 }
             }
+
+            if (fortuneCard instanceof SkullCard skullCard) {
+                score -= (skullCard.getSkulls() * 100);
+            }
         }
 
         // Captain card
