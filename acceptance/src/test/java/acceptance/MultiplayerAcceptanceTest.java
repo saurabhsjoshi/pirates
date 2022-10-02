@@ -102,23 +102,6 @@ public class MultiplayerAcceptanceTest {
         }
     }
 
-    private int getPlayerScore(BufferedReader reader, String playerName) throws IOException {
-        var lines = TestUtils.waitForUserPrompt(reader);
-        for (int i = 0; i < lines.size(); i++) {
-            var line = lines.get(i);
-            if (line.equals(ConsoleUtils.getSysMsg(ConsoleUtils.SCORE_MSG))) {
-                for (int j = i; j < 3; j++) {
-                    var split = lines.get(j).split("\\s+");
-                    if (split[0].equals(playerName)) {
-                        return Integer.parseInt(split[1]);
-                    }
-                }
-                break;
-            }
-        }
-        return -1;
-    }
-
     private void setRiggedFc(BufferedReader reader, BufferedWriter writer, FortuneCard card) throws IOException {
         // Wait for rigged card prompt
         TestUtils.waitForUserPrompt(reader, logger);
@@ -280,6 +263,105 @@ public class MultiplayerAcceptanceTest {
         assertEquals(3500, scores.get(player1Name));
         assertEquals(0, scores.get(player2Name));
         assertEquals(0, scores.get(player3Name));
+    }
+
+    @Tag("R139")
+    @Timeout(value = 25)
+    @Test
+    void R139() throws IOException {
+        //player 1 scores 0
+        setRiggedFc(reader1, writer1, new FortuneCard(FortuneCard.Type.GOLD));
+        TestUtils.rigDice(reader1, writer1, logger, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(1, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(2, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(3, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(4, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(5, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(6, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(7, new Die(Die.Side.SKULL))
+        ));
+        validatePlayerDead(reader1, player1Name);
+
+        var scores = TestUtils.readScores(reader1, logger);
+
+        assertEquals(0, scores.get(player1Name));
+        assertEquals(0, scores.get(player2Name));
+        assertEquals(0, scores.get(player3Name));
+
+
+        //player2 rolls 7 swords + 1 skull with FC = captain (4000 points - could win)
+        setRiggedFc(reader2, writer2, new FortuneCard(FortuneCard.Type.CAPTAIN));
+        TestUtils.rigDice(reader2, writer2, logger, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(1, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(2, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(3, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(4, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(5, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(6, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(7, new Die(Die.Side.SKULL))
+        ));
+
+        // End player2 turn
+        TestUtils.waitForUserPrompt(reader2, logger);
+        TestUtils.writeLine(writer2, "0", logger);
+
+        scores = TestUtils.readScores(reader1, logger);
+
+        assertEquals(0, scores.get(player1Name));
+        assertEquals(4000, scores.get(player2Name));
+        assertEquals(0, scores.get(player3Name));
+
+        //player3 scores 0
+        setRiggedFc(reader3, writer3, new FortuneCard(FortuneCard.Type.GOLD));
+        TestUtils.rigDice(reader3, writer3, logger, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(1, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(2, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(3, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(4, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(5, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(6, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(7, new Die(Die.Side.SKULL))
+        ));
+
+        // Validate that player3 was disqualified
+        validatePlayerDead(reader3, player3Name);
+
+        scores = TestUtils.readScores(reader1, logger);
+
+        assertEquals(0, scores.get(player1Name));
+        assertEquals(4000, scores.get(player2Name));
+        assertEquals(0, scores.get(player3Name));
+
+        setRiggedFc(reader1, writer1, new FortuneCard(FortuneCard.Type.CAPTAIN));
+        // player 1 has FC = Captain rolls 8 swords gets 8000 points
+        TestUtils.rigDice(reader1, writer1, logger, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(1, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(2, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(3, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(4, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(5, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(6, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(7, new Die(Die.Side.SWORD))
+        ));
+
+        // End turn
+        TestUtils.waitForUserPrompt(reader1, logger);
+        TestUtils.writeLine(writer1, "0", logger);
+        TestUtils.waitForEndTurn(reader1, player1Name, logger);
+
+        scores = TestUtils.readScores(reader1, logger);
+
+        // 8 x sword = 4000 + 500 (full chest) * 2 captain = 9000
+        assertEquals(9000, scores.get(player1Name));
+        assertEquals(4000, scores.get(player2Name));
+        assertEquals(0, scores.get(player3Name));
+
+        // Validate player 1 wins
+        assertTrue(TestUtils.validateWinner(reader1, player1Name, logger));
     }
 
 }
