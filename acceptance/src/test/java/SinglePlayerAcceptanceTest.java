@@ -59,27 +59,16 @@ public class SinglePlayerAcceptanceTest {
         server.destroy();
     }
 
-    @DisplayName("R45: die with 3 skulls on first roll")
-    @Test
-    void DieWith3Skulls_45() throws IOException {
+    private void defaultRiggedCard() throws IOException {
         // Wait for rigged card prompt
         TestUtils.waitForUserPrompt(reader);
         TestUtils.rigFortuneCard(writer, new FortuneCard(FortuneCard.Type.GOLD));
+    }
 
-        // Wait for rigged dice prompt
-        TestUtils.waitForUserPrompt(reader);
-        TestUtils.rigDice(writer, List.of(
-                new Turn.RiggedDie(0, new Die(Die.Side.SKULL, Die.State.ACTIVE)),
-                new Turn.RiggedDie(1, new Die(Die.Side.SKULL, Die.State.ACTIVE)),
-                new Turn.RiggedDie(2, new Die(Die.Side.SKULL, Die.State.ACTIVE)),
-                new Turn.RiggedDie(3, new Die(Die.Side.DIAMOND, Die.State.ACTIVE)),
-                new Turn.RiggedDie(4, new Die(Die.Side.DIAMOND, Die.State.ACTIVE)),
-                new Turn.RiggedDie(5, new Die(Die.Side.DIAMOND, Die.State.ACTIVE)),
-                new Turn.RiggedDie(6, new Die(Die.Side.DIAMOND, Die.State.ACTIVE)),
-                new Turn.RiggedDie(7, new Die(Die.Side.DIAMOND, Die.State.ACTIVE))
-        ));
-
-        // Wait for new round prompt
+    /**
+     * Common function used by multiple tests to validate that the player is dead and their score is zero.
+     */
+    private void validatePlayerDead() throws IOException {
         var lines = TestUtils.waitForUserPrompt(reader);
 
         boolean playerDied = false;
@@ -98,12 +87,31 @@ public class SinglePlayerAcceptanceTest {
         assertEquals(0, playerScore);
     }
 
+    @DisplayName("R45: die with 3 skulls on first roll")
+    @Test
+    void DieWith3Skulls_45() throws IOException {
+        defaultRiggedCard();
+
+        // Wait for rigged dice prompt
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.rigDice(writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.SKULL, Die.State.ACTIVE)),
+                new Turn.RiggedDie(1, new Die(Die.Side.SKULL, Die.State.ACTIVE)),
+                new Turn.RiggedDie(2, new Die(Die.Side.SKULL, Die.State.ACTIVE)),
+                new Turn.RiggedDie(3, new Die(Die.Side.DIAMOND, Die.State.ACTIVE)),
+                new Turn.RiggedDie(4, new Die(Die.Side.DIAMOND, Die.State.ACTIVE)),
+                new Turn.RiggedDie(5, new Die(Die.Side.DIAMOND, Die.State.ACTIVE)),
+                new Turn.RiggedDie(6, new Die(Die.Side.DIAMOND, Die.State.ACTIVE)),
+                new Turn.RiggedDie(7, new Die(Die.Side.DIAMOND, Die.State.ACTIVE))
+        ));
+
+        validatePlayerDead();
+    }
+
     @DisplayName("R46: roll 1 skull, 4 parrots, 3 swords, hold parrots, re-roll 3 swords, get 2 skulls 1 sword  die")
     @Test
     void Row46() throws IOException {
-        // Wait for rigged card prompt
-        TestUtils.waitForUserPrompt(reader);
-        TestUtils.rigFortuneCard(writer, new FortuneCard(FortuneCard.Type.GOLD));
+        defaultRiggedCard();
 
         // Wait for rigged dice prompt
         TestUtils.waitForUserPrompt(reader);
@@ -138,24 +146,46 @@ public class SinglePlayerAcceptanceTest {
                 new Turn.RiggedDie(7, new Die(Die.Side.SWORD, Die.State.ACTIVE))
         ));
 
-        // Wait for new round prompt
-        var lines = TestUtils.waitForUserPrompt(reader);
+        validatePlayerDead();
+    }
 
-        boolean playerDied = false;
-        int playerScore = -1;
+    @DisplayName("R47: roll 2 skulls, 4 parrots, 2 swords, hold parrots, re-roll swords, get 1 skull 1 sword  die")
+    @Test
+    void R47() throws IOException {
+        defaultRiggedCard();
 
-        for (int i = 0; i < lines.size(); i++) {
-            var line = lines.get(i);
-            if (line.equals(ConsoleUtils.getSysMsg(ConsoleUtils.DEAD_MSG))) {
-                playerDied = true;
-            } else if (line.equals(ConsoleUtils.getSysMsg(ConsoleUtils.SCORE_MSG))) {
-                playerScore = TestUtils.getPlayerScore(lines.get(++i));
-            }
-        }
+        // Wait for rigged dice prompt
+        TestUtils.waitForUserPrompt(reader);
 
-        assertTrue(playerDied);
-        assertEquals(0, playerScore);
+        // 2 skulls, 4 parrots, 2 swords
+        TestUtils.rigDice(writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.SKULL, Die.State.ACTIVE)),
+                new Turn.RiggedDie(1, new Die(Die.Side.SKULL, Die.State.ACTIVE)),
+                new Turn.RiggedDie(2, new Die(Die.Side.PARROT, Die.State.ACTIVE)),
+                new Turn.RiggedDie(3, new Die(Die.Side.PARROT, Die.State.ACTIVE)),
+                new Turn.RiggedDie(4, new Die(Die.Side.PARROT, Die.State.ACTIVE)),
+                new Turn.RiggedDie(5, new Die(Die.Side.PARROT, Die.State.ACTIVE)),
+                new Turn.RiggedDie(6, new Die(Die.Side.SWORD, Die.State.ACTIVE)),
+                new Turn.RiggedDie(7, new Die(Die.Side.SWORD, Die.State.ACTIVE))
+        ));
 
+        // Hold parrots
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "2 2 3 4 5");
+
+        //re-roll
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "3");
+
+        // Wait for rigged dice prompt
+        TestUtils.waitForUserPrompt(reader);
+        // get 1 skull 1 sword
+        TestUtils.rigDice(writer, List.of(
+                new Turn.RiggedDie(6, new Die(Die.Side.SKULL, Die.State.ACTIVE)),
+                new Turn.RiggedDie(7, new Die(Die.Side.SWORD, Die.State.ACTIVE))
+        ));
+
+        validatePlayerDead();
     }
 
 
