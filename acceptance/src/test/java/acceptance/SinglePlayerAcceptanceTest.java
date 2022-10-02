@@ -460,4 +460,28 @@ public class SinglePlayerAcceptanceTest {
         assertEquals(500, getPlayerScore());
 
     }
+
+    @DisplayName("R57: score a set of 4 coins correctly (i.e., 200 + 400 points) with FC is a diamond (SC 700)")
+    @Test
+    void R57() throws IOException {
+        setRiggedFc(new FortuneCard(FortuneCard.Type.DIAMOND));
+
+        // 4 coins
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(1, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(2, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(3, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(4, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(5, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(6, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(7, new Die(Die.Side.SKULL))
+        ));
+
+        //End turn
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "0");
+
+        assertEquals(700, getPlayerScore());
+    }
 }
