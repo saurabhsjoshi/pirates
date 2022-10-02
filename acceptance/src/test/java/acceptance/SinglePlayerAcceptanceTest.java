@@ -1,3 +1,5 @@
+package acceptance;
+
 import org.joshi.pirates.Die;
 import org.joshi.pirates.Turn;
 import org.joshi.pirates.cards.FortuneCard;

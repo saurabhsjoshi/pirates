@@ -3,8 +3,8 @@
     <module name="pirates.acceptance.test" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="ALTERNATIVE_JRE_PATH" value="temurin-17" />
-    <option name="PACKAGE_NAME" value="" />
-    <option name="MAIN_CLASS_NAME" value="SinglePlayerAcceptanceTest" />
+    <option name="PACKAGE_NAME" value="acceptance" />
+    <option name="MAIN_CLASS_NAME" value="acceptance.SinglePlayerAcceptanceTest" />
     <option name="METHOD_NAME" value="" />
     <option name="TEST_OBJECT" value="class" />
     <option name="WORKING_DIRECTORY" value="$ProjectFileDir$/bin" />
