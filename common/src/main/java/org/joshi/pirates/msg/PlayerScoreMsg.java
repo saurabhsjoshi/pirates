@@ -2,9 +2,8 @@ package org.joshi.pirates.msg;
 
 
 import org.joshi.network.Message;
-import org.joshi.pirates.Player;
 
-import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Message to broadcast all player scores.
@@ -12,10 +11,10 @@ import java.util.ArrayList;
 public class PlayerScoreMsg extends Message {
     public static final String TYPE = "PlayerScoreMsg";
 
-    private final ArrayList<Player> players;
+    private final Map<String, Integer> scores;
 
-    public PlayerScoreMsg(ArrayList<Player> players) {
-        this.players = players;
+    public PlayerScoreMsg(Map<String, Integer> scores) {
+        this.scores = scores;
     }
 
     @Override
@@ -23,7 +22,7 @@ public class PlayerScoreMsg extends Message {
         return TYPE;
     }
 
-    public ArrayList<Player> getPlayers() {
-        return players;
+    public Map<String, Integer> getScores() {
+        return scores;
     }
 }

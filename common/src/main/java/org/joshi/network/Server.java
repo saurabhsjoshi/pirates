@@ -97,9 +97,7 @@ public class Server {
                         messageHandler.onMessage(id, msg);
                     }
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                System.out.println("Socket closed due to exception.");
+            } catch (Exception ignore) {
             }
         }
 

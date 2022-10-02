@@ -11,7 +11,8 @@ import org.joshi.pirates.ui.ConsoleUtils;
 import org.joshi.pirates.ui.PlayerTurn;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 
@@ -113,14 +114,18 @@ public class HostApp {
     void postTurn(TurnResult result) throws IOException {
 
         server.broadcast(new BroadcastMsg(ConsoleUtils.getEndTurnMsg(game.getCurrentPlayerId().username())));
-        if (game.getCurrentPlayerId().id().equals(host.getPlayerId().id())) {
-            System.out.println(ConsoleUtils.getEndTurnMsg(host.getPlayerId().username()));
-        }
+        System.out.println(ConsoleUtils.getEndTurnMsg(game.getCurrentPlayerId().username()));
 
         game.endTurn(result);
 
+        Map<String, Integer> scores = new HashMap<>();
+        for (var player : game.getPlayers()) {
+            scores.put(player.getPlayerId().username(), player.getScore());
+        }
+        ConsoleUtils.printPlayerScores(game.getPlayers());
+        server.broadcast(new PlayerScoreMsg(scores));
+
         if (game.ended()) {
-            ConsoleUtils.printPlayerScores(game.getPlayers());
             ConsoleUtils.printWinner(game.getWinner().username());
             server.broadcast(new WinnerMsg(game.getWinner().username()));
             gameEndLatch.countDown();
@@ -128,11 +133,8 @@ public class HostApp {
             return;
         }
 
-        ConsoleUtils.printPlayerScores(game.getPlayers());
-
-        server.broadcast(new PlayerScoreMsg(new ArrayList<>(game.getPlayers())));
-
         if (game.isFinalRound()) {
+            server.broadcast(new BroadcastMsg(ConsoleUtils.getSysMsg("FINAL ROUND")));
             ConsoleUtils.printSysMsg("FINAL ROUND");
         }
 
@@ -141,8 +143,9 @@ public class HostApp {
 
     void startTurn(PlayerId playerId) throws IOException {
         server.broadcast(new BroadcastMsg(ConsoleUtils.getStartTurnMsg(playerId.username())));
+        System.out.println(ConsoleUtils.getStartTurnMsg(playerId.username()));
+
         if (playerId == host.getPlayerId()) {
-            System.out.println(ConsoleUtils.getStartTurnMsg(playerId.username()));
             PlayerTurn playerTurn = new PlayerTurn(game.getCurrentCard(), riggingEnabled);
             postTurn(playerTurn.start());
             return;

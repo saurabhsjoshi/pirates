@@ -27,9 +27,8 @@ public class Client {
                         messageHandler.onMessage("SERVER_MSG", msg);
                     }
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                System.out.println("Socket closed due to exception.");
+            } catch (Exception ignore) {
+
             }
         });
 

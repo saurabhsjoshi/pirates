@@ -41,8 +41,12 @@ public class ClientApp {
                     client.sendMsg(new TurnEndMsg(result));
                 }
                 case BroadcastMsg.TYPE -> System.out.println(((BroadcastMsg) msg).getMessage());
-                case PlayerScoreMsg.TYPE -> ConsoleUtils.printPlayerScores(((PlayerScoreMsg) msg).getPlayers());
-                case WinnerMsg.TYPE -> ConsoleUtils.printWinner(((WinnerMsg) msg).getWinnerName());
+                case PlayerScoreMsg.TYPE -> ConsoleUtils.printPlayerScores(((PlayerScoreMsg) msg).getScores());
+                case WinnerMsg.TYPE -> {
+                    client.stop();
+                    gameEndLatch.countDown();
+                    ConsoleUtils.printWinner(((WinnerMsg) msg).getWinnerName());
+                }
             }
 
         };

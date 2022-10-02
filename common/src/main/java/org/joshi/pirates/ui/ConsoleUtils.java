@@ -7,6 +7,7 @@ import org.joshi.pirates.cards.SeaBattleCard;
 import org.joshi.pirates.cards.SkullCard;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class ConsoleUtils {
@@ -87,11 +88,17 @@ public class ConsoleUtils {
         }
     }
 
-
     public static void printPlayerScores(List<Player> players) {
         printSysMsg("PLAYER SCORES");
         for (var player : players) {
             System.out.printf("%-1s %-10s \n", player.getPlayerId().username(), player.getScore());
+        }
+    }
+
+    public static void printPlayerScores(Map<String, Integer> players) {
+        printSysMsg("PLAYER SCORES");
+        for (var player : players.entrySet()) {
+            System.out.printf("%-1s %-10s \n", player.getKey(), player.getValue());
         }
     }
 
