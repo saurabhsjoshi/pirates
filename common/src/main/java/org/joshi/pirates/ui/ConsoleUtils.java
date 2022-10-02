@@ -18,6 +18,8 @@ public class ConsoleUtils {
     public static final String SCORE_MSG = "PLAYER SCORES";
     public static final String SKULL_ACTIVATE_MSG = "CANNOT ACTIVATE SKULL";
 
+    public static final String WINNER_MSG = "THIS GAME HAS A WINNER";
+
     private static final Scanner scanner = new Scanner(System.in);
 
     /**
@@ -98,7 +100,8 @@ public class ConsoleUtils {
     }
 
     public static void printWinner(String winner) {
-        printSysMsg("WINNER IS " + winner);
+        printSysMsg(WINNER_MSG);
+        System.out.printf("WINNER %-10s\n", winner);
     }
 
     public static String getSysMsg(String msg) {

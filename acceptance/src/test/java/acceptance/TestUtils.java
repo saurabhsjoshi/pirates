@@ -61,6 +61,16 @@ public class TestUtils {
         return waitForPrompt(reader, ConsoleUtils.getEndTurnMsg(playerName), logger);
     }
 
+    public static boolean validateWinner(BufferedReader reader, String playerName, Logger logger) throws IOException {
+        waitForPrompt(reader, ConsoleUtils.getSysMsg(ConsoleUtils.WINNER_MSG), logger);
+        String line = reader.readLine();
+        if (line == null) {
+            return false;
+        }
+        logger.push(line);
+        return playerName.equals(line.split("\\s+")[1]);
+    }
+
     public static Map<String, Integer> readScores(BufferedReader reader, Logger logger) throws IOException {
         var scores = new HashMap<String, Integer>();
         waitForPrompt(reader, ConsoleUtils.getSysMsg(ConsoleUtils.SCORE_MSG), logger);
