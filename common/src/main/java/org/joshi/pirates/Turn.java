@@ -180,6 +180,15 @@ public class Turn {
 
         // If player is dead they get no score
         if (state == State.DISQUALIFIED) {
+            if (fortuneCard instanceof SeaBattleCard seaBattleCard) {
+                var count = dice.stream()
+                        .filter(s -> s.diceSide == Die.Side.SWORD)
+                        .count();
+                if (count != seaBattleCard.getSwords()) {
+                    return new TurnResult(false, -seaBattleCard.getBonus());
+                }
+            }
+
             if (fortuneCard.getType() != FortuneCard.Type.TREASURE_CHEST) {
                 return new TurnResult(false, 0);
             }
