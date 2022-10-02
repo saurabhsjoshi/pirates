@@ -1581,6 +1581,49 @@ public class SinglePlayerAcceptanceTest {
         validatePlayerDead();
     }
 
+    @DisplayName("R109: roll 2 skulls AND have a FC with two skulls: roll 2 skulls next roll, then 1 skull => -700")
+    @Test
+    void R109() {
+        Turn playerTurn = new Turn();
+        playerTurn.setFortuneCard(new SkullCard(2));
+
+        playerTurn.roll();
+        playerTurn.setRiggedDice(List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(1, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(2, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(3, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(4, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(5, new Die(Die.Side.DIAMOND)),
+                new Turn.RiggedDie(6, new Die(Die.Side.DIAMOND)),
+                new Turn.RiggedDie(7, new Die(Die.Side.DIAMOND))));
+        playerTurn.postRoll();
+
+        // Validate on island of dead
+        assertTrue(playerTurn.isOnIslandOfSkulls());
+
+        playerTurn.roll();
+        playerTurn.setRiggedDice(List.of(
+                new Turn.RiggedDie(1, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(2, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(4, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(5, new Die(Die.Side.DIAMOND)),
+                new Turn.RiggedDie(6, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(7, new Die(Die.Side.MONKEY))));
+        playerTurn.postRoll();
+
+        playerTurn.roll();
+        playerTurn.setRiggedDice(List.of(
+                new Turn.RiggedDie(1, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(4, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(5, new Die(Die.Side.DIAMOND)),
+                new Turn.RiggedDie(7, new Die(Die.Side.MONKEY))));
+        playerTurn.postRoll();
+
+        var result = playerTurn.complete();
+        assertTrue(result.islandOfDead());
+        assertEquals(-700, result.score());
+    }
 
 
 }
