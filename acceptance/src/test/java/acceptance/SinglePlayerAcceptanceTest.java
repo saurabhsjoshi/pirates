@@ -1193,4 +1193,57 @@ public class SinglePlayerAcceptanceTest {
 
         assertEquals(1100, getPlayerScore());
     }
+
+    @DisplayName("R83: over several rolls: 2 monkeys, 1 parrot, 2 coins, 1 diamond, 2 swords SC 400")
+    @Test
+    void R83() throws IOException {
+        setRiggedFc(new FortuneCard(FortuneCard.Type.MONKEY_BUSINESS));
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(1, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(2, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(3, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(4, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(5, new Die(Die.Side.DIAMOND)),
+                new Turn.RiggedDie(6, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(7, new Die(Die.Side.GOLD_COIN))
+        ));
+
+        TestUtils.waitForUserPrompt(reader);
+        // Monkey, Sword
+        TestUtils.writeLine(writer, "2 0 1");
+
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "3");
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(2, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(3, new Die(Die.Side.DIAMOND)),
+                new Turn.RiggedDie(4, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(5, new Die(Die.Side.DIAMOND)),
+                new Turn.RiggedDie(6, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(7, new Die(Die.Side.MONKEY))
+        ));
+
+        TestUtils.waitForUserPrompt(reader);
+
+        // Diamond, Parrot, Monkey
+        TestUtils.writeLine(writer, "2 3 6 7");
+
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "3");
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(2, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(4, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(5, new Die(Die.Side.SWORD))
+        ));
+
+        // End turn
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "0");
+
+        assertEquals(400, getPlayerScore());
+    }
 }
