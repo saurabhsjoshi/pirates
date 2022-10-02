@@ -10,6 +10,7 @@ import org.junit.jupiter.api.*;
 import java.io.*;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -38,8 +39,8 @@ public class MultiplayerAcceptanceTest {
         return Path.of("").toAbsolutePath().toString();
     }
 
-    private Process startApp(String jarName) throws IOException {
-        ProcessBuilder builder = new ProcessBuilder(getJavaPath(), "-jar", jarName, "RIGGED");
+    private Process startApp(String jarName, int port) throws IOException {
+        ProcessBuilder builder = new ProcessBuilder(getJavaPath(), "-jar", jarName, "RIGGED", "PORT", String.valueOf(port));
         builder.directory(new File(getCurrentPath()));
         return builder.start();
     }
@@ -62,23 +63,26 @@ public class MultiplayerAcceptanceTest {
 
     @BeforeEach
     void setup(TestInfo testInfo) throws IOException {
-        logger = new Logger(testInfo.getTags().toArray(String[]::new)[0] + ".txt");
+        var tags = testInfo.getTags().toArray(String[]::new);
+        logger = new Logger(tags[0] + ".txt");
         loggerThread = new Thread(logger);
         loggerThread.start();
 
-        server = startApp("server.jar");
+        int testPort = Integer.parseInt(tags[1]);
+
+        server = startApp("server.jar", testPort);
         writer1 = new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
         reader1 = new BufferedReader(new InputStreamReader(server.getInputStream()));
         TestUtils.waitForUserPrompt(reader1, logger);
         TestUtils.writeLine(writer1, player1Name, logger);
 
-        player2 = startApp("client.jar");
+        player2 = startApp("client.jar", testPort);
         writer2 = new BufferedWriter(new OutputStreamWriter(player2.getOutputStream()));
         reader2 = new BufferedReader(new InputStreamReader(player2.getInputStream()));
         TestUtils.waitForUserPrompt(reader2, logger);
         TestUtils.writeLine(writer2, player2Name, logger);
 
-        player3 = startApp("client.jar");
+        player3 = startApp("client.jar", testPort);
         writer3 = new BufferedWriter(new OutputStreamWriter(player3.getOutputStream()));
         reader3 = new BufferedReader(new InputStreamReader(player3.getInputStream()));
         TestUtils.waitForUserPrompt(reader3, logger);
@@ -109,6 +113,7 @@ public class MultiplayerAcceptanceTest {
     }
 
     @Tag("R131")
+    @Tag("6795")
     @Timeout(value = 25)
     @Test
     void R131() throws IOException {
@@ -188,6 +193,7 @@ public class MultiplayerAcceptanceTest {
     }
 
     @Tag("R134")
+    @Tag("6796")
     @Timeout(value = 25)
     @Test
     void R134() throws IOException {
@@ -266,6 +272,7 @@ public class MultiplayerAcceptanceTest {
     }
 
     @Tag("R139")
+    @Tag("6797")
     @Timeout(value = 25)
     @Test
     void R139() throws IOException {
@@ -365,6 +372,7 @@ public class MultiplayerAcceptanceTest {
     }
 
     @Tag("R144")
+    @Tag("6798")
     @Timeout(value = 25)
     @Test
     void R144() throws IOException {

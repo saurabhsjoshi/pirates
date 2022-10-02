@@ -17,17 +17,21 @@ public class ClientApp {
 
     private final boolean rigged;
 
-    public ClientApp(boolean rigged) {
+    private final int port;
+
+    public ClientApp(boolean rigged, int port) {
         this.rigged = rigged;
+        this.port = port;
     }
 
     public void start() throws IOException, InterruptedException {
 
         if (rigged) {
             ConsoleUtils.printSysMsg("RIGGING ENABLED");
+            ConsoleUtils.printSysMsg("USING PORT " + port);
         }
 
-        Client client = new Client(6794);
+        Client client = new Client(port);
 
         MessageHandler handler = (senderId, msg) -> {
             switch (msg.getType()) {
@@ -52,14 +56,22 @@ public class ClientApp {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         boolean rigged = false;
-        for (var arg : args) {
-            if (arg.equals("RIGGED")) {
+        int port = 6794;
+
+        for (int i = 0; i < args.length; i++) {
+
+            if (args[i].equals("RIGGED")) {
                 rigged = true;
-                break;
+                continue;
+            }
+
+            if (args[i].equals("PORT")) {
+                port = Integer.parseInt(args[i + i]);
+                i++;
             }
         }
 
-        ClientApp clientApp = new ClientApp(rigged);
+        ClientApp clientApp = new ClientApp(rigged, port);
         clientApp.start();
     }
 

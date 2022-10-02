@@ -25,6 +25,8 @@ public class HostApp {
 
     private Player host;
 
+    private final int port;
+
     private Server server;
 
     private final boolean riggingEnabled;
@@ -34,6 +36,8 @@ public class HostApp {
     public static void main(String[] args) throws IOException, InterruptedException {
         int players = 3;
         boolean rigged = false;
+        int port = 6794;
+
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("PLAYERS")) {
                 players = Integer.parseInt(args[i + 1]);
@@ -43,14 +47,21 @@ public class HostApp {
 
             if (args[i].equals("RIGGED")) {
                 rigged = true;
+                continue;
+            }
+
+            if (args[i].equals("PORT")) {
+                port = Integer.parseInt(args[i + i]);
+                i++;
             }
         }
-        HostApp app = new HostApp(rigged, players);
+        HostApp app = new HostApp(rigged, players, port);
         app.start();
     }
 
-    public HostApp(boolean riggingEnabled, int maxPlayers) {
+    public HostApp(boolean riggingEnabled, int maxPlayers, int port) {
         this.riggingEnabled = riggingEnabled;
+        this.port = port;
         MAX_PLAYERS = maxPlayers;
 
         // Create a game instance
@@ -63,7 +74,7 @@ public class HostApp {
         }
 
         host = new Player(new PlayerId(UUID.randomUUID().toString(), ConsoleUtils.userPrompt("Enter username to start server")));
-        server = new Server(6794);
+        server = new Server(port);
 
         // Add host to the game
         game.addPlayer(host);
