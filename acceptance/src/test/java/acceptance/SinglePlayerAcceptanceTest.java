@@ -1170,4 +1170,27 @@ public class SinglePlayerAcceptanceTest {
         }
         assertFalse(skullActivate);
     }
+
+    @DisplayName("R82: first roll gets 3 monkeys 3 parrots  1 skull 1 coin  SC = 1100  (i.e., sequence of of 6 + coin)")
+    @Test
+    void R82() throws IOException {
+        setRiggedFc(new FortuneCard(FortuneCard.Type.MONKEY_BUSINESS));
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(1, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(2, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(3, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(4, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(5, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(6, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(7, new Die(Die.Side.GOLD_COIN))
+        ));
+
+        // End turn
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "0");
+
+        assertEquals(1100, getPlayerScore());
+    }
 }
