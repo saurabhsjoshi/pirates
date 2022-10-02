@@ -1774,4 +1774,24 @@ public class SinglePlayerAcceptanceTest {
         assertEquals(-1000, result.score());
     }
 
+    @DisplayName("R117: show a deduction received from a sea battle cannot make your score negative")
+    @Test
+    void R117() throws IOException {
+        setRiggedFc(new SeaBattleCard(4));
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(1, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(2, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(3, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(4, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(5, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(6, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(7, new Die(Die.Side.PARROT))
+        ));
+
+        // Validates score is zero and not negative
+        validatePlayerDead();
+    }
+
 }
