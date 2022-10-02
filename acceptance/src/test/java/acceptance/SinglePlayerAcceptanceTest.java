@@ -1874,4 +1874,39 @@ public class SinglePlayerAcceptanceTest {
 
         assertEquals(800, getPlayerScore());
     }
+
+    @DisplayName("R122: FC 3 swords, roll 4 monkeys 2 swords 2 skulls" +
+            "then re-roll 4 monkeys and get  2 skulls and 2 swords   -> DIE\n")
+    @Test
+    void R122() throws IOException {
+        setRiggedFc(new SeaBattleCard(3));
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(1, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(2, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(3, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(4, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(5, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(6, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(7, new Die(Die.Side.SKULL))
+        ));
+
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "2 4 5");
+
+        // Re-roll
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "3");
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(1, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(2, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(3, new Die(Die.Side.SWORD))
+        ));
+
+        validatePlayerDead();
+    }
+
 }
