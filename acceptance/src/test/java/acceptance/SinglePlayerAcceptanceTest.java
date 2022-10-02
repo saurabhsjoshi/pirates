@@ -1118,4 +1118,56 @@ public class SinglePlayerAcceptanceTest {
         assertEquals(5300, score);
 
     }
+
+
+    @DisplayName("R79: roll no skulls, then next round roll 1 skull and re-roll for it, then go to next round")
+    @Test
+    void R79() throws IOException {
+        setRiggedFc(new FortuneCard(FortuneCard.Type.SORCERESS));
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(1, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(2, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(3, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(4, new Die(Die.Side.DIAMOND)),
+                new Turn.RiggedDie(5, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(6, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(7, new Die(Die.Side.PARROT))
+        ));
+
+        // Re-roll
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "3");
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(1, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(2, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(3, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(4, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(5, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(6, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(7, new Die(Die.Side.GOLD_COIN))
+        ));
+
+        // Activate the skull
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "1 4");
+
+        // Re-roll
+        var lines = TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "3");
+
+        boolean skullActivate = false;
+
+        // Validate we did not see skull activation error
+        for (var line : lines) {
+            if (line.equals(ConsoleUtils.getSysMsg(ConsoleUtils.SKULL_ACTIVATE_MSG))) {
+                skullActivate = true;
+                break;
+            }
+        }
+        assertFalse(skullActivate);
+    }
 }
