@@ -911,4 +911,43 @@ public class SinglePlayerAcceptanceTest {
         assertEquals(500, getPlayerScore());
 
     }
+
+    @DisplayName("R70: score a set of 3 coins over 2 rolls  (SC 600)")
+    @Test
+    void R70() throws IOException {
+        defaultRiggedCard();
+
+        // First roll
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(1, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(2, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(3, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(4, new Die(Die.Side.DIAMOND)),
+                new Turn.RiggedDie(5, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(6, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(7, new Die(Die.Side.SKULL))
+        ));
+
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "2 0 3");
+
+        // Re-roll
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "3");
+
+        // Second Roll
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(1, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(4, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(5, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(6, new Die(Die.Side.PARROT))
+        ));
+
+        // End turn
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "0");
+
+        assertEquals(600, getPlayerScore());
+    }
 }
