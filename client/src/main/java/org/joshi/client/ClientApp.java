@@ -2,10 +2,7 @@ package org.joshi.client;
 
 import org.joshi.network.Client;
 import org.joshi.network.MessageHandler;
-import org.joshi.pirates.msg.PlayerScoreMsg;
-import org.joshi.pirates.msg.RegisterUsrMsg;
-import org.joshi.pirates.msg.StartTurnMsg;
-import org.joshi.pirates.msg.TurnEndMsg;
+import org.joshi.pirates.msg.*;
 import org.joshi.pirates.ui.ConsoleUtils;
 import org.joshi.pirates.ui.PlayerTurn;
 
@@ -39,7 +36,7 @@ public class ClientApp {
                     var result = turn.start();
                     client.sendMsg(new TurnEndMsg(result));
                 }
-
+                case BroadcastMsg.TYPE -> System.out.println(((BroadcastMsg)msg).getMessage());
                 case PlayerScoreMsg.TYPE -> ConsoleUtils.printPlayerScores(((PlayerScoreMsg) msg).getPlayers());
             }
 

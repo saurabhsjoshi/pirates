@@ -6,10 +6,7 @@ import org.joshi.pirates.Game;
 import org.joshi.pirates.Player;
 import org.joshi.pirates.PlayerId;
 import org.joshi.pirates.TurnResult;
-import org.joshi.pirates.msg.PlayerScoreMsg;
-import org.joshi.pirates.msg.RegisterUsrMsg;
-import org.joshi.pirates.msg.StartTurnMsg;
-import org.joshi.pirates.msg.TurnEndMsg;
+import org.joshi.pirates.msg.*;
 import org.joshi.pirates.ui.ConsoleUtils;
 import org.joshi.pirates.ui.PlayerTurn;
 
@@ -103,6 +100,12 @@ public class HostApp {
     }
 
     void postTurn(TurnResult result) throws IOException {
+
+        server.broadcast(new BroadcastMsg(ConsoleUtils.getEndTurnMsg(game.getCurrentPlayerId().username())));
+        if (game.getCurrentPlayerId().id().equals(host.getPlayerId().id())) {
+            System.out.println(ConsoleUtils.getEndTurnMsg(host.getPlayerId().username()));
+        }
+
         game.endTurn(result);
 
         if (game.ended()) {
@@ -125,7 +128,9 @@ public class HostApp {
     }
 
     void startTurn(PlayerId playerId) throws IOException {
+        server.broadcast(new BroadcastMsg(ConsoleUtils.getStartTurnMsg(playerId.username())));
         if (playerId == host.getPlayerId()) {
+            System.out.println(ConsoleUtils.getStartTurnMsg(playerId.username()));
             PlayerTurn playerTurn = new PlayerTurn(game.getCurrentCard(), riggingEnabled);
             postTurn(playerTurn.start());
             return;

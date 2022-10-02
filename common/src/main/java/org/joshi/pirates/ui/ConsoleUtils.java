@@ -32,6 +32,14 @@ public class ConsoleUtils {
         return scanner.nextLine();
     }
 
+    public static String getStartTurnMsg(String player) {
+        return getSysMsg("STARTING TURN FOR " + player);
+    }
+
+    public static String getEndTurnMsg(String player) {
+        return getSysMsg("TURN ENDED FOR " + player);
+    }
+
     public static String printRoundOptions(FortuneCard card) {
         printSysMsg("OPTIONS");
         System.out.println("1. Set die as active");
@@ -81,7 +89,7 @@ public class ConsoleUtils {
     public static void printPlayerScores(List<Player> players) {
         printSysMsg("PLAYER SCORES");
         for (var player : players) {
-            System.out.println(player.getPlayerId().username() + ": " + player.getScore());
+            System.out.printf("%-1s %-10s \n", player.getPlayerId().username(), player.getScore());
         }
     }
 

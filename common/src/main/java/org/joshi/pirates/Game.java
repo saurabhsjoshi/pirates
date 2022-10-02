@@ -133,6 +133,10 @@ public class Game {
         return currentCard;
     }
 
+    public PlayerId getCurrentPlayerId() {
+        return players.get(currentPlayer).getPlayerId();
+    }
+
     /**
      * Allows the next fortune card to be rigged.
      *
