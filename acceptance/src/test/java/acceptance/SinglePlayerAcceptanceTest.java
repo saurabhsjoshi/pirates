@@ -383,10 +383,6 @@ public class SinglePlayerAcceptanceTest {
                 new Turn.RiggedDie(7, new Die(Die.Side.SKULL))
         ));
 
-        // hold all
-        TestUtils.waitForUserPrompt(reader);
-        TestUtils.writeLine(writer, "2 0 1 2 3 4 5 6 7");
-
         // End turn
         TestUtils.waitForUserPrompt(reader);
         TestUtils.writeLine(writer, "0");
@@ -394,7 +390,7 @@ public class SinglePlayerAcceptanceTest {
         assertEquals(300, getPlayerScore());
     }
 
-    @DisplayName("R55: score 2 sets of 3 (monkey, parrots) in RTS using 2 rolls   (SC 300)")
+    @DisplayName("R55: score 2 sets of 3 (monkey, parrots) in RTS using 2 rolls (SC 300)")
     @Test
     void R55() throws IOException {
         defaultRiggedCard();
@@ -424,10 +420,6 @@ public class SinglePlayerAcceptanceTest {
                 new Turn.RiggedDie(6, new Die(Die.Side.PARROT)),
                 new Turn.RiggedDie(7, new Die(Die.Side.SKULL))
         ));
-
-        // hold all
-        TestUtils.waitForUserPrompt(reader);
-        TestUtils.writeLine(writer, "2 0 1 2 3 4 5 6 7");
 
         // End turn
         TestUtils.waitForUserPrompt(reader);
@@ -483,5 +475,29 @@ public class SinglePlayerAcceptanceTest {
         TestUtils.writeLine(writer, "0");
 
         assertEquals(700, getPlayerScore());
+    }
+
+    @DisplayName("R58: score set of 3 swords and set of 4 parrots correctly on first roll (SC 400 because of FC)")
+    @Test
+    void R58() throws IOException {
+        defaultRiggedCard();
+
+        // 3 swords and set of 4 parrots
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(1, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(2, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(3, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(4, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(5, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(6, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(7, new Die(Die.Side.SKULL))
+        ));
+
+        //End turn
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "0");
+
+        assertEquals(400, getPlayerScore());
     }
 }
