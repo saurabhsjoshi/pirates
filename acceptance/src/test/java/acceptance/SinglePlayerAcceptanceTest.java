@@ -784,4 +784,27 @@ public class SinglePlayerAcceptanceTest {
 
         assertEquals(5400, getPlayerScore());
     }
+
+    @DisplayName("R66: score set of 8 swords on first roll and FC is captain (SC 4500x2 = 9000) since full chest")
+    @Test
+    void R66() throws IOException {
+        setRiggedFc(new FortuneCard(FortuneCard.Type.CAPTAIN));
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(1, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(2, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(3, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(4, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(5, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(6, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(7, new Die(Die.Side.SWORD))
+        ));
+
+        // End turn
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "0");
+
+        assertEquals(9000, getPlayerScore());
+    }
 }
