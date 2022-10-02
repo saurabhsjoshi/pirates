@@ -738,4 +738,27 @@ public class SinglePlayerAcceptanceTest {
 
         assertEquals(2100, getPlayerScore());
     }
+
+    @DisplayName("R64: score set of 8 coins on first roll (SC 5400)  seq of 8 + 9 coins(FC is coin) +  full chest")
+    @Test
+    void R64() throws IOException {
+        defaultRiggedCard();
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(1, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(2, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(3, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(4, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(5, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(6, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(7, new Die(Die.Side.GOLD_COIN))
+        ));
+
+        // End turn
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "0");
+
+        assertEquals(5400, getPlayerScore());
+    }
 }
