@@ -761,4 +761,27 @@ public class SinglePlayerAcceptanceTest {
 
         assertEquals(5400, getPlayerScore());
     }
+
+    @DisplayName("R65: score set of 8 coins on first roll and FC is diamond (SC 5400)")
+    @Test
+    void R65() throws IOException {
+        setRiggedFc(new FortuneCard(FortuneCard.Type.DIAMOND));
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(1, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(2, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(3, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(4, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(5, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(6, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(7, new Die(Die.Side.GOLD_COIN))
+        ));
+
+        // End turn
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "0");
+
+        assertEquals(5400, getPlayerScore());
+    }
 }
