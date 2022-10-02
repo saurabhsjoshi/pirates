@@ -871,4 +871,44 @@ public class SinglePlayerAcceptanceTest {
         assertEquals(400, getPlayerScore());
 
     }
+
+    @DisplayName("R69: score a set of 3 diamonds over 2 rolls (SC 500)")
+    @Test
+    void R69() throws IOException {
+        defaultRiggedCard();
+
+        // First roll
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.DIAMOND)),
+                new Turn.RiggedDie(1, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(2, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(3, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(4, new Die(Die.Side.DIAMOND)),
+                new Turn.RiggedDie(5, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(6, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(7, new Die(Die.Side.SKULL))
+        ));
+
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "2 0 4");
+
+        // Re-roll
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "3");
+
+        // Second Roll
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(1, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(3, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(5, new Die(Die.Side.DIAMOND)),
+                new Turn.RiggedDie(6, new Die(Die.Side.PARROT))
+        ));
+
+        // End turn
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "0");
+
+        assertEquals(500, getPlayerScore());
+
+    }
 }
