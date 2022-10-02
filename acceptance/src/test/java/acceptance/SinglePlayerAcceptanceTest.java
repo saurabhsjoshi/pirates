@@ -61,10 +61,14 @@ public class SinglePlayerAcceptanceTest {
         server.destroy();
     }
 
-    private void defaultRiggedCard() throws IOException {
+    private void setRiggedFc(FortuneCard card) throws IOException {
         // Wait for rigged card prompt
         TestUtils.waitForUserPrompt(reader);
-        TestUtils.rigFortuneCard(writer, new FortuneCard(FortuneCard.Type.GOLD));
+        TestUtils.rigFortuneCard(writer, card);
+    }
+
+    private void defaultRiggedCard() throws IOException {
+        setRiggedFc(new FortuneCard(FortuneCard.Type.GOLD));
     }
 
     private int getPlayerScore() throws IOException {
@@ -291,5 +295,34 @@ public class SinglePlayerAcceptanceTest {
 
         int score = getPlayerScore();
         assertEquals(4800, score);
+    }
+
+    @DisplayName("score first roll with nothing but 2 diamonds and 2 coins and FC is captain (SC 800)")
+    @Test
+    void R52() throws IOException {
+        setRiggedFc(new FortuneCard(FortuneCard.Type.CAPTAIN));
+
+        // 2 diamonds and 2 coins
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.DIAMOND)),
+                new Turn.RiggedDie(1, new Die(Die.Side.DIAMOND)),
+                new Turn.RiggedDie(2, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(3, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(4, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(5, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(6, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(7, new Die(Die.Side.SKULL))
+        ));
+
+        // Hold diamonds and gold coins
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "2 0 1 2 3");
+
+        // End turn
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "0");
+
+        int score = getPlayerScore();
+        assertEquals(800, score);
     }
 }
