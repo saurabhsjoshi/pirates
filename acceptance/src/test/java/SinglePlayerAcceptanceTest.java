@@ -188,5 +188,56 @@ public class SinglePlayerAcceptanceTest {
         validatePlayerDead();
     }
 
+    @DisplayName("R48: roll 1 skull, 4 parrots, 3 swords, hold parrots, re-roll swords, get 1 skull 2 monkeys " +
+            "re-roll 2 monkeys, get 1 skull 1 monkey and die")
+    @Test
+    void R48() throws IOException {
+        defaultRiggedCard();
 
+        // Wait for rigged dice prompt
+        TestUtils.waitForUserPrompt(reader);
+
+        // 1 skull, 4 parrots, 3 swords
+        TestUtils.rigDice(writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.SKULL, Die.State.ACTIVE)),
+                new Turn.RiggedDie(1, new Die(Die.Side.PARROT, Die.State.ACTIVE)),
+                new Turn.RiggedDie(2, new Die(Die.Side.PARROT, Die.State.ACTIVE)),
+                new Turn.RiggedDie(3, new Die(Die.Side.PARROT, Die.State.ACTIVE)),
+                new Turn.RiggedDie(4, new Die(Die.Side.PARROT, Die.State.ACTIVE)),
+                new Turn.RiggedDie(5, new Die(Die.Side.SWORD, Die.State.ACTIVE)),
+                new Turn.RiggedDie(6, new Die(Die.Side.SWORD, Die.State.ACTIVE)),
+                new Turn.RiggedDie(7, new Die(Die.Side.SWORD, Die.State.ACTIVE))
+        ));
+
+        // Hold parrots
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "2 1 2 3 4");
+
+        //re-roll
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "3");
+
+        // Wait for rigged dice prompt
+        TestUtils.waitForUserPrompt(reader);
+        // get 1 skull 2 monkeys
+        TestUtils.rigDice(writer, List.of(
+                new Turn.RiggedDie(5, new Die(Die.Side.SKULL, Die.State.ACTIVE)),
+                new Turn.RiggedDie(6, new Die(Die.Side.MONKEY, Die.State.ACTIVE)),
+                new Turn.RiggedDie(7, new Die(Die.Side.MONKEY, Die.State.ACTIVE))
+        ));
+
+        //re-roll
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "3");
+
+        // Wait for rigged dice prompt
+        TestUtils.waitForUserPrompt(reader);
+        // get 1 skull 1 monkey
+        TestUtils.rigDice(writer, List.of(
+                new Turn.RiggedDie(6, new Die(Die.Side.SKULL, Die.State.ACTIVE)),
+                new Turn.RiggedDie(7, new Die(Die.Side.MONKEY, Die.State.ACTIVE))
+        ));
+
+        validatePlayerDead();
+    }
 }
