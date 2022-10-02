@@ -991,4 +991,27 @@ public class SinglePlayerAcceptanceTest {
 
         assertEquals(500, getPlayerScore());
     }
+
+    @DisplayName("R72: score a set of 4 monkeys and a set of 3 coins (including the COIN fortune card) (SC 600)")
+    @Test
+    void R72() throws IOException {
+        defaultRiggedCard();
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(1, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(2, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(3, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(4, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(5, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(6, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(7, new Die(Die.Side.SKULL))
+        ));
+
+        // End turn
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "0");
+
+        assertEquals(600, getPlayerScore());
+    }
 }
