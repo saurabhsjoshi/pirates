@@ -66,7 +66,7 @@ public class ClientApp {
             }
 
             if (args[i].equals("PORT")) {
-                port = Integer.parseInt(args[i + i]);
+                port = Integer.parseInt(args[i + 1]);
                 i++;
             }
         }
@@ -74,6 +74,4 @@ public class ClientApp {
         ClientApp clientApp = new ClientApp(rigged, port);
         clientApp.start();
     }
-
-
 }

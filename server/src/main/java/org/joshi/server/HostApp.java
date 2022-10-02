@@ -51,7 +51,7 @@ public class HostApp {
             }
 
             if (args[i].equals("PORT")) {
-                port = Integer.parseInt(args[i + i]);
+                port = Integer.parseInt(args[i + 1]);
                 i++;
             }
         }

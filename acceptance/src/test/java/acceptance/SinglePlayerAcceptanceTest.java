@@ -6,10 +6,7 @@ import org.joshi.pirates.cards.FortuneCard;
 import org.joshi.pirates.cards.SeaBattleCard;
 import org.joshi.pirates.cards.SkullCard;
 import org.joshi.pirates.ui.ConsoleUtils;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -36,11 +33,15 @@ public class SinglePlayerAcceptanceTest {
         return Path.of("").toAbsolutePath().toString();
     }
 
+    private static int port = 6900;
+
     @BeforeEach
     void setup() throws IOException {
-        ProcessBuilder builder = new ProcessBuilder(getJavaPath(), "-jar", "server.jar", "PLAYERS", "1", "RIGGED");
+        ProcessBuilder builder = new ProcessBuilder(getJavaPath(), "-jar", "server.jar", "PLAYERS", "1", "RIGGED", "PORT", String.valueOf(port));
         builder.directory(new File(getCurrentPath()));
         server = builder.start();
+
+        System.out.println("Test setup with port " + port);
         InputStream stdout = server.getInputStream();
         OutputStream stdin = server.getOutputStream();
 
@@ -48,7 +49,7 @@ public class SinglePlayerAcceptanceTest {
         reader = new BufferedReader(new InputStreamReader(stdout));
         String line = reader.readLine();
 
-        while (!line.equals(ConsoleUtils.USER_PROMPT)) {
+        while (line != null && !line.equals(ConsoleUtils.USER_PROMPT)) {
             line = reader.readLine();
         }
 
@@ -60,6 +61,7 @@ public class SinglePlayerAcceptanceTest {
     @AfterEach
     void teardown() {
         server.destroy();
+        port++;
     }
 
     private void setRiggedFc(FortuneCard card) throws IOException {
