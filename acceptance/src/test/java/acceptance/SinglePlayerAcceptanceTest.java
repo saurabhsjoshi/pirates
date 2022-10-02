@@ -4,6 +4,7 @@ import org.joshi.pirates.Die;
 import org.joshi.pirates.Turn;
 import org.joshi.pirates.cards.FortuneCard;
 import org.joshi.pirates.cards.SeaBattleCard;
+import org.joshi.pirates.cards.SkullCard;
 import org.joshi.pirates.ui.ConsoleUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -1544,6 +1545,23 @@ public class SinglePlayerAcceptanceTest {
         TestUtils.writeLine(writer, "0");
 
         assertEquals(1200, getPlayerScore());
+    }
+
+    @DisplayName("R107: die by rolling one skull and having a FC with two skulls")
+    @Test
+    void R107() throws IOException {
+        setRiggedFc(new SkullCard(2));
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(1, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(2, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(3, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(4, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(5, new Die(Die.Side.DIAMOND)),
+                new Turn.RiggedDie(6, new Die(Die.Side.DIAMOND)),
+                new Turn.RiggedDie(7, new Die(Die.Side.DIAMOND))
+        ));
+        validatePlayerDead();
     }
 
 }
