@@ -634,4 +634,61 @@ public class SinglePlayerAcceptanceTest {
         int score = getPlayerScore();
         assertEquals(1200, score);
     }
+
+    @DisplayName("R61: score set of 5 swords over 3 rolls (SC 600)")
+    @Test
+    void R61() throws IOException{
+        defaultRiggedCard();
+
+        // First roll
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(1, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(2, new Die(Die.Side.DIAMOND)),
+                new Turn.RiggedDie(3, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(4, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(5, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(6, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(7, new Die(Die.Side.SKULL))
+        ));
+
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "2 0 1");
+
+        // Re-roll
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "3");
+
+        // Second Roll
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(2, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(3, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(4, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(5, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(6, new Die(Die.Side.SWORD))
+        ));
+
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "2 2 6");
+
+        // Re-roll
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "3");
+
+        // Third Roll
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(3, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(4, new Die(Die.Side.SWORD))
+        ));
+
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "2 4");
+
+        // End turn
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "0");
+
+        assertEquals(600, getPlayerScore());
+
+    }
 }
