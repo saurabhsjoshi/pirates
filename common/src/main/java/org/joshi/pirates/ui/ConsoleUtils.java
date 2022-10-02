@@ -16,6 +16,7 @@ public class ConsoleUtils {
     public static final String DICE_STATE_MSG = "DICE STATE";
     public static final String DEAD_MSG = "YOU ARE DISQUALIFIED (3 SKULLS)";
     public static final String SCORE_MSG = "PLAYER SCORES";
+    public static final String SKULL_ACTIVATE_MSG = "CANNOT ACTIVATE SKULL";
 
     private static final Scanner scanner = new Scanner(System.in);
 
@@ -82,6 +83,10 @@ public class ConsoleUtils {
         for (var player : players) {
             System.out.println(player.getPlayerId().username() + ": " + player.getScore());
         }
+    }
+
+    public static void printSkullActivated() {
+        printSysMsg(SKULL_ACTIVATE_MSG);
     }
 
     public static void printWinner(String winner) {

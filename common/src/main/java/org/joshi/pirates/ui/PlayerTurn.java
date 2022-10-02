@@ -96,7 +96,7 @@ public class PlayerTurn {
                         try {
                             turn.active(index);
                         } catch (Turn.SkullActivatedException e) {
-                            ConsoleUtils.printSysMsg("CANNOT ACTIVATE SKULL");
+                            ConsoleUtils.printSkullActivated();
                         }
 
                         break;
