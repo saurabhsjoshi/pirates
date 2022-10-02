@@ -715,4 +715,27 @@ public class SinglePlayerAcceptanceTest {
         assertEquals(1100, getPlayerScore());
 
     }
+
+    @DisplayName("R63: score set of 7 parrots on first roll (SC 2100)")
+    @Test
+    void R63() throws IOException{
+        defaultRiggedCard();
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(1, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(2, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(3, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(4, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(5, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(6, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(7, new Die(Die.Side.SKULL))
+        ));
+
+        // End turn
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "0");
+
+        assertEquals(2100, getPlayerScore());
+    }
 }
