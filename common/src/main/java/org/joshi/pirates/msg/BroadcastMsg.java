@@ -13,7 +13,7 @@ public class BroadcastMsg extends Message {
 
     @Override
     public String getType() {
-        return message;
+        return TYPE;
     }
 
     public String getMessage() {

@@ -55,9 +55,9 @@ public class Server {
 
 
     public void broadcast(Message message) {
-        for (var client : clients.values()) {
+        for (var client : clients.keySet()) {
             try {
-                client.sendMsg(message);
+                clients.get(client).sendMsg(message);
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);

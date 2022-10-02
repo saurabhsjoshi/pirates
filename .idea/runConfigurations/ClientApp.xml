@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ClientApp" type="Application" factoryName="Application">
+  <configuration default="false" name="ClientApp" type="Application" factoryName="Application" singleton="false">
     <option name="MAIN_CLASS_NAME" value="org.joshi.client.ClientApp" />
     <module name="pirates.client.main" />
     <extension name="coverage">
