@@ -567,4 +567,71 @@ public class SinglePlayerAcceptanceTest {
         int score = getPlayerScore();
         assertEquals(800, score);
     }
+
+    @DisplayName("R60: same as previous row but with captain fortune card  (SC = (100 + + 300 + 200)*2 = 1200)")
+    @Test
+    void R60() throws IOException {
+        setRiggedFc(new FortuneCard(FortuneCard.Type.CAPTAIN));
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(1, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(2, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(3, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(4, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(5, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(6, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(7, new Die(Die.Side.DIAMOND))
+        ));
+
+        // Hold coins and sword
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "2 0 1 2 3");
+
+        // Re-roll
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "3");
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(4, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(5, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(6, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(7, new Die(Die.Side.MONKEY))
+        ));
+
+        // Hold sword
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "2 4");
+
+        // Re-roll
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "3");
+
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(5, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(6, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(7, new Die(Die.Side.MONKEY))
+        ));
+
+        // Hold sword
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "2 5");
+
+        // Re-roll
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "3");
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(6, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(7, new Die(Die.Side.SKULL))
+        ));
+
+        // End turn
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "0");
+
+        int score = getPlayerScore();
+        assertEquals(1200, score);
+    }
 }
