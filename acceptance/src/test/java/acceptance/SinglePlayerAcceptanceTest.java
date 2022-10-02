@@ -365,4 +365,32 @@ public class SinglePlayerAcceptanceTest {
 
         assertEquals(200, getPlayerScore());
     }
+
+    @DisplayName("score 2 sets of 3 (monkey, swords) in RTS on first roll   (SC 300)")
+    @Test
+    void R54() throws IOException {
+        defaultRiggedCard();
+
+        // 2 sets of 3 (monkey, swords)
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(1, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(2, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(3, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(4, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(5, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(6, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(7, new Die(Die.Side.SKULL))
+        ));
+
+        // hold all
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "2 0 1 2 3 4 5 6 7");
+
+        // End turn
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "0");
+
+        assertEquals(300, getPlayerScore());
+    }
 }
