@@ -3,6 +3,7 @@ package acceptance;
 import org.joshi.pirates.Die;
 import org.joshi.pirates.Turn;
 import org.joshi.pirates.cards.FortuneCard;
+import org.joshi.pirates.cards.SeaBattleCard;
 import org.joshi.pirates.ui.ConsoleUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -1460,4 +1461,28 @@ public class SinglePlayerAcceptanceTest {
 
         assertEquals(1800, getPlayerScore());
     }
+
+    @DisplayName("R100: 3 monkeys, 4 swords, 1 diamond, FC: coin   => SC 1000  (ie 100++200+100+100+bonus)")
+    @Test
+    void R100() throws IOException {
+        defaultRiggedCard();
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(1, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(2, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(3, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(4, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(5, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(6, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(7, new Die(Die.Side.DIAMOND))
+        ));
+
+        // End turn
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "0");
+
+        assertEquals(1000, getPlayerScore());
+    }
+
 }
