@@ -1351,4 +1351,67 @@ public class SinglePlayerAcceptanceTest {
         assertEquals(1100, getPlayerScore());
 
     }
+
+
+    @DisplayName("R92: roll 2 skulls, 3 parrots, 3 coins   put 3 coins in chest")
+    @Test
+    void R92() throws IOException {
+        setRiggedFc(new FortuneCard(FortuneCard.Type.TREASURE_CHEST));
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(1, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(2, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(3, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(4, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(5, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(6, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(7, new Die(Die.Side.GOLD_COIN))
+        ));
+
+        // Coins in chest
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "4 5 6 7");
+
+        // Re-roll
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "3");
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(2, new Die(Die.Side.DIAMOND)),
+                new Turn.RiggedDie(3, new Die(Die.Side.DIAMOND)),
+                new Turn.RiggedDie(4, new Die(Die.Side.GOLD_COIN))
+        ));
+
+        // Coin in chest
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "4 4");
+
+        // Re-roll
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "3");
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(2, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(3, new Die(Die.Side.GOLD_COIN))
+        ));
+
+        var lines = TestUtils.waitForUserPrompt(reader);
+
+        boolean playerDied = false;
+        int playerScore = -1;
+
+        for (int i = 0; i < lines.size(); i++) {
+            var line = lines.get(i);
+            if (line.equals(ConsoleUtils.getSysMsg(ConsoleUtils.DEAD_MSG))) {
+                playerDied = true;
+            } else if (line.equals(ConsoleUtils.getSysMsg(ConsoleUtils.SCORE_MSG))) {
+                playerScore = TestUtils.getPlayerScore(lines.get(++i));
+            }
+        }
+
+        // Validate player dead
+        assertTrue(playerDied);
+        // Make sure correct score
+        assertEquals(600, playerScore);
+    }
 }
