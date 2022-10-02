@@ -364,4 +364,78 @@ public class MultiplayerAcceptanceTest {
         assertTrue(TestUtils.validateWinner(reader1, player1Name, logger));
     }
 
+    @Tag("R144")
+    @Timeout(value = 25)
+    @Test
+    void R144() throws IOException {
+        //Player 1 has 6 swords, 2 skulls and FC coin, scores 1100 points
+        setRiggedFc(reader1, writer1, new FortuneCard(FortuneCard.Type.GOLD));
+        TestUtils.rigDice(reader1, writer1, logger, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(1, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(2, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(3, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(4, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(5, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(6, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(7, new Die(Die.Side.SKULL))
+        ));
+
+        // End turn for player 1
+        TestUtils.waitForUserPrompt(reader1, logger);
+        TestUtils.writeLine(writer1, "0", logger);
+
+        TestUtils.waitForEndTurn(reader1, player1Name, logger);
+
+        var scores = TestUtils.readScores(reader1, logger);
+
+        assertEquals(1100, scores.get(player1Name));
+        assertEquals(0, scores.get(player2Name));
+        assertEquals(0, scores.get(player3Name));
+
+        //Player 2 has FC Sorceress and 7 skulls and a coin
+        setRiggedFc(reader2, writer2, new FortuneCard(FortuneCard.Type.SORCERESS));
+        TestUtils.rigDice(reader2, writer2, logger, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(1, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(2, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(3, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(4, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(5, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(6, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(7, new Die(Die.Side.GOLD_COIN))
+        ));
+
+        // uses sorceress to activate a skull
+        TestUtils.waitForUserPrompt(reader2, logger);
+        TestUtils.writeLine(writer2, "1 0", logger);
+
+        // Re-roll
+        TestUtils.waitForUserPrompt(reader2, logger);
+        TestUtils.writeLine(writer2, "3", logger);
+
+        TestUtils.rigDice(reader2, writer2, logger, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(7, new Die(Die.Side.GOLD_COIN))));
+
+        // Re-roll
+        TestUtils.waitForUserPrompt(reader2, logger);
+        TestUtils.writeLine(writer2, "3", logger);
+
+        TestUtils.rigDice(reader2, writer2, logger, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(7, new Die(Die.Side.SWORD))
+        ));
+
+        // End player2 turn
+        TestUtils.waitForUserPrompt(reader2, logger);
+        TestUtils.writeLine(writer2, "0", logger);
+
+        scores = TestUtils.readScores(reader1, logger);
+
+        assertEquals(300, scores.get(player1Name));
+        assertEquals(0, scores.get(player2Name));
+        assertEquals(0, scores.get(player3Name));
+    }
+
 }
