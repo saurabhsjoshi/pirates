@@ -36,8 +36,9 @@ public class ClientApp {
                     var result = turn.start();
                     client.sendMsg(new TurnEndMsg(result));
                 }
-                case BroadcastMsg.TYPE -> System.out.println(((BroadcastMsg)msg).getMessage());
+                case BroadcastMsg.TYPE -> System.out.println(((BroadcastMsg) msg).getMessage());
                 case PlayerScoreMsg.TYPE -> ConsoleUtils.printPlayerScores(((PlayerScoreMsg) msg).getPlayers());
+                case WinnerMsg.TYPE -> ConsoleUtils.printWinner(((WinnerMsg) msg).getWinnerName());
             }
 
         };

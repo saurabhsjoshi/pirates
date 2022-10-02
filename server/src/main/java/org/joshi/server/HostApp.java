@@ -111,6 +111,7 @@ public class HostApp {
         if (game.ended()) {
             ConsoleUtils.printPlayerScores(game.getPlayers());
             ConsoleUtils.printWinner(game.getWinner().username());
+            server.broadcast(new WinnerMsg(game.getWinner().username()));
             gameEndLatch.countDown();
             server.stop();
             return;
