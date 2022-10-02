@@ -1564,4 +1564,23 @@ public class SinglePlayerAcceptanceTest {
         validatePlayerDead();
     }
 
+    @DisplayName("R108: die by rolling 2 skulls and having a FC with 1 skull")
+    @Test
+    void R108() throws IOException {
+        setRiggedFc(new SkullCard(1));
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(1, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(2, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(3, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(4, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(5, new Die(Die.Side.DIAMOND)),
+                new Turn.RiggedDie(6, new Die(Die.Side.DIAMOND)),
+                new Turn.RiggedDie(7, new Die(Die.Side.DIAMOND))
+        ));
+        validatePlayerDead();
+    }
+
+
+
 }
