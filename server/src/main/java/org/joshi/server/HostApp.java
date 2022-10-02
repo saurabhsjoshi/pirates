@@ -37,10 +37,9 @@ public class HostApp {
     public static void main(String[] args) throws IOException, InterruptedException {
         int players = 3;
         boolean rigged = false;
-
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("PLAYERS")) {
-                players = Integer.parseInt(args[i + i]);
+                players = Integer.parseInt(args[i + 1]);
                 i++;
                 continue;
             }

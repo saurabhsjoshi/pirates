@@ -10,9 +10,11 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleUtils {
-    private static final String USER_PROMPT = "##: ";
+    public static final String USER_PROMPT = "##: ";
 
     private static final String SYSTEM_MSG_SEPARATOR = "######";
+    public static final String DICE_STATE_MSG = "DICE STATE";
+    public static final String DEAD_MSG = "YOU ARE DISQUALIFIED (3 SKULLS)";
 
     private static final Scanner scanner = new Scanner(System.in);
 
@@ -24,7 +26,7 @@ public class ConsoleUtils {
      */
     public static String userPrompt(String prompt) {
         System.out.println(prompt);
-        System.out.print(USER_PROMPT);
+        System.out.println(USER_PROMPT);
         return scanner.nextLine();
     }
 
@@ -66,7 +68,7 @@ public class ConsoleUtils {
     }
 
     public static void printDice(List<Die> dice) {
-        printSysMsg("DICE STATE");
+        printSysMsg(DICE_STATE_MSG);
         for (int i = 0; i < dice.size(); i++) {
             var die = dice.get(i);
             System.out.printf("%-1s %-10s %-10s\n", i, die.getDiceSide().name(), die.getState().name());
@@ -85,7 +87,15 @@ public class ConsoleUtils {
         printSysMsg("WINNER IS " + winner);
     }
 
+    public static String getSysMsg(String msg) {
+        return SYSTEM_MSG_SEPARATOR + msg + SYSTEM_MSG_SEPARATOR;
+    }
+
+    public static void printDeadMsg() {
+        printSysMsg(DEAD_MSG);
+    }
+
     public static void printSysMsg(String msg) {
-        System.out.println(SYSTEM_MSG_SEPARATOR + msg + SYSTEM_MSG_SEPARATOR);
+        System.out.println(getSysMsg(msg));
     }
 }

@@ -73,7 +73,7 @@ public class PlayerTurn {
                 ConsoleUtils.printDice(turn.getDice());
 
                 if (turn.getState() == Turn.State.DISQUALIFIED) {
-                    ConsoleUtils.printSysMsg("YOU ARE DISQUALIFIED (3 SKULLS)");
+                    ConsoleUtils.printDeadMsg();
                     return turn.complete();
                 }
 
