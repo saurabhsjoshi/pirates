@@ -1,10 +1,10 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ClientApp" type="Application" factoryName="Application" singleton="false" nameIsGenerated="true">
-    <option name="MAIN_CLASS_NAME" value="org.joshi.ClientApp" />
-    <module name="pirates.main" />
+  <configuration default="false" name="ClientApp" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="org.joshi.client.ClientApp" />
+    <module name="pirates.client.main" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="org.joshi.*" />
+        <option name="PATTERN" value="org.joshi.client.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

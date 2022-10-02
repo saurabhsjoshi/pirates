@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'org.joshi'
+version ''
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':common')
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Pirates Client',
+                'Implementation-Version': version,
+                'Class-Path': 'common.jar',
+                'Main-Class': 'org.joshi.client.ClientApp'
+    }
+    destinationDirectory.set(file("$rootDir/bin"))
+}
+
+test {
+    useJUnitPlatform()
+}

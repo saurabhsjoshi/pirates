@@ -29,10 +29,6 @@ public class Player implements Serializable {
         return score;
     }
 
-    public void setScore(int score) {
-        this.score = score;
-    }
-
     public void addScore(int score) {
         this.score += score;
 

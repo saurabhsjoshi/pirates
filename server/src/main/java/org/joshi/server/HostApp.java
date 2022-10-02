@@ -1,4 +1,4 @@
-package org.joshi;
+package org.joshi.server;
 
 import org.joshi.network.MessageHandler;
 import org.joshi.network.Server;

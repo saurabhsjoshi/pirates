@@ -1,2 +1,6 @@
 rootProject.name = 'pirates'
+include 'common'
+include 'server'
+include 'client'
+include 'acceptance'
 
