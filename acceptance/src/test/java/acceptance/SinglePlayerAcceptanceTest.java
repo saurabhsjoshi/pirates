@@ -1485,4 +1485,42 @@ public class SinglePlayerAcceptanceTest {
         assertEquals(1000, getPlayerScore());
     }
 
+    @DisplayName("FC: 2 sword sea battle, first  roll:  4 monkeys, 1 sword, 2 parrots and a coin" +
+            "then re-roll 2 parrots and get coin and 2nd sword" +
+            " score is: 200 (coins) + 200 (monkeys) + 300 (swords of battle) + 500 (full chest) = 1200")
+    @Test
+    void R101() throws IOException {
+        setRiggedFc(new SeaBattleCard(2));
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(1, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(2, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(3, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(4, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(5, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(6, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(7, new Die(Die.Side.GOLD_COIN))
+        ));
+
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "2 0 1 2 3 4 7");
+
+        // Re-roll
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "3");
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(5, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(6, new Die(Die.Side.SWORD))
+        ));
+
+        // End turn
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "0");
+
+        assertEquals(1200, getPlayerScore());
+
+    }
+
 }
