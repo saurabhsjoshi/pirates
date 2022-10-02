@@ -308,7 +308,7 @@ public class TurnTest {
         List<Turn.RiggedDie> riggedDice = new ArrayList<>();
         riggedDice.add(new Turn.RiggedDie(0, new Die(Die.Side.PARROT, Die.State.HELD)));
         for (int i = 1; i < 8; i++) {
-            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.SKULL, Die.State.HELD)));
+            riggedDice.add(new Turn.RiggedDie(i, new Die(Die.Side.SKULL, Die.State.ACTIVE)));
         }
         turn.setRiggedDice(riggedDice);
         turn.postRoll();

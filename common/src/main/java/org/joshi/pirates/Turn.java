@@ -32,6 +32,8 @@ public class Turn {
 
     private FortuneCard fortuneCard;
 
+    private int heldDiceCount = 0;
+
     public static class SkullActivatedException extends Exception {
     }
 
@@ -123,7 +125,8 @@ public class Turn {
     public void postRoll() {
         // Check skulls
         for (var die : dice) {
-            if (die.diceSide == Die.Side.SKULL) {
+            if (die.diceSide == Die.Side.SKULL && die.state != Die.State.HELD) {
+                heldDiceCount++;
                 die.setState(Die.State.HELD);
             }
         }
@@ -262,12 +265,7 @@ public class Turn {
         }
 
         if (isOnIslandOfSkulls) {
-            score = 0;
-            for (var die : dice) {
-                if (die.diceSide == Die.Side.SKULL) {
-                    score -= 100;
-                }
-            }
+            score = -(heldDiceCount * 100);
 
             if (fortuneCard instanceof SkullCard skullCard) {
                 score -= (skullCard.getSkulls() * 100);
