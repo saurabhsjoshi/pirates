@@ -15,6 +15,7 @@ public class ConsoleUtils {
     private static final String SYSTEM_MSG_SEPARATOR = "######";
     public static final String DICE_STATE_MSG = "DICE STATE";
     public static final String DEAD_MSG = "YOU ARE DISQUALIFIED (3 SKULLS)";
+    public static final String SCORE_MSG = "PLAYER SCORES";
 
     private static final Scanner scanner = new Scanner(System.in);
 

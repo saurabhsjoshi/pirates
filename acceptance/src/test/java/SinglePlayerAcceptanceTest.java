@@ -11,6 +11,7 @@ import java.io.*;
 import java.nio.file.Path;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SinglePlayerAcceptanceTest {
@@ -80,17 +81,21 @@ public class SinglePlayerAcceptanceTest {
 
         // Wait for new round prompt
         var lines = TestUtils.waitForUserPrompt(reader);
-        boolean playerDied = false;
 
-        // Validate dice state are accurate
-        for (var line : lines) {
+        boolean playerDied = false;
+        int playerScore = -1;
+
+        for (int i = 0; i < lines.size(); i++) {
+            var line = lines.get(i);
             if (line.equals(ConsoleUtils.getSysMsg(ConsoleUtils.DEAD_MSG))) {
                 playerDied = true;
-                break;
+            } else if (line.equals(ConsoleUtils.getSysMsg(ConsoleUtils.SCORE_MSG))) {
+                playerScore = TestUtils.getPlayerScore(lines.get(++i));
             }
         }
 
         assertTrue(playerDied);
+        assertEquals(0, playerScore);
     }
 
 }

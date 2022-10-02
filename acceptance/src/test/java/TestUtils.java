@@ -51,4 +51,8 @@ public class TestUtils {
         }
         return lines;
     }
+
+    public static int getPlayerScore(String line) {
+        return Integer.parseInt(line.split("\\s+")[1]);
+    }
 }
