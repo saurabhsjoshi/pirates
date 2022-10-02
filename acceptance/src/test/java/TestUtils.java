@@ -25,7 +25,8 @@ public class TestUtils {
         writeLine(writer, line);
     }
 
-    public static void rigDice(BufferedWriter writer, List<Turn.RiggedDie> dice) throws IOException {
+    public static void rigDice(BufferedReader reader, BufferedWriter writer, List<Turn.RiggedDie> dice) throws IOException {
+        waitForUserPrompt(reader);
         StringJoiner joiner = new StringJoiner(" ");
         for (var die : dice) {
             joiner.add(String.valueOf(die.index()));
@@ -40,7 +41,7 @@ public class TestUtils {
     public static List<String> waitForUserPrompt(BufferedReader reader) throws IOException {
         List<String> lines = new ArrayList<>();
         String line = reader.readLine();
-        while (!line.equals(ConsoleUtils.USER_PROMPT)) {
+        while (line != null && !line.equals(ConsoleUtils.USER_PROMPT)) {
             if (!line.isBlank()) {
                 lines.add(line);
                 System.out.println(line);

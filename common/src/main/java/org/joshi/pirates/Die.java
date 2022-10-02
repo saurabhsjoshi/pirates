@@ -9,6 +9,10 @@ public class Die {
 
     private boolean used = false;
 
+    public Die(Side diceSide) {
+        this(diceSide, State.ACTIVE);
+    }
+
     public Die(Side diceSide, State state) {
         this.diceSide = diceSide;
         this.state = state;
