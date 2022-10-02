@@ -1719,7 +1719,7 @@ public class SinglePlayerAcceptanceTest {
         assertEquals(-300, result.score());
     }
 
-    @DisplayName("R115: FC 3 swords, have 2 swords, 2 skulls and 4 parrots, die on reroll of parrots  => lose 500 points\n")
+    @DisplayName("R115: FC 3 swords, have 2 swords, 2 skulls and 4 parrots, die on reroll of parrots  => lose 500 points")
     @Test
     void R115() {
         Turn playerTurn = new Turn();
@@ -1749,6 +1749,29 @@ public class SinglePlayerAcceptanceTest {
         var result = playerTurn.complete();
         assertFalse(result.islandOfDead());
         assertEquals(-500, result.score());
+    }
+
+    @DisplayName("R116: FC 4 swords, die on first roll with 3 skulls and 3 swords  => lose 1000 points")
+    @Test
+    void R116() {
+        Turn playerTurn = new Turn();
+        playerTurn.setFortuneCard(new SeaBattleCard(4));
+
+        playerTurn.roll();
+        playerTurn.setRiggedDice(List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(1, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(2, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(3, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(4, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(5, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(6, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(7, new Die(Die.Side.PARROT))));
+        playerTurn.postRoll();
+
+        var result = playerTurn.complete();
+        assertFalse(result.islandOfDead());
+        assertEquals(-1000, result.score());
     }
 
 }
