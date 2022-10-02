@@ -1414,4 +1414,27 @@ public class SinglePlayerAcceptanceTest {
         // Make sure correct score
         assertEquals(600, playerScore);
     }
+
+    @DisplayName("R98: 3 monkeys, 3 swords, 1 diamond, 1 parrot FC: coin   => SC 400  (ie no bonus)")
+    @Test
+    void R98() throws IOException {
+        defaultRiggedCard();
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(1, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(2, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(3, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(4, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(5, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(6, new Die(Die.Side.DIAMOND)),
+                new Turn.RiggedDie(7, new Die(Die.Side.PARROT))
+        ));
+
+        // End turn
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "0");
+
+        assertEquals(400, getPlayerScore());
+    }
 }
