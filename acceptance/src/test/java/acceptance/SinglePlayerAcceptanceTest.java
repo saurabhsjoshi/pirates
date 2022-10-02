@@ -1696,4 +1696,27 @@ public class SinglePlayerAcceptanceTest {
     }
 
 
+    @DisplayName("R114: FC 2 swords, have 1 sword and die on first roll with 3 skulls   => lose 300 points")
+    @Test
+    void R114() {
+        Turn playerTurn = new Turn();
+        playerTurn.setFortuneCard(new SeaBattleCard(2));
+
+        playerTurn.roll();
+        playerTurn.setRiggedDice(List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(1, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(2, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(3, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(4, new Die(Die.Side.SKULL)),
+                new Turn.RiggedDie(5, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(6, new Die(Die.Side.DIAMOND)),
+                new Turn.RiggedDie(7, new Die(Die.Side.DIAMOND))));
+        playerTurn.postRoll();
+
+        var result = playerTurn.complete();
+        assertFalse(result.islandOfDead());
+        assertEquals(-300, result.score());
+    }
+
 }
