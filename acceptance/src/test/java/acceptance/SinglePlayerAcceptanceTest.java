@@ -1437,4 +1437,27 @@ public class SinglePlayerAcceptanceTest {
 
         assertEquals(400, getPlayerScore());
     }
+
+    @DisplayName("R99: 3 monkeys, 3 swords, 2 coins FC: captain   => SC (100+100+200+500)*2 =  1800")
+    @Test
+    void R99() throws IOException {
+        setRiggedFc(new FortuneCard(FortuneCard.Type.CAPTAIN));
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(1, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(2, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(3, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(4, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(5, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(6, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(7, new Die(Die.Side.GOLD_COIN))
+        ));
+
+        // End turn
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "0");
+
+        assertEquals(1800, getPlayerScore());
+    }
 }
