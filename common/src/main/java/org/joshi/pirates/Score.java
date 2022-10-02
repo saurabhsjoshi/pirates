@@ -35,8 +35,7 @@ public class Score {
                 case 5 -> 500;
                 case 6 -> 1000;
                 case 7 -> 2000;
-                case 8 -> 4000;
-                default -> 0;
+                default -> 4000;
             };
             setUsed(side.getKey(), dice);
         }
