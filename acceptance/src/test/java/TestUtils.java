@@ -14,15 +14,15 @@ import java.util.StringJoiner;
 public class TestUtils {
 
     public static void rigFortuneCard(BufferedWriter writer, FortuneCard fortuneCard) throws IOException {
+        String line;
         if (fortuneCard instanceof SeaBattleCard seaBattleCard) {
-            writer.write(FortuneCard.Type.SEA_BATTLE.ordinal() + " " + seaBattleCard.getSwords());
+            line = FortuneCard.Type.SEA_BATTLE.ordinal() + " " + seaBattleCard.getSwords();
         } else if (fortuneCard instanceof SkullCard skullCard) {
-            writer.write(FortuneCard.Type.SKULLS.ordinal() + " " + skullCard.getSkulls());
+            line = FortuneCard.Type.SKULLS.ordinal() + " " + skullCard.getSkulls();
         } else {
-            writer.write(String.valueOf(fortuneCard.getType().ordinal()));
+            line = String.valueOf(fortuneCard.getType().ordinal());
         }
-        writer.newLine();
-        writer.flush();
+        writeLine(writer, line);
     }
 
     public static void rigDice(BufferedWriter writer, List<Turn.RiggedDie> dice) throws IOException {
@@ -34,9 +34,7 @@ public class TestUtils {
             joiner.add(String.valueOf(d.getState().ordinal()));
         }
 
-        writer.write(joiner.toString());
-        writer.newLine();
-        writer.flush();
+        writeLine(writer, joiner.toString());
     }
 
     public static List<String> waitForUserPrompt(BufferedReader reader) throws IOException {
@@ -50,6 +48,12 @@ public class TestUtils {
             line = reader.readLine();
         }
         return lines;
+    }
+
+    public static void writeLine(BufferedWriter writer, String line) throws IOException {
+        writer.write(line);
+        writer.newLine();
+        writer.flush();
     }
 
     public static int getPlayerScore(String line) {
