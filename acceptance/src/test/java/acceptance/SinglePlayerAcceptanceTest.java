@@ -1794,4 +1794,27 @@ public class SinglePlayerAcceptanceTest {
         validatePlayerDead();
     }
 
+    @DisplayName("R118: FC 2 swords, roll 3 monkeys 2 swords, 1 coin, 2 parrots  SC = 100 + 100 + 300 = 500")
+    @Test
+    void R118() throws IOException {
+        setRiggedFc(new SeaBattleCard(2));
+
+        TestUtils.rigDice(reader, writer, List.of(
+                new Turn.RiggedDie(0, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(1, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(2, new Die(Die.Side.MONKEY)),
+                new Turn.RiggedDie(3, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(4, new Die(Die.Side.SWORD)),
+                new Turn.RiggedDie(5, new Die(Die.Side.GOLD_COIN)),
+                new Turn.RiggedDie(6, new Die(Die.Side.PARROT)),
+                new Turn.RiggedDie(7, new Die(Die.Side.PARROT))
+        ));
+
+        // End turn
+        TestUtils.waitForUserPrompt(reader);
+        TestUtils.writeLine(writer, "0");
+
+        assertEquals(500, getPlayerScore());
+    }
+
 }
